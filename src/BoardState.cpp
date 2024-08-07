@@ -6,13 +6,13 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 14:43:15 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/07 16:57:04 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/07 16:57:59 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BoardState.hpp"
 
-BigInt BoardState::mask = BigInt("0");
+BigInt BoardState::mask = BigInt(0);
 
 BoardState::BoardState(int _sqrt)
 :
@@ -23,8 +23,8 @@ BoardState::BoardState(int _sqrt)
 	_otherstate(0),
 	_totalboard(0)
 {
-	if (BoardState::mask == BigInt("0"))
-		BoardState::mask = (BigInt("1") << _size) - 1;
+	if (BoardState::mask == BigInt(0))
+		BoardState::mask = (BigInt(1) << _size) - 1;
 }
 
 BoardState::BoardState(const BoardState& other)

@@ -1,12 +1,12 @@
-FILES			=	
+FILES			=	main.cpp BoardState.cpp BigInt.cpp
 
 SRCDIR			= 	src/
 
-SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) main.cpp
+SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
 
 OBJS			= 	${SRCS:.cpp=.o}
 
-HEADS			=	
+HEADS			=
 
 INC				= 	./includes/
 
@@ -16,9 +16,13 @@ NAME			= 	gomoku
 
 CXX				=	clang++
 
-CXXFLAGS		= 	-g -Wall -Wextra -Werror -lgmp -lgmpxx
+CXXFLAGS		= 	-g -Wall -Wextra -Werror -std=c++11
 
-INCLUDE 		= 	-I${INC}
+
+GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
+GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
+
+INCLUDE 		= 	-I${INC} ${GMP_INC}
 
 SANITIZE 		= 	-fsanitize=address
 
@@ -29,6 +33,8 @@ LINUX			= -D _LINUX
 ifeq ($(UNAME),Linux)
 	CXXFLAGS += $(LINUX)
 endif
+
+all:			${NAME}
 
 check-gmp:
 ifeq ($(shell pkg-config --exists gmp && echo yes || echo no), no)
@@ -45,13 +51,12 @@ else
 	@echo "GMP is already installed."
 endif
 
-%.o: %.cpp		
-				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
 
 $(NAME):		check-gmp ${OBJS} $(DEPS)
-				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} ${GMP_LIB} -lgmp -lgmpxx -o ${NAME}
 
-all:			${NAME}
+%.o: %.cpp
+				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
 
 test:			all
 				${NAME}

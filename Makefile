@@ -33,7 +33,7 @@ endif
 %.o: %.cpp		
 				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
 
-$(NAME):		${OBJS} $(DEPS) ${MAIN}
+$(NAME):		${OBJS} $(DEPS)
 				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}
 
 all:			${NAME}

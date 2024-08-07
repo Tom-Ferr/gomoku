@@ -2,7 +2,7 @@ FILES			=
 
 SRCDIR			= 	src/
 
-SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
+SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) main.cpp
 
 OBJS			= 	${SRCS:.cpp=.o}
 
@@ -11,8 +11,6 @@ HEADS			=
 INC				= 	./includes/
 
 DEPS			= 	$(addprefix ${INC}, $(HEADS))
-
-MAIN			=	main.cpp
 
 NAME			= 	gomoku
 
@@ -36,7 +34,7 @@ endif
 				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
 
 $(NAME):		${OBJS} $(DEPS) ${MAIN}
-				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} ${MAIN} -o ${NAME}
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}
 
 all:			${NAME}
 

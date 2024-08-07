@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 14:43:15 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/07 16:51:04 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/07 16:57:04 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,18 @@ _totalboard(other._totalboard)
 
 BoardState::BoardState(const BoardState& other, BigInt move)
 : _turn(!other._turn), _size(other._size), _sqrt(other._sqrt),
-_mystate(other._otherstate), _otherstate(other._mystate ^ move),
-_totalboard(_mystate ^ _otherstate)
+_mystate(other._otherstate), _otherstate(other._mystate | move),
+_totalboard(_mystate | _otherstate)
 { }
 
 void BoardState::applymove(size_t pos, bool mystate)
 {
 	BigInt mv = BigInt(1) << pos;
 	if (mystate)
-		_mystate = _mystate ^ mv;
+		_mystate = _mystate | mv;
 	else
-		_otherstate = _otherstate ^ mv;
-	_totalboard = _totalboard ^ mv;
+		_otherstate = _otherstate | mv;
+	_totalboard = _totalboard | mv;
 }
 
 BoardState::~BoardState() { }

@@ -2,9 +2,9 @@
 # define GAME_HPP
 
 # include <chrono>
-# include "gomoku.hpp"
-# include "BoardState.hpp"
-# include "Node.hpp"
+# include <gomoku.hpp>
+# include <BoardState.hpp>
+# include <Node.hpp>
 
 class Game
 {

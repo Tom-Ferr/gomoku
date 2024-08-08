@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   BigInt.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/07 15:48:37 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/07 20:59:26 by iwillens         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "BigInt.hpp"
 
 BigInt::BigInt()
@@ -39,7 +27,7 @@ BigInt::BigInt(BigInt&& other) noexcept
 {
 	mpz_init(_value);
 	mpz_swap(_value, other._value);
-	mpz_clear(other._value);
+	// mpz_clear(other._value);
 }
 
 BigInt::~BigInt() {

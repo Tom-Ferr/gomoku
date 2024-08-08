@@ -1,4 +1,4 @@
-FILES			=	main.cpp BoardState.cpp BigInt.cpp Game.cpp Node.cpp
+FILES			=	BigInt.cpp BoardState.cpp Node.cpp main.cpp Mask.cpp Game.cpp
 
 SRCDIR			= 	src/
 
@@ -6,7 +6,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
 
 OBJS			= 	${SRCS:.cpp=.o}
 
-HEADS			=
+HEADS			=	BigInt.hpp BoardState.hpp gomoku.hpp Node.hpp
 
 INC				= 	./includes/
 
@@ -24,11 +24,15 @@ GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 INCLUDE 		= 	-I${INC}
 
-SANITIZE 		= 	-O3#-fsanitize=address -g
+SANITIZE 		= 	-fsanitize=address -g
 
 UNAME			=	$(shell uname)
 
-LINUX			= -D _LINUX
+LINUX			= 	-D _LINUX
+
+GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
+
+GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 LIBS 			= -lgmp -lgmpxx
 

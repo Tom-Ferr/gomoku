@@ -71,9 +71,14 @@ std::vector<BigInt> Node::possible_moves()
 
 	for (size_t i = 0; i < freepos.size(); i++)
 	{
-		if (freepos.get_bit(i))
+		if (freepos.get_bit(i) && !check_double_tree(i))
 			moves.push_back(BigInt(1) << i);
 	}
 	return moves;
 }
 
+bool Node::check_double_tree(size_t pos)
+{
+	(void)pos;
+	return false;
+}

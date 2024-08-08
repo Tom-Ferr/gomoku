@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 13:34:12 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/08 00:13:21 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:14:43 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ class Node
 		std::pair<int, BigInt> minimax();
 		std::pair<int, BigInt> alpha_beta_prune(int x, bool maximizing=true);
 		std::vector<BigInt> possible_moves();
+		bool check_double_tree(size_t pos);
 };
 #endif

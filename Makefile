@@ -24,7 +24,7 @@ GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 INCLUDE 		= 	-I${INC}
 
-SANITIZE 		= 	-fsanitize=address -g
+SANITIZE 		= 	-O3#-fsanitize=address -g
 
 UNAME			=	$(shell uname)
 

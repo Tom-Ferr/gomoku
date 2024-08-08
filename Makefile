@@ -1,4 +1,4 @@
-FILES			=	main.cpp BoardState.cpp BigInt.cpp
+FILES			=	main.cpp BoardState.cpp BigInt.cpp Game.cpp Node.cpp
 
 SRCDIR			= 	src/
 
@@ -16,7 +16,7 @@ NAME			= 	gomoku
 
 CXX				=	clang++
 
-CXXFLAGS		= 	-g -Wall -Wextra -Werror -std=c++11
+CXXFLAGS		= 	 -Wall -Wextra -Werror -std=c++11
 
 
 GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
@@ -24,7 +24,7 @@ GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 INCLUDE 		= 	-I${INC} ${GMP_INC}
 
-SANITIZE 		= 	-fsanitize=address
+SANITIZE 		= 	-fsanitize=address -g
 
 UNAME			=	$(shell uname)
 

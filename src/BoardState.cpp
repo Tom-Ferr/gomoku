@@ -6,25 +6,36 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 14:43:15 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/07 16:57:59 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/07 23:21:22 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BoardState.hpp"
 
 BigInt BoardState::mask = BigInt(0);
+BigInt BoardState::leftmask = BigInt(0);
+BigInt BoardState::rightmask = BigInt(0);
 
 BoardState::BoardState(int _sqrt)
 :
 	_turn(true),
 	_size(_sqrt * _sqrt),
-	_sqrt(_sqrt),
-	_mystate(0),
-	_otherstate(0),
-	_totalboard(0)
+	_sqrt(_sqrt)
 {
 	if (BoardState::mask == BigInt(0))
+	{
 		BoardState::mask = (BigInt(1) << _size) - 1;
+		BoardState::leftmask = mask;
+		BoardState::rightmask = mask;
+		for (int i = 0; i < _sqrt; i++)
+		{
+			BoardState::rightmask.clear_bit(i * _sqrt);
+			BoardState::leftmask.clear_bit((i + 1) * _sqrt - 1);
+		}
+	}
+	_mystate = BoardState::mask;
+	_otherstate = BoardState::mask;
+	_totalboard = BoardState::mask;
 }
 
 BoardState::BoardState(const BoardState& other)
@@ -42,18 +53,27 @@ _totalboard(other._totalboard)
 
 BoardState::BoardState(const BoardState& other, BigInt move)
 : _turn(!other._turn), _size(other._size), _sqrt(other._sqrt),
-_mystate(other._otherstate), _otherstate(other._mystate | move),
-_totalboard(_mystate | _otherstate)
+_mystate(other._otherstate), _otherstate(other._mystate ^ move),
+_totalboard(~(_mystate ^ _otherstate) & BoardState::mask)
 { }
 
 void BoardState::applymove(size_t pos, bool mystate)
 {
 	BigInt mv = BigInt(1) << pos;
 	if (mystate)
-		_mystate = _mystate | mv;
+		_mystate = _mystate ^ mv;
 	else
-		_otherstate = _otherstate | mv;
-	_totalboard = _totalboard | mv;
+		_otherstate = _otherstate ^ mv;
+	_totalboard = _totalboard ^ mv;
+}
+
+void BoardState::applymove(BigInt move, bool mystate)
+{
+	if (mystate)
+		_mystate = _mystate ^ move;
+	else
+		_otherstate = _otherstate ^ move;
+	_totalboard = _totalboard ^ move;
 }
 
 BoardState::~BoardState() { }
@@ -93,6 +113,53 @@ size_t const &BoardState::move() const
 	return _move;
 }
 
+void BoardState::swap_states()
+{
+	BigInt temp = _mystate;
+	_mystate = _otherstate;
+	_otherstate = temp;
+}
+
+void BoardState::flip_turn()
+{
+	_turn = !_turn;
+}
+
+BigInt BoardState::expanded_free() const
+{
+	BigInt e[8];
+	BigInt t = ~totalboard() & mask;
+	e[0] = ((t & BoardState::rightmask) >> 1) & BoardState::mask;
+	e[1] = ((t & BoardState::leftmask) << 1) & BoardState::mask;
+	e[2] = (t << _sqrt) & BoardState::mask;
+	e[3] = (t >> _sqrt) & BoardState::mask;
+	e[4] = (e[0] << _sqrt) & BoardState::mask;
+	e[5] = (e[1] << _sqrt) & BoardState::mask;
+	e[6] = (e[0] >> _sqrt) & BoardState::mask;
+	e[7] = (e[1] >> _sqrt) & BoardState::mask;
+	return ((e[0] | e[1] | e[2] | e[3] | e[4] | e[5] | e[6] | e[7])
+				& ~t);
+}
+
+void BoardState::print()
+{
+	std::cout << "\033[2J\033[1;1H";
+	for (int y = _sqrt - 1; y >= 0; y--)
+	{
+		for (int x = _sqrt - 1; x >= 0; x--)
+		{
+			if (!_mystate.get_bit(y * _sqrt + x))
+				std::cout << "\033[1;36m X \033[0m";
+			else if (!_otherstate.get_bit(y * _sqrt + x))
+				std::cout << "\033[1;35m 0 \033[0m";
+			else
+				std::cout << "\033[1;33m . \033[0m";
+			if (x == 0)
+				std::cout << std::endl;
+		}
+	}
+}
+
 BoardState& BoardState::operator=(const BoardState& other)
 {
 	if (this != &other)
@@ -109,12 +176,23 @@ BoardState& BoardState::operator=(const BoardState& other)
 
 std::ostream &operator<<(std::ostream &os, const BoardState &bs)
 {
-	os << "Mask: " << BoardState::mask << std::endl;
+	//os << "Mask: " << BoardState::mask << std::endl;
+	//os << "Left Mask: " << BoardState::leftmask << std::endl;
+	//os << "Right Mask: " << BoardState::rightmask << std::endl;
 	os << "_turn: " << bs.turn() << std::endl;
 	os << "_size: " << bs.size() << std::endl;
 	os << "_sqrt: " << bs.sqrt() << std::endl;
 	os << "_mystate: " << bs.mystate() << std::endl;
 	os << "_otherstate: " << bs.otherstate() << std::endl;
 	os << "_totalboard: " << bs.totalboard() << std::endl;
+	BigInt freepos = bs.expanded_free();
+	os << "expanded_free: " << freepos << std::endl;
+	os << "possible moves: " << std::endl;
+	for (size_t i = 0; i < freepos.size(); i++)
+	{
+		if (freepos.get_bit(i))
+			std::cout << "\t" << i;
+	}
+	std::cout  << std::endl;
 	return os;
 }

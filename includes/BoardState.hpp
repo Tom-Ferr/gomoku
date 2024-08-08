@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 13:49:52 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/07 16:51:05 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/07 23:15:11 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ class BoardState
 {
 	public:
 		static BigInt mask;
+		static BigInt leftmask;
+		static BigInt rightmask;
 
 		private:
 			bool	_turn;
@@ -38,6 +40,7 @@ class BoardState
 			~BoardState();
 			BoardState& operator=(const BoardState& other);
 			void applymove(size_t pos, bool mystate=true);
+			void applymove(BigInt move, bool mystate);
 
 			// getters
 			bool	const &turn() const;
@@ -47,6 +50,11 @@ class BoardState
 			BigInt 	const &mystate() const;
 			BigInt 	const &otherstate() const;
 			BigInt 	const &totalboard() const;
+			BigInt 	expanded_free() const;
+			void swap_states();
+			void flip_turn();
+			void print();
+
 };
 
 std::ostream &operator<<(std::ostream &os, const BoardState &bs);

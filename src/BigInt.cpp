@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:48:37 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/07 16:48:35 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/07 20:59:26 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,6 +281,26 @@ BigInt BigInt::operator--(int)
 	BigInt temp = *this;
 	mpz_sub_ui(_value, _value, 1);
 	return temp;
+}
+
+void BigInt::set_bit(size_t bit)
+{
+	mpz_setbit(_value, bit);
+}
+
+bool BigInt::get_bit(size_t bit)
+{
+	return mpz_tstbit(_value, bit);
+}
+
+void BigInt::clear_bit(size_t bit)
+{
+	mpz_clrbit(_value, bit);
+}
+
+size_t BigInt::size() const
+{
+	return mpz_sizeinbase(_value, 2);
 }
 
 std::ostream& operator<<(std::ostream& os, const BigInt& big_int) {

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:44:50 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/07 16:23:51 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/07 20:59:07 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,12 @@ class BigInt
 
 		BigInt operator--(int);
 
+		void set_bit(size_t bit);
+		bool get_bit(size_t bit);
+
+		void clear_bit(size_t bit);
+
+		size_t size() const;
 
 		// Output Stream
 		friend std::ostream& operator<<(std::ostream& os, const BigInt& big_int);

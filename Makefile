@@ -22,7 +22,7 @@ CXXFLAGS		= 	 -Wall -Wextra -Werror -std=c++11
 GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
 GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
-INCLUDE 		= 	-I${INC} ${GMP_INC}
+INCLUDE 		= 	-I${INC}
 
 SANITIZE 		= 	-fsanitize=address -g
 
@@ -30,8 +30,13 @@ UNAME			=	$(shell uname)
 
 LINUX			= -D _LINUX
 
+LIBS 			= -lgmp -lgmpxx
+
 ifeq ($(UNAME),Linux)
-	CXXFLAGS += $(LINUX)
+    CXXFLAGS += $(LINUX)
+else ifeq ($(shell uname -s), Darwin)
+    INCLUDE += $(GMP_INC)
+    LIBS += $(GMP_LIB)
 endif
 
 all:			${NAME}
@@ -53,7 +58,7 @@ endif
 
 
 $(NAME):		check-gmp ${OBJS} $(DEPS)
-				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} ${GMP_LIB} -lgmp -lgmpxx -o ${NAME}
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} ${LIBS} -o ${NAME}
 
 %.o: %.cpp
 				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@

@@ -1,12 +1,12 @@
-FILES			=	
+FILES			=	BigInt.cpp BoardState.cpp Node.cpp main.cpp Mask.cpp
 
 SRCDIR			= 	src/
 
-SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) main.cpp
+SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
 
 OBJS			= 	${SRCS:.cpp=.o}
 
-HEADS			=	
+HEADS			=	BigInt.hpp BoardState.hpp gomoku.hpp Node.hpp
 
 INC				= 	./includes/
 
@@ -16,7 +16,9 @@ NAME			= 	gomoku
 
 CXX				=	clang++
 
-CXXFLAGS		= 	-g -Wall -Wextra -Werror -lgmp -lgmpxx
+CXXFLAGS		= 	#-Wall -Wextra -Werror -g
+
+GMP				= 	-lgmp -lgmpxx
 
 INCLUDE 		= 	-I${INC}
 
@@ -24,11 +26,28 @@ SANITIZE 		= 	-fsanitize=address
 
 UNAME			=	$(shell uname)
 
-LINUX			= -D _LINUX
+LINUX			= 	-D _LINUX
+
+GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
+
+GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 ifeq ($(UNAME),Linux)
 	CXXFLAGS += $(LINUX)
+else ifeq ($(shell uname -s), Darwin)
+	CXXFLAGS += $(GMP_INC)
+	CXXFLAGS += $(GMP_LIB)
+
 endif
+
+
+%.o: %.cpp		
+				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
+
+$(NAME):		${OBJS} $(DEPS)
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${GMP} ${INCLUDE} -o ${NAME}
+
+all:			${NAME}
 
 check-gmp:
 ifeq ($(shell pkg-config --exists gmp && echo yes || echo no), no)
@@ -44,17 +63,6 @@ endif
 else
 	@echo "GMP is already installed."
 endif
-
-%.o: %.cpp		
-				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
-
-$(NAME):		check-gmp ${OBJS} $(DEPS)
-				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}
-
-all:			${NAME}
-
-test:			all
-				${NAME}
 
 clean:
 				rm -f ${OBJS}

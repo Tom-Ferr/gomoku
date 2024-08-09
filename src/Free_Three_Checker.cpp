@@ -20,11 +20,13 @@ Free_Three_Checker::Free_Three_Checker(const Free_Three_Checker& other)
 Free_Three_Checker &Free_Three_Checker::operator=(const Free_Three_Checker& other)
 {
 	if (this != &other)
+    {
 		_my_state = other._my_state;
 	    _other_state = other._other_state;
 	    _board_sqrt = other._board_sqrt;
 	    _board_size = other._board_size;
         _masks = other._masks;
+    }
 	return *this;
 }
 

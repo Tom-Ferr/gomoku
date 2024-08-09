@@ -27,11 +27,13 @@ Mask::Mask(const Mask& other)
 Mask &Mask::operator=(const Mask& other)
 {
 	if (this != &other)
+    {
 		_mask_size = other._mask_size;
 	    _board_sqrt = other._board_sqrt;
 	    _board_size = other._board_size;
 	    _submask = other._submask;
         _masks = other._masks;
+    }
 	return *this;
 }
 

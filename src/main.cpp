@@ -3,7 +3,7 @@
 
 int main (void)
 {
-	Mask m = Mask(6, 19);
-	m.print_mask(m['d']["edge"]);
+	Mask m = Mask(5, 19, true);
+	m.print_mask(m['h']["submask"]);
 	return (0);
 }

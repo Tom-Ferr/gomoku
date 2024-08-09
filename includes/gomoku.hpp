@@ -1,7 +1,7 @@
 #ifndef GOMOKU_HPP
 # define GOMOKU_HPP
 
-# define ORANGE "\033[33m"
+# define YELLOW "\033[33m"
 # define RESET "\033[0m"
 
 # include <iostream>

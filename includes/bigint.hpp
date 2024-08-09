@@ -1,7 +1,9 @@
-#include <gomoku.hpp>
+
+# include <gomoku.hpp>
 
 #ifndef BIGINT_HPP
 # define BIGINT_HPP
+
 
 class BigInt
 {
@@ -13,7 +15,7 @@ class BigInt
 		BigInt();
 
 		// Constructor with string input
-		BigInt(const std::string& initial_value);
+		BigInt(const std::string& initial_value, int base=10);
 
 		BigInt(const size_t& initial_value);
 
@@ -114,6 +116,7 @@ class BigInt
 		void set_bit(size_t bit);
 		bool get_bit(size_t bit);
 
+		size_t bitCount() const;
 		void clear_bit(size_t bit);
 
 		size_t size() const;

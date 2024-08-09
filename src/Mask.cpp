@@ -1,18 +1,58 @@
 #include <Mask.hpp>
 
-Mask::Mask(const int mask_size, const unsigned int board_sqrt)
+Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
 : 
     _mask_size(mask_size),
     _board_sqrt(board_sqrt),
-    _board_size(board_sqrt * board_sqrt)
+    _board_size(board_sqrt * board_sqrt),
+    _submask(submask)
 {
         _masks = outer_map();
         _masks['h'] = horizontal_mask();
         _masks['v'] = vertical_mask();
         _masks['c'] = crescendo_mask();
         _masks['d'] = decrescendo_mask();
+        build_targets();
 }
+
+Mask::Mask(const Mask& other)
+{
+	_mask_size = other._mask_size;
+	_board_sqrt = other._board_sqrt;
+	_board_size = other._board_size;
+	_submask = other._submask;
+    _masks = other._masks;
+}
+
+Mask &Mask::operator=(const Mask& other)
+{
+	if (this != &other)
+		_mask_size = other._mask_size;
+	    _board_sqrt = other._board_sqrt;
+	    _board_size = other._board_size;
+	    _submask = other._submask;
+        _masks = other._masks;
+	return *this;
+}
+
 Mask::~Mask(){}
+
+void Mask::build_targets()
+{
+    mask_vector vec;
+    for (size_t i = 0; i < _board_size; i++)
+    {
+        BigInt n = BigInt((1 << i));
+        vec.push_back(1 << i);
+    }
+    this->_targets = vec;
+}
+
+
+BigInt Mask::targets(size_t pos) const
+{
+    return _targets[pos];
+}
 
 Mask::Mask::inner_map Mask::horizontal_mask() const
 {

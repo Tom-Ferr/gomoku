@@ -5,10 +5,10 @@ BigInt::BigInt()
 	mpz_init(_value);
 }
 
-BigInt::BigInt(const std::string& initial__value)
+BigInt::BigInt(const std::string& initial__value, int base)
 {
 	mpz_init(_value);
-	mpz_set_str(_value, initial__value.c_str(), 10);
+	mpz_set_str(_value, initial__value.c_str(), base);
 }
 
 BigInt::BigInt(const size_t& initial__value)
@@ -279,6 +279,10 @@ void BigInt::set_bit(size_t bit)
 bool BigInt::get_bit(size_t bit)
 {
 	return mpz_tstbit(_value, bit);
+}
+
+size_t BigInt::bitCount() const {
+    return mpz_popcount(_value);
 }
 
 void BigInt::clear_bit(size_t bit)

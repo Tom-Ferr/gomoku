@@ -3,18 +3,18 @@
 Free_Three_Checker::Free_Three_Checker(int board_sqrt, BigInt my_state, BigInt other_state)
 :
 _masks(Mask(6, board_sqrt)),
-_my_state(my_state),
 _board_sqrt(board_sqrt * board_sqrt),
 _board_size(board_sqrt),
+_my_state(my_state),
 _other_state(other_state) {};
 
 Free_Three_Checker::Free_Three_Checker(const Free_Three_Checker& other)
+: _masks(Mask(other._masks))
 {
 	_my_state = other._my_state;
 	_other_state = other._other_state;
 	_board_sqrt = other._board_sqrt;
 	_board_size = other._board_size;
-    _masks = other._masks;
 }
 
 Free_Three_Checker &Free_Three_Checker::operator=(const Free_Three_Checker& other)

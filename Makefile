@@ -6,7 +6,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
 
 OBJS			= 	${SRCS:.cpp=.o}
 
-HEADS			=	BigInt.hpp BoardState.hpp gomoku.hpp Node.hpp Free_Three_checker.hpp Mask.hpp Game.hpp
+HEADS			=	BigInt.hpp BoardState.hpp gomoku.hpp Node.hpp Free_Three_Checker.hpp Mask.hpp Game.hpp
 
 INC				= 	./includes/
 

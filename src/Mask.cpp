@@ -43,7 +43,7 @@ void Mask::build_targets()
     for (size_t i = 0; i < _board_size; i++)
     {
         BigInt n = BigInt((1 << i));
-        vec.push_back(1 << i);
+        vec.push_back(n);
     }
     this->_targets = vec;
 }

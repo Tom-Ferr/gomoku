@@ -36,7 +36,5 @@ private:
     inner_map crescendo_mask() const;
     inner_map decrescendo_mask() const;
     void build_targets();
-    
-public:
 };
 #endif

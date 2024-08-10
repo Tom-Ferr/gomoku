@@ -55,7 +55,48 @@ BigInt Mask::targets(size_t pos) const
     return _targets[pos];
 }
 
-Mask::Mask::inner_map Mask::horizontal_mask() const
+void Mask::vectorize(Mask::mask_vector &dest, int src, char mode)
+{
+    int inc;
+    int shift;
+    int pos;
+    switch (mode)
+    {
+    case 'h':
+        inc = 0;
+        shift = 1;
+        break;
+    case 'v':
+        inc = 0;
+        shift = _board_sqrt;
+        break;
+    case 'c':
+        inc = -1;
+        shift = _board_sqrt;
+        break;
+    case 'd':
+        inc = 1;
+        shift = _board_sqrt;
+        break;
+    default:
+        return ;
+    }
+
+    pos = src - shift - inc;
+    for (size_t i = 0; i < _mask_size + 2; pos = pos + shift + inc)
+    {
+        BigInt t;
+        
+        if (pos < 0 || pos >= _board_size)
+            t = BigInt(0);
+        else
+            t = targets(pos);
+        dest.push_back(t);
+    }
+    return ;
+}
+
+Mask::Mask::inner_map Mask::horizontal_mask()
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -74,6 +115,7 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
     variations_vector mid_vec;
     variations_vector edge_vec;
     variations_vector sub_vec;
+    variations_vector vectorized;
 
     for (size_t pos = 0; pos < _board_size; pos++)
     {
@@ -86,6 +128,7 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
             mid_vec.push_back(empty_vector);
             edge_vec.push_back(empty_vector);
             sub_vec.push_back(empty_vector);
+            vectorized.push_back(empty_vector);
             continue;
         }
         BigInt full_mask = full_base << pos - 1;
@@ -125,6 +168,10 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
 
             e_vec.push_back(edge_mask);
 
+            mask_vector vec;
+            vectorize(vec, pos, 'h');
+            vectorized.push_back(vec);
+
             mask_vector s_vec;
             BigInt sub_mask = full_mask & (full_mask << 1);
             s_vec.push_back(sub_mask);
@@ -141,12 +188,15 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
     map["middle"] = mid_vec;
     map["edge"] = edge_vec;
     if (_submask == true)
+    {
         map["submask"] = sub_vec;
+        map["vectors"] = vectorized;
+    }
 
     return map;
 }
 
-Mask::inner_map Mask::vertical_mask() const
+Mask::inner_map Mask::vertical_mask()
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -167,6 +217,7 @@ Mask::inner_map Mask::vertical_mask() const
     variations_vector mid_vec;
     variations_vector edge_vec;
     variations_vector sub_vec;
+    variations_vector vectorized;
 
     for (size_t pos = 0; pos < _board_size; pos++)
     {
@@ -179,6 +230,7 @@ Mask::inner_map Mask::vertical_mask() const
             mid_vec.push_back(empty_vector);
             edge_vec.push_back(empty_vector);
             sub_vec.push_back(empty_vector);
+            vectorized.push_back(empty_vector);
             continue;
         }
         BigInt full_mask = full_base << pos - _board_sqrt;
@@ -220,6 +272,10 @@ Mask::inner_map Mask::vertical_mask() const
 
             e_vec.push_back(edge_mask);
 
+            mask_vector vec;
+            vectorize(vec, pos, 'v');
+            vectorized.push_back(vec);
+
             mask_vector s_vec;
             BigInt sub_mask = full_mask & (full_mask << shift);
             s_vec.push_back(sub_mask);
@@ -236,12 +292,15 @@ Mask::inner_map Mask::vertical_mask() const
     map["middle"] = mid_vec;
     map["edge"] = edge_vec;
     if (_submask == true)
+    {
         map["submask"] = sub_vec;
+        map["vectors"] = vectorized;
+    }
 
     return map;
 }
 
-Mask::Mask::inner_map Mask::crescendo_mask() const
+Mask::Mask::inner_map Mask::crescendo_mask()
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -262,6 +321,7 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
     variations_vector mid_vec;
     variations_vector edge_vec;
     variations_vector sub_vec;
+    variations_vector vectorized;
 
     for (size_t pos = 0; pos < _board_size; pos++)
     {
@@ -274,6 +334,7 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
             mid_vec.push_back(empty_vector);
             edge_vec.push_back(empty_vector);
             sub_vec.push_back(empty_vector);
+            vectorized.push_back(empty_vector);
             continue;
         }
         if(pos % _board_sqrt == _mask_size - 2)
@@ -321,6 +382,10 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
 
             e_vec.push_back(edge_mask);
 
+            mask_vector vec;
+            vectorize(vec, pos, 'c');
+            vectorized.push_back(vec);
+
             mask_vector s_vec;
             BigInt sub_mask = full_mask & (full_mask << (shift -1));
             s_vec.push_back(sub_mask);
@@ -337,12 +402,15 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
     map["middle"] = mid_vec;
     map["edge"] = edge_vec;
     if (_submask == true)
+    {
         map["submask"] = sub_vec;
+        map["vectors"] = vectorized;
+    }
 
     return map;
 }
 
-Mask::Mask::inner_map Mask::decrescendo_mask() const
+Mask::Mask::inner_map Mask::decrescendo_mask()
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -363,6 +431,7 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
     variations_vector mid_vec;
     variations_vector edge_vec;
     variations_vector sub_vec;
+    variations_vector vectorized;
 
     for (size_t pos = 0; pos < _board_size; pos++)
     {
@@ -376,6 +445,7 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
             mid_vec.push_back(empty_vector);
             edge_vec.push_back(empty_vector);
             sub_vec.push_back(empty_vector);
+            vectorized.push_back(empty_vector);
             continue;
         }
         BigInt full_mask = full_base << pos - ( _board_sqrt + 1);
@@ -418,6 +488,10 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
 
             e_vec.push_back(edge_mask);
 
+            mask_vector vec;
+            vectorize(vec, pos, 'd');
+            vectorized.push_back(vec);
+
             mask_vector s_vec;
             BigInt sub_mask = full_mask & (full_mask << (shift +1));
             s_vec.push_back(sub_mask);
@@ -434,7 +508,10 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
     map["middle"] = mid_vec;
     map["edge"] = edge_vec;
     if (_submask == true)
+    {
         map["submask"] = sub_vec;
+        map["vectors"] = vectorized;
+    }
 
     return map;
 }

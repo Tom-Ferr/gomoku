@@ -39,13 +39,36 @@ void Heuristics::set_masks(int mask_size, int board_sqrt)
     Heuristics::_masks = Mask(mask_size, board_sqrt);
 }
 
+    
+    
+int check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks)
+{
+        // size_t my_bits = (target & masks["full"][pos][0]).bitCount();
+        // size_t other_bits = (other_target & masks["full"][pos][0]).bitCount();
+        // if (other_bits == 2 and my_bits < 3)
+        // {
+        //     size_t sub_bits = 0;
+        //     bool capture = false;
+        //     for (size_t i = 0; i < 2; i++)
+        //     {
+        //         BigInt other_sub_target = other_target & masks["submask"][pos][i];
+        //         sub_bits += other_sub_target.bitCount();
+        //         BigInt sub_target = target & masks["submask"][pos][i];
+        //         if (sub_target.bitCount() == 1 and other_sub_target > sub_target)
+        //             capture = true;
+        //     }
+        //     if (sub_bits == 4 and capture == true)
+        //         return (1 << captures) + 1;
+        // }
+        // else
+            return 0;
+}
+
 int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks)
 {
-
-
     if ((masks["full"][pos][0] & other_target) != 0)
         return 0;
-    //         return self.check_captures(target, other_target, pos, masks)
+            return check_captures(target, other_target, pos, masks);
         size_t bits = (target & masks["full"][pos][0]).bitCount();
         int score = 1 << bits;
         BigInt zero = BigInt(0);
@@ -57,21 +80,21 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
 
             if (bits == sub_bits && bits > 1)
             {
-                BigInt target_first = target & _masks.targets(pos);
-                BigInt target_last = target & _masks.targets(pos + _mask_size-1);
+                BigInt target_first = target & masks["vectors"][pos][1];
+                BigInt target_last = target & masks["vectors"][pos][5];
                 BigInt edge_first;
                 BigInt edge_last;
-                if (masks["edge"][pos][0] != 0)
-                    edge_first = edge & _masks.targets(masks["edge"][pos][0]);
+                if (masks["edge"][pos][0] != zero)
+                    edge_first = edge & masks["vectors"][pos][0];
                 else
                     edge_first = target_first;
-                if (masks["edge"][pos][0] != 0)
-                    edge_last = edge & _masks.targets(masks["edge"][pos][0]);
+                if (masks["edge"][pos][0] != zero)
+                    edge_last = edge & masks["vectors"][pos][6];
                 else
                     edge_last = target_last;
-                if ((target_first && edge_first == 0)
-                || (target_last && edge_last == 0)
-                || ((target_first == 0 && target_last == 0) && (edge_first == 0 || edge_last == 0))
+                if ((target_first != zero && edge_first == zero)
+                || (target_last != zero && edge_last == zero)
+                || ((target_first == zero && target_last == zero) && (edge_first == zero || edge_last == zero))
                 )
                     score += 3;
                 break ;

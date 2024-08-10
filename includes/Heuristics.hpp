@@ -27,6 +27,7 @@ public:
 
     static void set_masks(int mask_size, int board_sqrt);
 private:
+    int check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks);
     int get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks);
     bool board_eval(int pos, char orienation);
 };

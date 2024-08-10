@@ -29,12 +29,13 @@ public:
 
     void print_mask(variations_vector &m) const;
     BigInt targets(size_t pos) const;
+    void vectorize(mask_vector &dest, const int src, const char mode);
 
 private:
-    inner_map horizontal_mask() const;
-    inner_map vertical_mask() const;
-    inner_map crescendo_mask() const;
-    inner_map decrescendo_mask() const;
+    inner_map horizontal_mask();
+    inner_map vertical_mask();
+    inner_map crescendo_mask();
+    inner_map decrescendo_mask();
     void build_targets();
 };
 #endif

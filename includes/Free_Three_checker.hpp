@@ -8,7 +8,7 @@ class Free_Three_Checker
 {
 
 private:
-	Mask _masks;
+	static Mask _masks;
         size_t _board_sqrt;
         size_t _board_size;
         BigInt _my_state;
@@ -20,6 +20,8 @@ public:
         ~Free_Three_Checker();
 
         bool check(int pos, char orientation);
+
+        static void set_masks(int mask_size, int board_sqrt);
 
 };
 

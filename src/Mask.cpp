@@ -87,7 +87,7 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode)
         return ;
     }
 
-    pos = src - shift - inc;
+    pos = src - (2 * shift) - (2 * inc);
     for (int i = 0; i < (int)_mask_size + 2; i++)
     {
         BigInt t;

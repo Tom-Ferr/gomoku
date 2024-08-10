@@ -2,7 +2,7 @@
 # define BOARD_HPP
 
 # include <SFML/Graphics.hpp>
-# include "Tile.hpp"
+# include <Tile.hpp>
 
 class Tile;
 

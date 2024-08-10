@@ -1,7 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-#include "Board.hpp"
+#include <Board.hpp>
 
 int main()
 {

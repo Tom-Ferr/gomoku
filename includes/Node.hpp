@@ -1,7 +1,7 @@
 #ifndef NODE_HPP
 # define NODE_HPP
 
-# include "gomoku.hpp"
+# include <gomoku.hpp>
 # include <vector>
 # include <utility>
 # include <random>

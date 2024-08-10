@@ -3,7 +3,7 @@
 
 # include <iostream>
 # include <SFML/Graphics.hpp>
-# include "Board.hpp"
+# include <Board.hpp>
 
 class Board;
 

@@ -6,13 +6,13 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 13:00:02 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/08 19:35:06 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/10 10:21:14 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gomoku.hpp"
-#include "Node.hpp"
-#include "Game.hpp"
+#include <gomoku.hpp>
+#include <Node.hpp>
+#include <Game.hpp>
 
 int main (void)
 {

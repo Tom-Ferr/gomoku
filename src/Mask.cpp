@@ -15,6 +15,8 @@ Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
         _masks['v'] = vertical_mask();
         _masks['c'] = crescendo_mask();
         _masks['d'] = decrescendo_mask();
+        if(submask == false)
+            _masks['s'] = create_superpositions();
 }
 
 Mask::Mask(const Mask& other)
@@ -98,6 +100,40 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode)
         pos = pos + shift + inc;
     }
     return ;
+}
+
+Mask::inner_map Mask::create_superpositions()
+{
+    inner_map super_positions;
+    variations_vector vars;
+    std::vector<char> ot;
+    ot.assign(_modes, _modes+4);
+    BigInt zero = BigInt(0);
+    for (size_t pos = 0; pos < _board_size; pos++)
+    {
+        mask_vector masks;
+        std::vector<char>::iterator it = ot.begin();
+        for (; it+1 != ot.end(); it++)
+        {
+            mask_vector::iterator main = _masks[*it]["full"][pos].begin();
+            for (; main != _masks[*it]["full"][pos].end(); main++)
+            {
+                if(*main == zero)
+                    break;
+                mask_vector::iterator others = _masks[*(it+1)]["full"][pos].begin();
+                for (; others != _masks[*(it+1)]["full"][pos].end(); others++)
+                {
+                    if(*others == zero)
+                        break;
+                    BigInt sp = *main | *others;
+                    masks.push_back(sp);
+                }
+            }
+        }
+        vars.push_back(masks);
+    }
+    super_positions["full"] = vars;
+    return super_positions;
 }
 
 Mask::Mask::inner_map Mask::horizontal_mask()

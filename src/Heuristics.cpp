@@ -69,40 +69,39 @@ int Heuristics::check_captures(const BigInt &target, const BigInt &other_target,
 int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks)
 {
     if ((masks["full"][pos][0] & other_target) != 0)
-        return 0;
-            return check_captures(target, other_target, pos, masks);
-        size_t bits = (target & masks["full"][pos][0]).bitCount();
-        int score = 1 << bits;
-        BigInt zero = BigInt(0);
-
-        for (size_t i = 0; i < 2; i++)
+        return check_captures(target, other_target, pos, masks);
+    
+    size_t bits = (target & masks["full"][pos][0]).bitCount();
+    int score = 1 << bits;
+    BigInt zero = BigInt(0);
+    
+    for (size_t i = 0; i < 2; i++)
+    {
+        BigInt sub_target = target & masks["submask"][pos][i];
+        size_t sub_bits = sub_target.bitCount();
+        if (bits == sub_bits && bits > 1)
         {
-            BigInt sub_target = target & masks["submask"][pos][i];
-            size_t sub_bits = sub_target.bitCount();
-
-            if (bits == sub_bits && bits > 1)
-            {
-                BigInt target_first = target & masks["vectors"][pos][1];
-                BigInt target_last = target & masks["vectors"][pos][5];
-                BigInt edge_first;
-                BigInt edge_last;
-                if (masks["edge"][pos][0] != zero)
-                    edge_first = edge & masks["vectors"][pos][0];
-                else
-                    edge_first = target_first;
-                if (masks["edge"][pos][0] != zero)
-                    edge_last = edge & masks["vectors"][pos][6];
-                else
-                    edge_last = target_last;
-                if ((target_first != zero && edge_first == zero)
-                || (target_last != zero && edge_last == zero)
-                || ((target_first == zero && target_last == zero) && (edge_first == zero || edge_last == zero))
-                )
-                    score += 3;
-                break ;
-            }
+            BigInt target_first = target & masks["vectors"][pos][1];
+            BigInt target_last = target & masks["vectors"][pos][5];
+            BigInt edge_first;
+            BigInt edge_last;
+            if (masks["edge"][pos][0] != zero)
+                edge_first = edge & masks["vectors"][pos][0];
+            else
+                edge_first = target_first;
+            if (masks["edge"][pos][0] != zero)
+                edge_last = edge & masks["vectors"][pos][6];
+            else
+                edge_last = target_last;
+            if ((target_first != zero && edge_first == zero)
+            || (target_last != zero && edge_last == zero)
+            || ((target_first == zero && target_last == zero) && (edge_first == zero || edge_last == zero))
+            )
+                score += 3;
+            break ;
         }
-        return score;
+    }
+    return score;
 }
 
 bool Heuristics::board_eval(int pos, char orientation)

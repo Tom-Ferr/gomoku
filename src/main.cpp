@@ -3,7 +3,7 @@
 
 int main (void)
 {
-	Mask m = Mask(5, 19, true);
-	m.print_mask(m['d']["middle"]);
+	Mask m = Mask(5, 19, false);
+	m.print_mask(m['s']["full"]);
 	return (0);
 }

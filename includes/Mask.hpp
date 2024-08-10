@@ -18,6 +18,7 @@ private:
     unsigned int _board_size;
     bool _submask;
     mask_vector _targets;
+    const char _modes[4] = {'h', 'v', 'c', 'd'};
     
 public:
     Mask();
@@ -38,5 +39,6 @@ private:
     inner_map crescendo_mask();
     inner_map decrescendo_mask();
     void build_targets();
+    inner_map create_superpositions();
 };
 #endif

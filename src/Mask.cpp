@@ -1,5 +1,7 @@
 #include <Mask.hpp>
 
+Mask::Mask(){}
+
 Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
 : 
     _mask_size(mask_size),
@@ -8,11 +10,11 @@ Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
     _submask(submask)
 {
         _masks = outer_map();
+        build_targets();
         _masks['h'] = horizontal_mask();
         _masks['v'] = vertical_mask();
         _masks['c'] = crescendo_mask();
         _masks['d'] = decrescendo_mask();
-        build_targets();
 }
 
 Mask::Mask(const Mask& other)
@@ -42,10 +44,11 @@ Mask::~Mask(){}
 void Mask::build_targets()
 {
     mask_vector vec;
+    BigInt n = BigInt(1);
     for (size_t i = 0; i < _board_size; i++)
     {
-        BigInt n = BigInt((1 << i));
-        vec.push_back(n);
+        BigInt s = (n << i);
+        vec.push_back(s);
     }
     this->_targets = vec;
 }
@@ -83,15 +86,16 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode)
     }
 
     pos = src - shift - inc;
-    for (size_t i = 0; i < _mask_size + 2; pos = pos + shift + inc)
+    for (int i = 0; i < (int)_mask_size + 2; i++)
     {
         BigInt t;
         
-        if (pos < 0 || pos >= _board_size)
+        if (pos < 0 || pos >= (int)_board_size)
             t = BigInt(0);
         else
             t = targets(pos);
         dest.push_back(t);
+        pos = pos + shift + inc;
     }
     return ;
 }
@@ -164,7 +168,9 @@ Mask::Mask::inner_map Mask::horizontal_mask()
                 edge_mask = edge_mask >> 1;
             f_vec.push_back(full_mask );
 
+            m_vec.push_back(mid_mask >> 1);
             m_vec.push_back(mid_mask);
+            m_vec.push_back(mid_mask << 1);
 
             e_vec.push_back(edge_mask);
 
@@ -268,7 +274,9 @@ Mask::inner_map Mask::vertical_mask()
                 edge_mask = edge_mask >> shift;
             f_vec.push_back(full_mask );
 
+            m_vec.push_back(mid_mask >> shift);
             m_vec.push_back(mid_mask);
+            m_vec.push_back(mid_mask << shift);
 
             e_vec.push_back(edge_mask);
 
@@ -378,7 +386,9 @@ Mask::Mask::inner_map Mask::crescendo_mask()
                 edge_mask = edge_mask >> (shift + 1);
             f_vec.push_back(full_mask );
 
+            m_vec.push_back(mid_mask >> (shift - 1));
             m_vec.push_back(mid_mask);
+            m_vec.push_back(mid_mask << (shift - 1));
 
             e_vec.push_back(edge_mask);
 
@@ -484,7 +494,9 @@ Mask::Mask::inner_map Mask::decrescendo_mask()
                 edge_mask = edge_mask >> (shift + 1);
             f_vec.push_back(full_mask );
 
+            m_vec.push_back(mid_mask >> (shift + 1));
             m_vec.push_back(mid_mask);
+            m_vec.push_back(mid_mask << (shift + 1));
 
             e_vec.push_back(edge_mask);
 

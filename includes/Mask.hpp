@@ -20,6 +20,7 @@ private:
     mask_vector _targets;
     
 public:
+    Mask();
     Mask(const int mask_size, unsigned int board_sqrt, bool submask=false);
     Mask(const Mask& other);
 	Mask &operator=(const Mask& other);
@@ -29,9 +30,9 @@ public:
 
     void print_mask(variations_vector &m) const;
     BigInt targets(size_t pos) const;
-    void vectorize(mask_vector &dest, const int src, const char mode);
 
 private:
+    void vectorize(mask_vector &dest, const int src, const char mode);
     inner_map horizontal_mask();
     inner_map vertical_mask();
     inner_map crescendo_mask();

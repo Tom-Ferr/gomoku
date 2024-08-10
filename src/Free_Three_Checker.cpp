@@ -1,5 +1,7 @@
 #include <Free_Three_Checker.hpp>
 
+Mask Free_Three_Checker::_masks = Mask();
+
 Free_Three_Checker::Free_Three_Checker(int board_sqrt, BigInt my_state, BigInt other_state)
 :
 _board_sqrt(board_sqrt * board_sqrt),
@@ -52,5 +54,5 @@ bool Free_Three_Checker::check(int pos, char orientation)
 
 void Free_Three_Checker::set_masks(int mask_size, int board_sqrt)
 {
-    Free_Three_Checker::_masks = Mask(mask_size, board_sqrt);
+    _masks = Mask(mask_size, board_sqrt);
 }

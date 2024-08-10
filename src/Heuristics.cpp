@@ -1,5 +1,7 @@
 #include <Heuristics.hpp>
 
+Mask Heuristics::_masks = Mask();
+
 Heuristics::Heuristics( int board_sqrt, BigInt my_state, BigInt other_state)
 : _board_sqrt(board_sqrt),
 _board_size(board_sqrt * board_sqrt),
@@ -41,7 +43,7 @@ void Heuristics::set_masks(int mask_size, int board_sqrt)
 
     
     
-int check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks)
+int Heuristics::check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks)
 {
         // size_t my_bits = (target & masks["full"][pos][0]).bitCount();
         // size_t other_bits = (other_target & masks["full"][pos][0]).bitCount();

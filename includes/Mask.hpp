@@ -13,11 +13,11 @@ public:
     typedef std::map<char, inner_map> outer_map;
 private:
     outer_map _masks;
+    mask_vector _targets;
     unsigned int _mask_size;
     unsigned int _board_sqrt;
     unsigned int _board_size;
     bool _submask;
-    mask_vector _targets;
     const char _modes[4] = {'h', 'v', 'c', 'd'};
     
 public:
@@ -38,7 +38,7 @@ private:
     inner_map crescendo_mask() const;
     inner_map decrescendo_mask() const;
     inner_map create_superpositions();
-    void build_targets();
+    mask_vector build_targets();
     void vectorize(mask_vector &dest, const int src, const char mode) const;
 };
 #endif

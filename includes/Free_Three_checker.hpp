@@ -2,6 +2,7 @@
 
 #ifndef FREE_THREE_CHECKER_HPP
 # define FREE_THREE_CHECKER_HPP
+# include <Mask.hpp>
 
 
 class Free_Three_Checker

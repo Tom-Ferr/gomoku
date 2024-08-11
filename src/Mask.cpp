@@ -10,7 +10,7 @@ Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
     _submask(submask)
 {
         _masks = outer_map();
-        build_targets();
+        _targets = build_targets();
         _masks['h'] = horizontal_mask();
         _masks['v'] = vertical_mask();
         _masks['c'] = crescendo_mask();
@@ -26,6 +26,7 @@ Mask::Mask(const Mask& other)
 	_board_size = other._board_size;
 	_submask = other._submask;
     _masks = other._masks;
+    _targets = other._targets;
 }
 
 Mask &Mask::operator=(const Mask& other)
@@ -37,13 +38,14 @@ Mask &Mask::operator=(const Mask& other)
 	    _board_size = other._board_size;
 	    _submask = other._submask;
         _masks = other._masks;
+        _targets = other._targets;
     }
 	return *this;
 }
 
 Mask::~Mask(){}
 
-void Mask::build_targets()
+Mask::mask_vector Mask::build_targets()
 {
     mask_vector vec;
     BigInt n = BigInt(1);
@@ -52,7 +54,7 @@ void Mask::build_targets()
         BigInt s = (n << i);
         vec.push_back(s);
     }
-    this->_targets = vec;
+    return vec;
 }
 
 BigInt Mask::targets(size_t pos) const

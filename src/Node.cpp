@@ -64,16 +64,52 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int x, bool maximizing)
 	return std::make_pair(x, best_child);
 }
 
+bool Node::is_double_free_three(const size_t &pos)
+{
+	Free_Three_Checker ftc = Free_Three_Checker(_state.sqrt(), _state.mystate(), _state.otherstate());
+
+	char modes[4] = {'h', 'v', 'c', 'd'};
+	int c = 0;
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		if(ftc.check(pos, modes[i]))
+			c++;
+		if(c == 2)
+			return true;
+	}
+	return false;
+}
+
+bool Node::is_valid(const size_t &pos, BigInt &freepos)
+{
+	if(freepos.get_bit(pos) && is_double_free_three(pos) == false)
+		return true;
+	return false;
+}
+
 std::vector<BigInt> Node::possible_moves()
 {
 	std::vector<BigInt> moves;
 	BigInt freepos = _state.expanded_free();
 
-	for (size_t i = 0; i < freepos.size(); i++)
+	for (size_t pos = 0; pos < freepos.size(); pos++)
 	{
-		if (freepos.get_bit(i))
-			moves.push_back(BigInt(1) << i);
+		if (freepos.get_bit(pos) && is_double_free_three(pos) == false)
+			moves.push_back(BigInt(1) << pos);
 	}
 	return moves;
 }
 
+// std::vector<BigInt> Node::possible_moves()
+// {
+// 	std::vector<BigInt> moves;
+// 	BigInt freepos = _state.expanded_free();
+
+// 	for (size_t i = 0; i < freepos.size(); i++)
+// 	{
+// 		if (freepos.get_bit(i))
+// 			moves.push_back(BigInt(1) << i);
+// 	}
+// 	return moves;
+// }

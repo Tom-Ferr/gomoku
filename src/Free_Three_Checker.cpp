@@ -25,7 +25,6 @@ Free_Three_Checker &Free_Three_Checker::operator=(const Free_Three_Checker& othe
 	    _other_state = other._other_state;
 	    _board_sqrt = other._board_sqrt;
 	    _board_size = other._board_size;
-        _masks = other._masks;
     }
 	return *this;
 }
@@ -34,8 +33,8 @@ Free_Three_Checker::~Free_Three_Checker(){};
 
 bool Free_Three_Checker::check(int pos, char orientation)
 {
-    Mask::inner_map masks = _masks[orientation];
-    BigInt target = _my_state & _masks.targets(pos - 1);
+    Mask::inner_map masks = Free_Three_Checker::_masks[orientation];
+    BigInt target = _my_state & Free_Three_Checker::_masks.targets(pos-1);
     Mask::mask_vector::iterator full_mask = masks["full"][pos-1].begin();
     Mask::mask_vector::iterator mid_mask = masks["middle"][pos-1].begin();
     Mask::mask_vector::iterator edge_mask = masks["edge"][pos-1].begin();

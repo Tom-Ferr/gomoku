@@ -281,7 +281,8 @@ bool BigInt::get_bit(size_t bit)
 	return mpz_tstbit(_value, bit);
 }
 
-size_t BigInt::bitCount() const {
+size_t BigInt::bitCount() const
+{
     return mpz_popcount(_value);
 }
 

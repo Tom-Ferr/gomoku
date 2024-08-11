@@ -1,4 +1,4 @@
-FILES			=	BigInt.cpp BoardState.cpp Node.cpp main.cpp Mask.cpp Free_Three_Checker.cpp
+FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp Game.cpp Heuristics.cpp main.cpp Mask.cpp Node.cpp
 
 SRCDIR			= 	src/
 
@@ -6,7 +6,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
 
 OBJS			= 	${SRCS:.cpp=.o}
 
-HEADS			=	BigInt.hpp BoardState.hpp gomoku.hpp Node.hpp Free_Three_Checker.hpp Mask.hpp Game.hpp
+HEADS			=	BigInt.hpp BoardState.hpp Free_Three_Checker.hpp Game.hpp gomoku.hpp Heuristics.hpp Mask.hpp Node.hpp
 
 INC				= 	./includes/
 
@@ -16,7 +16,7 @@ NAME			= 	gomoku
 
 CXX				=	clang++
 
-CXXFLAGS		= 	-Wall -Wextra -Werror -g
+CXXFLAGS		= 	#-Wall -Wextra -Werror -g
 
 GMP				= 	-lgmp -lgmpxx
 

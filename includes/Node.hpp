@@ -5,6 +5,7 @@
 # include <vector>
 # include <utility>
 # include <random>
+# include <Free_Three_Checker.hpp>
 
 class Node
 {
@@ -28,5 +29,7 @@ class Node
 		std::pair<int, BigInt> minimax();
 		std::pair<int, BigInt> alpha_beta_prune(int x, bool maximizing=true);
 		std::vector<BigInt> possible_moves();
+		bool is_double_free_three(const size_t &pos);
+		bool is_valid(const size_t &pos, BigInt &freepos);
 };
 #endif

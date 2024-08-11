@@ -33,12 +33,12 @@ public:
     BigInt targets(size_t pos) const;
 
 private:
-    void vectorize(mask_vector &dest, const int src, const char mode);
-    inner_map horizontal_mask();
-    inner_map vertical_mask();
-    inner_map crescendo_mask();
-    inner_map decrescendo_mask();
-    void build_targets();
+    inner_map horizontal_mask() const;
+    inner_map vertical_mask() const;
+    inner_map crescendo_mask() const;
+    inner_map decrescendo_mask() const;
     inner_map create_superpositions();
+    void build_targets();
+    void vectorize(mask_vector &dest, const int src, const char mode) const;
 };
 #endif

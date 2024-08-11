@@ -39,10 +39,9 @@ bool Free_Three_Checker::check(int pos, char orientation)
     Mask::mask_vector::iterator full_mask = masks["full"][pos-1].begin();
     Mask::mask_vector::iterator mid_mask = masks["middle"][pos-1].begin();
     Mask::mask_vector::iterator edge_mask = masks["edge"][pos-1].begin();
-    BigInt zero = BigInt(0);
     for (; full_mask != masks["full"][pos-1].end(); full_mask++, mid_mask++, edge_mask++)
     {
-        if((_other_state & *full_mask) != zero)
+        if((_other_state & *full_mask) != 0)
             continue;
         BigInt state = _my_state & *full_mask;
         if((state & *edge_mask) == *edge_mask)

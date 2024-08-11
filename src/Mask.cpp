@@ -60,7 +60,7 @@ BigInt Mask::targets(size_t pos) const
     return _targets[pos];
 }
 
-void Mask::vectorize(Mask::mask_vector &dest, int src, char mode)
+void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
 {
     int inc;
     int shift;
@@ -92,8 +92,10 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode)
     {
         BigInt t;
         
-        if (pos < 0 || pos >= (int)_board_size)
-            t = BigInt(0);
+        if (pos < 0 )
+            t = targets(pos + shift + inc);
+        else if (pos >= (int)_board_size)
+            t = targets(pos - shift - inc);
         else
             t = targets(pos);
         dest.push_back(t);
@@ -108,7 +110,6 @@ Mask::inner_map Mask::create_superpositions()
     variations_vector vars;
     std::vector<char> ot;
     ot.assign(_modes, _modes+4);
-    BigInt zero = BigInt(0);
     for (size_t pos = 0; pos < _board_size; pos++)
     {
         mask_vector masks;
@@ -118,12 +119,12 @@ Mask::inner_map Mask::create_superpositions()
             mask_vector::iterator main = _masks[*it]["full"][pos].begin();
             for (; main != _masks[*it]["full"][pos].end(); main++)
             {
-                if(*main == zero)
+                if(*main == 0)
                     break;
                 mask_vector::iterator others = _masks[*(it+1)]["full"][pos].begin();
                 for (; others != _masks[*(it+1)]["full"][pos].end(); others++)
                 {
-                    if(*others == zero)
+                    if(*others == 0)
                         break;
                     BigInt sp = *main | *others;
                     masks.push_back(sp);
@@ -136,7 +137,37 @@ Mask::inner_map Mask::create_superpositions()
     return super_positions;
 }
 
-Mask::Mask::inner_map Mask::horizontal_mask()
+void Mask::print_mask(Mask::variations_vector &m) const
+{
+    BigInt last = BigInt(1);
+    last = last << _board_size - 1;
+    for (size_t pos = 0; pos < _board_size; pos++)
+    {
+        char version = 'A';
+        mask_vector::iterator var = m[pos].begin();
+        for (; var != m[pos].end(); var++)
+        {
+            std::cout << "pos = " << pos << '.' << version <<  std::endl;
+            for (size_t offset = 0; offset < _board_size; offset++)
+            {
+                if (offset % _board_sqrt == 0 && offset != 0) 
+                    std::cout << std::endl;
+                BigInt current = last >> offset;
+                BigInt t = *var;
+                if ((t & current) != 0)
+                    std::cout << " X ";
+                else
+                    std::cout << " . ";
+            }
+            std::cout << std::endl;
+            version++;
+        }
+        
+    }
+    
+}
+
+Mask::Mask::inner_map Mask::horizontal_mask() const
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -238,7 +269,7 @@ Mask::Mask::inner_map Mask::horizontal_mask()
     return map;
 }
 
-Mask::inner_map Mask::vertical_mask()
+Mask::inner_map Mask::vertical_mask() const
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -344,7 +375,7 @@ Mask::inner_map Mask::vertical_mask()
     return map;
 }
 
-Mask::Mask::inner_map Mask::crescendo_mask()
+Mask::Mask::inner_map Mask::crescendo_mask() const
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -456,7 +487,7 @@ Mask::Mask::inner_map Mask::crescendo_mask()
     return map;
 }
 
-Mask::Mask::inner_map Mask::decrescendo_mask()
+Mask::Mask::inner_map Mask::decrescendo_mask() const
 {
     Mask::inner_map map;
     BigInt base = BigInt(1);
@@ -566,34 +597,4 @@ Mask::Mask::inner_map Mask::decrescendo_mask()
 Mask::inner_map Mask::operator[](char c)
 {
     return _masks[c];
-}
-void Mask::print_mask(Mask::variations_vector &m) const
-{
-    BigInt last = BigInt(1);
-    last = last << _board_size - 1;
-    BigInt zero = BigInt(0);
-    for (size_t pos = 0; pos < _board_size; pos++)
-    {
-        char version = 'A';
-        mask_vector::iterator var = m[pos].begin();
-        for (; var != m[pos].end(); var++)
-        {
-            std::cout << "pos = " << pos << '.' << version <<  std::endl;
-            for (size_t offset = 0; offset < _board_size; offset++)
-            {
-                if (offset % _board_sqrt == 0 && offset != 0) 
-                    std::cout << std::endl;
-                BigInt current = last >> offset;
-                BigInt t = *var;
-                if ((t & current) != zero)
-                    std::cout << " X ";
-                else
-                    std::cout << " . ";
-            }
-            std::cout << std::endl;
-            version++;
-        }
-        
-    }
-    
 }

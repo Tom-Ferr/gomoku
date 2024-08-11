@@ -11,7 +11,9 @@ private:
     BigInt _my_state;
     BigInt _other_state;
     
-    std::vector<int> _scores = std::vector<int>();
+    // std::vector<int> _scores = std::vector<int>();
+    int _max_score = 0;
+    int _min_score = 0;
     int _heuristic = 0;
     
     const int _mask_size = 5;
@@ -24,6 +26,8 @@ public:
     Heuristics(const Heuristics& other);
     Heuristics& operator=(const Heuristics& other);
     ~Heuristics();
+
+    int run();
 
     static void set_masks(int mask_size, int board_sqrt);
 private:

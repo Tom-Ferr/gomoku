@@ -34,7 +34,7 @@ Tile::Tile(Board *board, size_t pos)
 	_square = sf::RectangleShape(sf::Vector2f(417, 417));
 	_piece = sf::CircleShape(20, 500);
 	_piece.setFillColor(sf::Color::Transparent);
-	_piece.setTexture(&_board->get_button_texture(0));
+	//_piece.setTexture(&_board->get_button_texture(0));
 	_square.setTexture(&_board->get_tile_texture(tex), true);
 
 }
@@ -82,11 +82,11 @@ bool Tile::hover()
 			_board->window().mapPixelToCoords(
 				sf::Mouse::getPosition(_board->window()))))
 	{
+		sf::Color color;
 		if (_board->TURN)
-			_piece.setFillColor(Tile::p1_color);
+			color = Tile::p1_color;
 		else
-			_piece.setFillColor(Tile::p2_color);
-		sf::Color color = _piece.getFillColor();
+			color = Tile::p2_color;
 		color.a = 100;
 		_piece.setFillColor(color);
 		return true;
@@ -104,8 +104,12 @@ bool Tile::click()
 	if (enabled() && hover())
 	{
 		std::cout << "click" << _pos << std::endl;
-		_piece.setTexture(&_board->get_button_texture(_board->TURN));
-		_piece.setFillColor(Tile::p2_color);
+		sf::Color color;
+		if (_board->TURN)
+			color = Tile::p1_color;
+		else
+			color = Tile::p2_color;
+		_piece.setFillColor(color);
 		_board->TURN = !_board->TURN;
 		disable();
 		return true;

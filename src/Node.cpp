@@ -83,7 +83,7 @@ bool Node::is_double_free_three(const size_t &pos)
 
 bool Node::is_valid(const size_t &pos, BigInt &freepos)
 {
-	if(freepos.get_bit(pos) && is_double_free_three(pos) == false)
+	if(freepos.get_bit(pos) && !is_double_free_three(pos))
 		return true;
 	return false;
 }
@@ -95,21 +95,8 @@ std::vector<BigInt> Node::possible_moves()
 
 	for (size_t pos = 0; pos < freepos.size(); pos++)
 	{
-		if (freepos.get_bit(pos) && is_double_free_three(pos) == false)
+		if (is_valid(pos, freepos))
 			moves.push_back(BigInt(1) << pos);
 	}
 	return moves;
 }
-
-// std::vector<BigInt> Node::possible_moves()
-// {
-// 	std::vector<BigInt> moves;
-// 	BigInt freepos = _state.expanded_free();
-
-// 	for (size_t i = 0; i < freepos.size(); i++)
-// 	{
-// 		if (freepos.get_bit(i))
-// 			moves.push_back(BigInt(1) << i);
-// 	}
-// 	return moves;
-// }

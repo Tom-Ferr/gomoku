@@ -109,33 +109,51 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
 Mask::inner_map Mask::create_superpositions()
 {
     inner_map super_positions;
-    variations_vector vars;
+    variations_vector full_vars;
+    variations_vector mid_vars;
+    variations_vector edge_vars;
     std::vector<char> ot;
     ot.assign(_modes, _modes+4);
     for (size_t pos = 0; pos < _board_size; pos++)
     {
-        mask_vector masks;
+        mask_vector full_masks;
+        mask_vector mid_masks;
+        mask_vector edge_masks;
         std::vector<char>::iterator it = ot.begin();
         for (; it+1 != ot.end(); it++)
         {
-            mask_vector::iterator main = _masks[*it]["full"][pos].begin();
-            for (; main != _masks[*it]["full"][pos].end(); main++)
+            mask_vector::iterator main_full = _masks[*it]["full"][pos].begin();
+            mask_vector::iterator main_mid = _masks[*it]["middle"][pos].begin();
+            mask_vector::iterator main_edge = _masks[*it]["edge"][pos].begin();
+            for (; main_full != _masks[*it]["full"][pos].end(); main_full++, main_mid++, main_edge++)
             {
-                if(*main == 0)
+                if(*main_full == 0)
                     break;
-                mask_vector::iterator others = _masks[*(it+1)]["full"][pos].begin();
-                for (; others != _masks[*(it+1)]["full"][pos].end(); others++)
+                mask_vector::iterator others_full = _masks[*(it+1)]["full"][pos].begin();
+                mask_vector::iterator others_mid = _masks[*(it+1)]["middle"][pos].begin();
+                mask_vector::iterator others_edge = _masks[*(it+1)]["edge"][pos].begin();
+                for (; others_full != _masks[*(it+1)]["full"][pos].end(); others_full++, others_mid++, others_edge++)
                 {
-                    if(*others == 0)
+                    if(*others_full == 0)
                         break;
-                    BigInt sp = *main | *others;
-                    masks.push_back(sp);
+                    BigInt f = *main_full | *others_full;
+                    full_masks.push_back(f);
+
+                    BigInt m = *main_mid | *others_mid;
+                    mid_masks.push_back(m);
+
+                    BigInt e = *main_edge | *others_edge;
+                    edge_masks.push_back(e);
                 }
             }
         }
-        vars.push_back(masks);
+        full_vars.push_back(full_masks);
+        mid_vars.push_back(mid_masks);
+        edge_vars.push_back(edge_masks);
     }
-    super_positions["full"] = vars;
+    super_positions["full"] = full_vars;
+    super_positions["middle"] = mid_vars;
+    super_positions["edge"] = edge_vars;
     return super_positions;
 }
 

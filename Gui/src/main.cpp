@@ -5,7 +5,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Gomoku");
+    sf::RenderWindow window(sf::VideoMode(1024, 768), "Gomoku");
 
 	Board board(19, &window);
     while (window.isOpen())
@@ -21,6 +21,10 @@ int main()
         		window.setView(sf::View(visibleArea));
 				board.resize();
 			}
+			if (event.type == sf::Event::MouseMoved && board.enabled())
+				board.hover();
+			if (event.type == sf::Event::MouseButtonPressed && board.enabled())
+				board.click();
         }
         window.clear();
 		board.draw();

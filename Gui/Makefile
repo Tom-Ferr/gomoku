@@ -61,7 +61,7 @@ $(NAME):		check-gmp ${OBJS} $(DEPS)
 				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} ${LIBS} -o ${NAME}
 
 %.o: %.cpp
-				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${INCLUDE} -c $< -o $@
 
 test:			all
 				${NAME}

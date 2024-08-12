@@ -24,8 +24,5 @@ int main (void)
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	std::cout << "Time taken (TOTAL): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Node count: " << Node::node_count << std::endl;
-	// Mask m = Free_Three_Checker::_masks;
-	// Mask m = Mask(6, 19, false);
-	// m.print_mask(m['s']["middle"]);
 	return (0);
 }

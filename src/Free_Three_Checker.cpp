@@ -52,24 +52,33 @@ bool Free_Three_Checker::check(int pos, char orientation)
 
 // bool Free_Three_Checker::check(int pos, char orientation)
 // {
-//    BigInt inv_other = ~_other_state;
+// //    BigInt inv_other = ~_other_state;
 //    BigInt inv_my_state = ~_my_state;
 //    Mask::mask_vector::iterator full_masks = _masks[orientation]["full"][pos].begin();
 //    Mask::mask_vector::iterator mid_masks = _masks[orientation]["middle"][pos].begin();
+//    Mask::mask_vector::iterator other_masks = _masks[orientation]["other"][pos].begin();
 //    Mask::mask_vector::iterator edge_masks = _masks[orientation]["edge"][pos].begin();
 
-//    for (; full_masks != _masks[orientation]["full"][pos].end(); full_masks++)
+//    for (; full_masks != _masks[orientation]["full"][pos].end(); full_masks++, edge_masks++, mid_masks++, other_masks++)
 //    {
-//         if ((inv_other & *full_masks) != 0)
+//         if ((_other_state & *full_masks) != 0)
 //             continue;
+
 //         if ((inv_my_state & *edge_masks) != 0)
 //             continue;
+
 //         if ((inv_my_state & *full_masks).bitCount() != 4)
 //             continue;
 
-        
+//         if((inv_my_state & *mid_masks) == *mid_masks)
+//             continue;
+
+//         if((inv_my_state & *other_masks) == *other_masks)
+//             continue;
+//         return true;
 //    }
 //    return false;
+// }
 
 void Free_Three_Checker::set_masks(int mask_size, int board_sqrt)
 {

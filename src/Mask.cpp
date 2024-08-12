@@ -111,6 +111,7 @@ Mask::inner_map Mask::create_superpositions()
     inner_map super_positions;
     variations_vector full_vars;
     variations_vector mid_vars;
+    variations_vector other_vars;
     variations_vector edge_vars;
     std::vector<char> ot;
     ot.assign(_modes, _modes+4);
@@ -118,6 +119,7 @@ Mask::inner_map Mask::create_superpositions()
     {
         mask_vector full_masks;
         mask_vector mid_masks;
+        mask_vector other_masks;
         mask_vector edge_masks;
         std::vector<char>::iterator it = ot.begin();
         for (; it+1 != ot.end(); it++)
@@ -139,8 +141,11 @@ Mask::inner_map Mask::create_superpositions()
                     BigInt f = *main_full | *others_full;
                     full_masks.push_back(f);
 
-                    BigInt m = *main_mid | *others_mid;
+                    BigInt m = *main_mid ^ targets(pos);
                     mid_masks.push_back(m);
+
+                    BigInt o = *others_mid ^ targets(pos);
+                    other_masks.push_back(o);
 
                     BigInt e = *main_edge | *others_edge;
                     edge_masks.push_back(e);
@@ -149,10 +154,12 @@ Mask::inner_map Mask::create_superpositions()
         }
         full_vars.push_back(full_masks);
         mid_vars.push_back(mid_masks);
+        other_vars.push_back(other_masks);
         edge_vars.push_back(edge_masks);
     }
     super_positions["full"] = full_vars;
     super_positions["middle"] = mid_vars;
+    super_positions["other"] = other_vars;
     super_positions["edge"] = edge_vars;
     return super_positions;
 }

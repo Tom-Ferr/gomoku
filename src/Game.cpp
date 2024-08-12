@@ -27,12 +27,12 @@ bool Game::step()
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	std::pair<int, BigInt> result;
 	if (_board.turn())
-		result = Node(3, INT_MIN, INT_MAX, _board).minimax();
+		result = Node(1, INT_MIN, INT_MAX, _board).minimax();
 	else
 	{
 		BoardState other(_board);
 		other.swap_states();
-		result = Node(3, INT_MIN, INT_MAX, other).minimax();
+		result = Node(1, INT_MIN, INT_MAX, other).minimax();
 	}
 	if (result.second == 0)
 		std::cout << "No move found" << std::endl;

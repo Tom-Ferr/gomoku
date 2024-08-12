@@ -67,6 +67,13 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int x, bool maximizing)
 bool Node::is_double_free_three(const size_t &pos)
 {
 	Free_Three_Checker ftc = Free_Three_Checker(_state.sqrt(), _state.mystate(), _state.otherstate());
+	//uncomment from here
+	
+	// if(ftc.check(pos, 's'))
+	// 	return true;
+	// return false;
+
+	// to here to change to the other check method
 
 	char modes[4] = {'h', 'v', 'c', 'd'};
 	int c = 0;

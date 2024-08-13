@@ -31,14 +31,17 @@ Free_Three_Checker &Free_Three_Checker::operator=(const Free_Three_Checker& othe
 
 Free_Three_Checker::~Free_Three_Checker(){};
 
+
+
+
 bool Free_Three_Checker::check(int pos, char orientation)
 {
-    Mask::inner_map masks = Free_Three_Checker::_masks[orientation];
+    Mask::inner_map &masks = Free_Three_Checker::_masks.at(orientation);
     BigInt target = _my_state & Free_Three_Checker::_masks.targets(pos);
-    Mask::mask_vector::iterator full_mask = masks["full"][pos].begin();
-    Mask::mask_vector::iterator mid_mask = masks["middle"][pos].begin();
-    Mask::mask_vector::iterator edge_mask = masks["edge"][pos].begin();
-    for (; full_mask != masks["full"][pos].end(); full_mask++, mid_mask++, edge_mask++)
+    Mask::mask_vector::const_iterator full_mask = masks['f'][pos].begin();
+    Mask::mask_vector::const_iterator mid_mask = masks['m'][pos].begin();
+    Mask::mask_vector::const_iterator edge_mask = masks['e'][pos].begin();
+    for (; full_mask != masks['f'][pos].end(); full_mask++, mid_mask++, edge_mask++)
     {
         if((_other_state & *full_mask) != 0)
             continue;
@@ -54,12 +57,12 @@ bool Free_Three_Checker::check(int pos, char orientation)
 // {
 // //    BigInt inv_other = ~_other_state;
 //    BigInt inv_my_state = ~_my_state;
-//    Mask::mask_vector::iterator full_masks = _masks[orientation]["full"][pos].begin();
-//    Mask::mask_vector::iterator mid_masks = _masks[orientation]["middle"][pos].begin();
-//    Mask::mask_vector::iterator other_masks = _masks[orientation]["other"][pos].begin();
-//    Mask::mask_vector::iterator edge_masks = _masks[orientation]["edge"][pos].begin();
+//    Mask::mask_vector::iterator full_masks = _masks[orientation]['f'][pos].begin();
+//    Mask::mask_vector::iterator mid_masks = _masks[orientation]['m'][pos].begin();
+//    Mask::mask_vector::iterator other_masks = _masks[orientation]['o'][pos].begin();
+//    Mask::mask_vector::iterator edge_masks = _masks[orientation]['e'][pos].begin();
 
-//    for (; full_masks != _masks[orientation]["full"][pos].end(); full_masks++, edge_masks++, mid_masks++, other_masks++)
+//    for (; full_masks != _masks[orientation]['f'][pos].end(); full_masks++, edge_masks++, mid_masks++, other_masks++)
 //    {
 //         if ((_other_state & *full_masks) != 0)
 //             continue;

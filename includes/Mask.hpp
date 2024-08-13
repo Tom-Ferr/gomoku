@@ -9,7 +9,7 @@ class Mask
 public:
     typedef std::vector<BigInt> mask_vector;
     typedef std::vector<mask_vector> variations_vector;
-    typedef std::map<std::string, variations_vector> inner_map;
+    typedef std::map<char, variations_vector> inner_map;
     typedef std::map<char, inner_map> outer_map;
 private:
     outer_map _masks;
@@ -19,7 +19,7 @@ private:
     unsigned int _board_size;
     bool _submask;
     const char _modes[4] = {'h', 'v', 'c', 'd'};
-    
+
 public:
     Mask();
     Mask(const int mask_size, unsigned int board_sqrt, bool submask=false);
@@ -28,7 +28,7 @@ public:
     ~Mask();
 
     inner_map operator[](char);
-
+	inner_map &at(char c);
     void print_mask(variations_vector &m) const;
     BigInt targets(size_t pos) const;
 

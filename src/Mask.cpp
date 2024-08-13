@@ -3,7 +3,7 @@
 Mask::Mask(){}
 
 Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
-: 
+:
     _mask_size(mask_size),
     _board_sqrt(board_sqrt),
     _board_size(board_sqrt * board_sqrt),
@@ -93,7 +93,7 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
     for (int i = 0; i < (int)_mask_size + 2; i++)
     {
         BigInt t;
-        
+
         if (pos < 0 )
             t = targets(pos + shift + inc);
         else if (pos >= (int)_board_size)
@@ -124,17 +124,17 @@ Mask::inner_map Mask::create_superpositions()
         std::vector<char>::iterator it = ot.begin();
         for (; it+1 != ot.end(); it++)
         {
-            mask_vector::iterator main_full = _masks[*it]["full"][pos].begin();
-            mask_vector::iterator main_mid = _masks[*it]["middle"][pos].begin();
-            mask_vector::iterator main_edge = _masks[*it]["edge"][pos].begin();
-            for (; main_full != _masks[*it]["full"][pos].end(); main_full++, main_mid++, main_edge++)
+            mask_vector::iterator main_full = _masks[*it]['f'][pos].begin();
+            mask_vector::iterator main_mid = _masks[*it]['m'][pos].begin();
+            mask_vector::iterator main_edge = _masks[*it]['e'][pos].begin();
+            for (; main_full != _masks[*it]['f'][pos].end(); main_full++, main_mid++, main_edge++)
             {
                 if(*main_full == 0)
                     break;
-                mask_vector::iterator others_full = _masks[*(it+1)]["full"][pos].begin();
-                mask_vector::iterator others_mid = _masks[*(it+1)]["middle"][pos].begin();
-                mask_vector::iterator others_edge = _masks[*(it+1)]["edge"][pos].begin();
-                for (; others_full != _masks[*(it+1)]["full"][pos].end(); others_full++, others_mid++, others_edge++)
+                mask_vector::iterator others_full = _masks[*(it+1)]['f'][pos].begin();
+                mask_vector::iterator others_mid = _masks[*(it+1)]['m'][pos].begin();
+                mask_vector::iterator others_edge = _masks[*(it+1)]['e'][pos].begin();
+                for (; others_full != _masks[*(it+1)]['f'][pos].end(); others_full++, others_mid++, others_edge++)
                 {
                     if(*others_full == 0)
                         break;
@@ -157,10 +157,10 @@ Mask::inner_map Mask::create_superpositions()
         other_vars.push_back(other_masks);
         edge_vars.push_back(edge_masks);
     }
-    super_positions["full"] = full_vars;
-    super_positions["middle"] = mid_vars;
-    super_positions["other"] = other_vars;
-    super_positions["edge"] = edge_vars;
+    super_positions['f'] = full_vars;
+    super_positions['m'] = mid_vars;
+    super_positions['o'] = other_vars;
+    super_positions['e'] = edge_vars;
     return super_positions;
 }
 
@@ -177,7 +177,7 @@ void Mask::print_mask(Mask::variations_vector &m) const
             std::cout << "pos = " << pos << '.' << version <<  std::endl;
             for (size_t offset = 0; offset < _board_size; offset++)
             {
-                if (offset % _board_sqrt == 0 && offset != 0) 
+                if (offset % _board_sqrt == 0 && offset != 0)
                     std::cout << std::endl;
                 BigInt current = last >> offset;
                 BigInt t = *var;
@@ -189,9 +189,9 @@ void Mask::print_mask(Mask::variations_vector &m) const
             std::cout << std::endl;
             version++;
         }
-        
+
     }
-    
+
 }
 
 Mask::Mask::inner_map Mask::horizontal_mask() const
@@ -236,7 +236,7 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
         mask_vector f_vec;
         mask_vector m_vec;
         mask_vector e_vec;
-        
+
 
         if (_submask == false)
         {
@@ -276,7 +276,7 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
             BigInt sub_mask = full_mask & (full_mask << 1);
             s_vec.push_back(sub_mask);
             s_vec.push_back((sub_mask >> 1));
-            
+
             sub_vec.push_back(s_vec);
         }
 
@@ -284,13 +284,13 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map["full"] = full_vec;
-    map["middle"] = mid_vec;
-    map["edge"] = edge_vec;
+    map['f'] = full_vec;
+    map['m'] = mid_vec;
+    map['e'] = edge_vec;
     if (_submask == true)
     {
-        map["submask"] = sub_vec;
-        map["vectors"] = vectorized;
+        map['s'] = sub_vec;
+        map['v'] = vectorized;
     }
 
     return map;
@@ -349,9 +349,9 @@ Mask::inner_map Mask::vertical_mask() const
                 if( pos - shift < _board_sqrt)
                     break;
                 f_vec.push_back(full_mask >> shift);
-    
+
                 m_vec.push_back(mid_mask >> shift);
-    
+
                 e_vec.push_back(edge_mask >> shift);
             }
         }
@@ -382,7 +382,7 @@ Mask::inner_map Mask::vertical_mask() const
             BigInt sub_mask = full_mask & (full_mask << shift);
             s_vec.push_back(sub_mask);
             s_vec.push_back((sub_mask >> shift));
-            
+
             sub_vec.push_back(s_vec);
         }
 
@@ -390,13 +390,13 @@ Mask::inner_map Mask::vertical_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map["full"] = full_vec;
-    map["middle"] = mid_vec;
-    map["edge"] = edge_vec;
+    map['f'] = full_vec;
+    map['m'] = mid_vec;
+    map['e'] = edge_vec;
     if (_submask == true)
     {
-        map["submask"] = sub_vec;
-        map["vectors"] = vectorized;
+        map['s'] = sub_vec;
+        map['v'] = vectorized;
     }
 
     return map;
@@ -494,7 +494,7 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
             BigInt sub_mask = full_mask & (full_mask << (shift -1));
             s_vec.push_back(sub_mask);
             s_vec.push_back((sub_mask >> (shift-1)));
-            
+
             sub_vec.push_back(s_vec);
         }
 
@@ -502,13 +502,13 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map["full"] = full_vec;
-    map["middle"] = mid_vec;
-    map["edge"] = edge_vec;
+    map['f'] = full_vec;
+    map['m'] = mid_vec;
+    map['e'] = edge_vec;
     if (_submask == true)
     {
-        map["submask"] = sub_vec;
-        map["vectors"] = vectorized;
+        map['s'] = sub_vec;
+        map['v'] = vectorized;
     }
 
     return map;
@@ -541,7 +541,7 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
     {
         if (pos % _board_sqrt > _board_sqrt - (_mask_size - 1) || pos < _board_sqrt + 1 || pos > (_board_sqrt * (_board_sqrt - (_mask_size -2))) - (_mask_size -1) || pos % _board_sqrt == 0)
         {
-            
+
             BigInt zero = BigInt(0);
             mask_vector empty_vector;
             empty_vector.push_back(zero);
@@ -602,7 +602,7 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
             BigInt sub_mask = full_mask & (full_mask << (shift +1));
             s_vec.push_back(sub_mask);
             s_vec.push_back((sub_mask >> (shift+1)));
-            
+
             sub_vec.push_back(s_vec);
         }
 
@@ -610,18 +610,23 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map["full"] = full_vec;
-    map["middle"] = mid_vec;
-    map["edge"] = edge_vec;
+    map['f'] = full_vec;
+    map['m'] = mid_vec;
+    map['e'] = edge_vec;
     if (_submask == true)
     {
-        map["submask"] = sub_vec;
-        map["vectors"] = vectorized;
+        map['s'] = sub_vec;
+        map['v'] = vectorized;
     }
 
     return map;
 }
 Mask::inner_map Mask::operator[](char c)
+{
+    return _masks[c];
+}
+
+Mask::inner_map &Mask::at(char c)
 {
     return _masks[c];
 }

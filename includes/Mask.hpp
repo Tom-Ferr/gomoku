@@ -18,7 +18,9 @@ enum e_maskinnertype
 	FULL,
 	MIDDLE,
 	EDGE,
-	OUTER
+	OUTER,
+    SUBMASK,
+    VECTOR
 };
 
 

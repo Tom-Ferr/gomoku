@@ -84,24 +84,24 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     size_t bits = target.bitCount();
     int score = 1 << bits;
 
-    const Mask::mask_vector &vectorized = masks.at('v')[pos];
+    const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
 
+    BigInt target_first = target & vectorized[1];
+    BigInt target_last = target & vectorized[5];
+    BigInt edge_first = edge & vectorized[0];
+    BigInt  edge_last = edge & vectorized[6];
     for (size_t i = 0; i < 2; i++)
     {
         BigInt sub_target = target & masks.at(SUPERPOSITION)[pos][i];
         size_t sub_bits = sub_target.bitCount();
         if (bits == sub_bits && bits > 1)
         {
-            BigInt target_first = target & vectorized[1];
-            BigInt target_last = target & vectorized[5];
-            BigInt edge_first;
-            BigInt edge_last;
             // if (masks['e'][pos][0] != o)
-                edge_first = edge & vectorized[0];
+                // edge_first = edge & vectorized[0];
             // else
             //     edge_first = target_first;
             // if (masks['e'][pos][0] != o)
-                edge_last = edge & vectorized[6];
+                // edge_last = edge & vectorized[6];
             // else
                 // edge_last = target_last;
             if ((target_first != 0 && edge_first == 0)

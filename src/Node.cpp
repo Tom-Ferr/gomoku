@@ -34,10 +34,11 @@ std::pair<int, BigInt> Node::minimax()
 
 	if (_depth == 0)
 	{
+		/*comment this line to test with heuristics*/
 		return std::make_pair(std::rand() % 65 - 32, 0);
 
-		// int score = h.run(false);
-		// return std::make_pair(score, 0);
+		int score = h.run(false);
+		return std::make_pair(score, 0);
 	}
 	else
 	{

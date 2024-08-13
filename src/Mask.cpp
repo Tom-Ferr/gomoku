@@ -11,8 +11,8 @@ Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
     _board_size(board_sqrt * board_sqrt),
     _submask(submask)
 {
-	if (_targets.empty())
-        	_targets = build_targets();
+    if (_targets.empty())
+        _targets = build_targets();
 		_masks.resize(5);
         _masks[HORIZONTAL] = horizontal_mask();
         _masks[VERTICAL] = vertical_mask();
@@ -60,10 +60,10 @@ Mask::mask_vector Mask::build_targets()
     return vec;
 }
 
-//BigInt Mask::targets(size_t pos) const
-//{
-//    return Mask::_targets[pos];
-//}
+// BigInt Mask::targets(size_t pos) const
+// {
+//     return _targets[pos];
+// }
 
 BigInt &Mask::targets(size_t pos)
 {
@@ -205,7 +205,7 @@ void Mask::print_mask(Mask::variations_vector &m) const
 
 Mask::Mask::inner_map Mask::horizontal_mask() const
 {
-    Mask::inner_map map(5);
+    Mask::inner_map map(6);
     BigInt base = BigInt(1);
     base = base << _mask_size;
     base--;
@@ -298,8 +298,8 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
     map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map[SUPERPOSITION] = sub_vec;
-        map[VERTICAL] = vectorized;
+        map[SUBMASK] = sub_vec;
+        map[VECTOR] = vectorized;
     }
 
     return map;
@@ -307,7 +307,7 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
 
 Mask::inner_map Mask::vertical_mask() const
 {
-    Mask::inner_map map(5);
+    Mask::inner_map map(6);
     BigInt base = BigInt(1);
     for (size_t i = 1; i < _mask_size; i++)
     {
@@ -404,8 +404,8 @@ Mask::inner_map Mask::vertical_mask() const
     map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map[SUPERPOSITION] = sub_vec;
-        map[VERTICAL] = vectorized;
+        map[SUBMASK] = sub_vec;
+        map[VECTOR] = vectorized;
     }
 
     return map;
@@ -413,7 +413,7 @@ Mask::inner_map Mask::vertical_mask() const
 
 Mask::Mask::inner_map Mask::crescendo_mask() const
 {
-    Mask::inner_map map(5);
+    Mask::inner_map map(6);
     BigInt base = BigInt(1);
     for (size_t i = 1; i < _mask_size; i++)
     {
@@ -516,8 +516,8 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
     map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map[SUPERPOSITION] = sub_vec;
-        map[VERTICAL] = vectorized;
+        map[SUBMASK] = sub_vec;
+        map[VECTOR] = vectorized;
     }
 
     return map;
@@ -525,7 +525,7 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
 
 Mask::Mask::inner_map Mask::decrescendo_mask() const
 {
-    Mask::inner_map map(5);
+    Mask::inner_map map(6);
     BigInt base = BigInt(1);
     for (size_t i = 1; i < _mask_size; i++)
     {
@@ -624,8 +624,8 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
     map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map[SUPERPOSITION] = sub_vec;
-        map[VERTICAL] = vectorized;
+        map[SUBMASK] = sub_vec;
+        map[VECTOR] = vectorized;
     }
 
     return map;

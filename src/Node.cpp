@@ -110,7 +110,7 @@ std::vector<BigInt> Node::possible_moves()
 	for (size_t pos = 0; pos < freepos.size(); pos++)
 	{
 		if (is_valid(pos, freepos))
-			moves.push_back(BigInt(1) << pos);
+			moves.push_back(Mask::targets(pos));
 	}
 	return moves;
 }

@@ -1,5 +1,7 @@
 #include <Mask.hpp>
 
+Mask::mask_vector Mask::_targets = mask_vector();
+
 Mask::Mask(){}
 
 Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
@@ -9,7 +11,8 @@ Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
     _board_size(board_sqrt * board_sqrt),
     _submask(submask)
 {
-        _targets = build_targets();
+	if (_targets.empty())
+        	_targets = build_targets();
 		_masks.resize(5);
         _masks[HORIZONTAL] = horizontal_mask();
         _masks[VERTICAL] = vertical_mask();
@@ -28,7 +31,6 @@ Mask::Mask(const Mask& other)
 	_board_size = other._board_size;
 	_submask = other._submask;
     _masks = other._masks;
-    _targets = other._targets;
 }
 
 Mask &Mask::operator=(const Mask& other)
@@ -40,7 +42,6 @@ Mask &Mask::operator=(const Mask& other)
 	    _board_size = other._board_size;
 	    _submask = other._submask;
         _masks = other._masks;
-        _targets = other._targets;
     }
 	return *this;
 }
@@ -59,9 +60,14 @@ Mask::mask_vector Mask::build_targets()
     return vec;
 }
 
-BigInt Mask::targets(size_t pos) const
+//BigInt Mask::targets(size_t pos) const
+//{
+//    return Mask::_targets[pos];
+//}
+
+BigInt &Mask::targets(size_t pos)
 {
-    return _targets[pos];
+	return Mask::_targets[pos];
 }
 
 void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const

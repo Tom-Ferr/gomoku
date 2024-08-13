@@ -148,7 +148,7 @@ BigInt BoardState::expanded_free() const
 	e[6] = (e[0] >> _sqrt) & BoardState::mask;
 	e[7] = (e[1] >> _sqrt) & BoardState::mask;
 	return ((e[0] | e[1] | e[2] | e[3] | e[4] | e[5] | e[6] | e[7])
-				& ~t);
+				& totalboard() & mask);
 }
 
 void BoardState::print()

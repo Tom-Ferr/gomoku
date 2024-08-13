@@ -9,14 +9,16 @@ Mask::Mask(const int mask_size, const unsigned int board_sqrt, bool submask)
     _board_size(board_sqrt * board_sqrt),
     _submask(submask)
 {
-        _masks = outer_map();
         _targets = build_targets();
-        _masks['h'] = horizontal_mask();
-        _masks['v'] = vertical_mask();
-        _masks['c'] = crescendo_mask();
-        _masks['d'] = decrescendo_mask();
+		_masks.resize(5);
+        _masks[HORIZONTAL] = horizontal_mask();
+        _masks[VERTICAL] = vertical_mask();
+        _masks[CRESCENDO] = crescendo_mask();
+        _masks[DECRESCENDO] = decrescendo_mask();
         if(submask == false)
-            _masks['s'] = create_superpositions();
+		{
+            _masks[SUPERPOSITION] = create_superpositions();
+		}
 }
 
 Mask::Mask(const Mask& other)
@@ -69,19 +71,19 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
     int pos;
     switch (mode)
     {
-    case 'h':
+    case HORIZONTAL:
         inc = 0;
         shift = 1;
         break;
-    case 'v':
+    case VERTICAL:
         inc = 0;
         shift = _board_sqrt;
         break;
-    case 'c':
+    case CRESCENDO:
         inc = -1;
         shift = _board_sqrt;
         break;
-    case 'd':
+    case DECRESCENDO:
         inc = 1;
         shift = _board_sqrt;
         break;
@@ -109,6 +111,7 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
 Mask::inner_map Mask::create_superpositions()
 {
     inner_map super_positions;
+	super_positions.resize(4);
     variations_vector full_vars;
     variations_vector mid_vars;
     variations_vector other_vars;
@@ -124,17 +127,17 @@ Mask::inner_map Mask::create_superpositions()
         std::vector<char>::iterator it = ot.begin();
         for (; it+1 != ot.end(); it++)
         {
-            mask_vector::iterator main_full = _masks[*it]['f'][pos].begin();
-            mask_vector::iterator main_mid = _masks[*it]['m'][pos].begin();
-            mask_vector::iterator main_edge = _masks[*it]['e'][pos].begin();
-            for (; main_full != _masks[*it]['f'][pos].end(); main_full++, main_mid++, main_edge++)
+            mask_vector::iterator main_full = _masks[*it][FULL][pos].begin();
+            mask_vector::iterator main_mid = _masks[*it][MIDDLE][pos].begin();
+            mask_vector::iterator main_edge = _masks[*it][EDGE][pos].begin();
+            for (; main_full != _masks[*it][FULL][pos].end(); main_full++, main_mid++, main_edge++)
             {
                 if(*main_full == 0)
                     break;
-                mask_vector::iterator others_full = _masks[*(it+1)]['f'][pos].begin();
-                mask_vector::iterator others_mid = _masks[*(it+1)]['m'][pos].begin();
-                mask_vector::iterator others_edge = _masks[*(it+1)]['e'][pos].begin();
-                for (; others_full != _masks[*(it+1)]['f'][pos].end(); others_full++, others_mid++, others_edge++)
+                mask_vector::iterator others_full = _masks[*(it+1)][FULL][pos].begin();
+                mask_vector::iterator others_mid = _masks[*(it+1)][MIDDLE][pos].begin();
+                mask_vector::iterator others_edge = _masks[*(it+1)][EDGE][pos].begin();
+                for (; others_full != _masks[*(it+1)][FULL][pos].end(); others_full++, others_mid++, others_edge++)
                 {
                     if(*others_full == 0)
                         break;
@@ -157,10 +160,10 @@ Mask::inner_map Mask::create_superpositions()
         other_vars.push_back(other_masks);
         edge_vars.push_back(edge_masks);
     }
-    super_positions['f'] = full_vars;
-    super_positions['m'] = mid_vars;
-    super_positions['o'] = other_vars;
-    super_positions['e'] = edge_vars;
+    super_positions[FULL] = full_vars;
+    super_positions[MIDDLE] = mid_vars;
+    super_positions[OUTER] = other_vars;
+    super_positions[EDGE] = edge_vars;
     return super_positions;
 }
 
@@ -196,7 +199,7 @@ void Mask::print_mask(Mask::variations_vector &m) const
 
 Mask::Mask::inner_map Mask::horizontal_mask() const
 {
-    Mask::inner_map map;
+    Mask::inner_map map(5);
     BigInt base = BigInt(1);
     base = base << _mask_size;
     base--;
@@ -269,7 +272,7 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
             e_vec.push_back(edge_mask);
 
             mask_vector vec;
-            vectorize(vec, pos, 'h');
+            vectorize(vec, pos, HORIZONTAL);
             vectorized.push_back(vec);
 
             mask_vector s_vec;
@@ -284,13 +287,13 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map['f'] = full_vec;
-    map['m'] = mid_vec;
-    map['e'] = edge_vec;
+    map[FULL] = full_vec;
+    map[MIDDLE] = mid_vec;
+    map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map['s'] = sub_vec;
-        map['v'] = vectorized;
+        map[SUPERPOSITION] = sub_vec;
+        map[VERTICAL] = vectorized;
     }
 
     return map;
@@ -298,7 +301,7 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
 
 Mask::inner_map Mask::vertical_mask() const
 {
-    Mask::inner_map map;
+    Mask::inner_map map(5);
     BigInt base = BigInt(1);
     for (size_t i = 1; i < _mask_size; i++)
     {
@@ -375,7 +378,7 @@ Mask::inner_map Mask::vertical_mask() const
             e_vec.push_back(edge_mask);
 
             mask_vector vec;
-            vectorize(vec, pos, 'v');
+            vectorize(vec, pos, VERTICAL);
             vectorized.push_back(vec);
 
             mask_vector s_vec;
@@ -390,13 +393,13 @@ Mask::inner_map Mask::vertical_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map['f'] = full_vec;
-    map['m'] = mid_vec;
-    map['e'] = edge_vec;
+    map[FULL] = full_vec;
+    map[MIDDLE] = mid_vec;
+    map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map['s'] = sub_vec;
-        map['v'] = vectorized;
+        map[SUPERPOSITION] = sub_vec;
+        map[VERTICAL] = vectorized;
     }
 
     return map;
@@ -404,7 +407,7 @@ Mask::inner_map Mask::vertical_mask() const
 
 Mask::Mask::inner_map Mask::crescendo_mask() const
 {
-    Mask::inner_map map;
+    Mask::inner_map map(5);
     BigInt base = BigInt(1);
     for (size_t i = 1; i < _mask_size; i++)
     {
@@ -487,7 +490,7 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
             e_vec.push_back(edge_mask);
 
             mask_vector vec;
-            vectorize(vec, pos, 'c');
+            vectorize(vec, pos, CRESCENDO);
             vectorized.push_back(vec);
 
             mask_vector s_vec;
@@ -502,13 +505,13 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map['f'] = full_vec;
-    map['m'] = mid_vec;
-    map['e'] = edge_vec;
+    map[FULL] = full_vec;
+    map[MIDDLE] = mid_vec;
+    map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map['s'] = sub_vec;
-        map['v'] = vectorized;
+        map[SUPERPOSITION] = sub_vec;
+        map[VERTICAL] = vectorized;
     }
 
     return map;
@@ -516,7 +519,7 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
 
 Mask::Mask::inner_map Mask::decrescendo_mask() const
 {
-    Mask::inner_map map;
+    Mask::inner_map map(5);
     BigInt base = BigInt(1);
     for (size_t i = 1; i < _mask_size; i++)
     {
@@ -595,7 +598,7 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
             e_vec.push_back(edge_mask);
 
             mask_vector vec;
-            vectorize(vec, pos, 'd');
+            vectorize(vec, pos, DECRESCENDO);
             vectorized.push_back(vec);
 
             mask_vector s_vec;
@@ -610,13 +613,13 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
         mid_vec.push_back(m_vec);
         edge_vec.push_back(e_vec);
     }
-    map['f'] = full_vec;
-    map['m'] = mid_vec;
-    map['e'] = edge_vec;
+    map[FULL] = full_vec;
+    map[MIDDLE] = mid_vec;
+    map[EDGE] = edge_vec;
     if (_submask == true)
     {
-        map['s'] = sub_vec;
-        map['v'] = vectorized;
+        map[SUPERPOSITION] = sub_vec;
+        map[VERTICAL] = vectorized;
     }
 
     return map;

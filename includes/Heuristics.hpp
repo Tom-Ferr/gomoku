@@ -16,7 +16,7 @@ private:
 
     const int _mask_size = 5;
     const int _edge_mask_size = 7;
-    const char _modes[4] = {'h', 'v', 'c', 'd'};
+    const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 
     static Mask _masks;
 public:

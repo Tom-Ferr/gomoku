@@ -4,13 +4,31 @@
 # include <map>
 # include <vector>
 
+enum e_masktype
+{
+	HORIZONTAL,
+	VERTICAL,
+	CRESCENDO,
+	DECRESCENDO,
+	SUPERPOSITION
+};
+
+enum e_maskinnertype
+{
+	FULL,
+	MIDDLE,
+	EDGE,
+	OUTER
+};
+
+
 class Mask
 {
 public:
     typedef std::vector<BigInt> mask_vector;
     typedef std::vector<mask_vector> variations_vector;
-    typedef std::map<char, variations_vector> inner_map;
-    typedef std::map<char, inner_map> outer_map;
+    typedef std::vector<variations_vector> inner_map;
+    typedef std::vector<inner_map> outer_map;
 private:
     outer_map _masks;
     mask_vector _targets;
@@ -18,7 +36,7 @@ private:
     unsigned int _board_sqrt;
     unsigned int _board_size;
     bool _submask;
-    const char _modes[4] = {'h', 'v', 'c', 'd'};
+    const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 
 public:
     Mask();

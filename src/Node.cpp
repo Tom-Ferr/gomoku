@@ -30,10 +30,10 @@ Node& Node::operator=(const Node& other)
 
 std::pair<int, BigInt> Node::minimax()
 {
-	//Heuristics h = Heuristics(_state);
-	//int score = h.run(true);
-	//if(score == 32 || score == -32)
-	//	return std::make_pair(score, 0);
+	Heuristics h = Heuristics(_state);
+	int score = h.run(true);
+	if(score == 32 || score == -32)
+		return std::make_pair(score, 0);
 
 	if (_depth == 0)
 	{
@@ -73,13 +73,13 @@ bool Node::is_double_free_three(const size_t &pos)
 	Free_Three_Checker ftc = Free_Three_Checker(_state);
 	//uncomment from here
 
-	// if(ftc.check(pos, 's'))
+	// if(ftc.check(pos, SUPERPOSITION))
 	// 	return true;
 	// return false;
 
 	// to here to change to the other check method
 
-	char modes[4] = {'h', 'v', 'c', 'd'};
+	char modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 	int c = 0;
 
 	for (size_t i = 0; i < 4; i++)

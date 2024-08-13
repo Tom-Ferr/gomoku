@@ -30,17 +30,16 @@ Node& Node::operator=(const Node& other)
 
 std::pair<int, BigInt> Node::minimax()
 {
-	Heuristics h = Heuristics(_state);
-	int score = h.run(true);
-	if(score == 32 || score == -32)
-		return std::make_pair(score, 0);
+	//Heuristics h = Heuristics(_state);
+	//int score = h.run(true);
+	//if(score == 32 || score == -32)
+	//	return std::make_pair(score, 0);
 
 	if (_depth == 0)
 	{
 		/*
 		** calculates all the score here
 		*/
-
 		return std::make_pair(std::rand() % 65 - 32, 0);
 	}
 	if (_state.turn())
@@ -71,7 +70,7 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int x, bool maximizing)
 
 bool Node::is_double_free_three(const size_t &pos)
 {
-	Free_Three_Checker ftc = Free_Three_Checker(_state.sqrt(), _state.mystate(), _state.otherstate());
+	Free_Three_Checker ftc = Free_Three_Checker(_state);
 	//uncomment from here
 
 	// if(ftc.check(pos, 's'))
@@ -95,7 +94,7 @@ bool Node::is_double_free_three(const size_t &pos)
 
 bool Node::is_valid(const size_t &pos, BigInt &freepos)
 {
-	if(freepos.get_bit(pos))// && !is_double_free_three(pos))
+	if(freepos.get_bit(pos) && !is_double_free_three(pos))
 		return true;
 	return false;
 }

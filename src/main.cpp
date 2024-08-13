@@ -19,16 +19,8 @@ int main (void)
 	Game g;
 
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-	g.step();
-	g.step();
-	g.step();
-	g.step();
-	g.step();
-	g.step();
-	g.step();
-	g.step();
-	g.step();
-	g.step();
+	while (g.step())
+		;
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	std::cout << "Time taken (TOTAL): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Node count: " << Node::node_count << std::endl;

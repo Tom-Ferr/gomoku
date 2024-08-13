@@ -53,7 +53,7 @@ void Heuristics::set_masks(int mask_size, int board_sqrt)
 
 
 
-int Heuristics::check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks)
+int Heuristics::check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
 {
         // size_t my_bits = (target & masks['f'][pos][0]).bitCount();
         // size_t other_bits = (other_target & masks['f'][pos][0]).bitCount();
@@ -76,30 +76,32 @@ int Heuristics::check_captures(const BigInt &target, const BigInt &other_target,
             return 0;
 }
 
-int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, Mask::inner_map &masks)
+int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
 {
-    if ((masks['f'][pos][0] & other_target) != 0)
+    if ((masks.at('f')[pos][0] & other_target) != 0)
         return check_captures(target, other_target, pos, masks);
 
-    size_t bits = (target & masks['f'][pos][0]).bitCount();
+    size_t bits = target.bitCount();
     int score = 1 << bits;
+
+    const Mask::mask_vector &vectorized = masks.at('v')[pos];
 
     for (size_t i = 0; i < 2; i++)
     {
-        BigInt sub_target = target & masks['s'][pos][i];
+        BigInt sub_target = target & masks.at('s')[pos][i];
         size_t sub_bits = sub_target.bitCount();
         if (bits == sub_bits && bits > 1)
         {
-            BigInt target_first = target & masks['v'][pos][1];
-            BigInt target_last = target & masks['v'][pos][5];
+            BigInt target_first = target & vectorized[1];
+            BigInt target_last = target & vectorized[5];
             BigInt edge_first;
             BigInt edge_last;
             // if (masks['e'][pos][0] != o)
-                edge_first = edge & masks['v'][pos][0];
+                edge_first = edge & vectorized[0];
             // else
             //     edge_first = target_first;
             // if (masks['e'][pos][0] != o)
-                edge_last = edge & masks['v'][pos][6];
+                edge_last = edge & vectorized[6];
             // else
                 // edge_last = target_last;
             if ((target_first != 0 && edge_first == 0)
@@ -115,11 +117,11 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
 
 bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 {
-    Mask::inner_map &masks = _masks.at(orientation);
+    const Mask::inner_map &masks = _masks.at(orientation);
 
-    if (masks['f'][pos][0] == 0)
+	const BigInt &full_mask = masks.at('f').at(pos)[0];
+    if (full_mask == 0)
         return false;
-	BigInt &full_mask = masks.at('f').at(pos)[0];
     BigInt target = _state.mystate(true) & full_mask;
     BigInt other_target = _state.otherstate(true) & full_mask;
 
@@ -138,8 +140,8 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
         return false;
     }
 
-    BigInt edge = (_state.otherstate(true) & masks['e'][pos][0]);
-    edge = edge | (_state.mystate(true) & masks['e'][pos][0]);
+    BigInt edge = (_state.otherstate(true) & masks.at('e')[pos][0]);
+    edge = edge | (_state.mystate(true) & masks.at('e')[pos][0]);
 
     int score = get_score(target, edge, other_target, pos, masks);
     if (score == 32)

@@ -19,6 +19,7 @@ public:
         ~Free_Three_Checker();
 
         bool check(int pos, char orientation);
+        bool check(int pos);
 
         static void set_masks(int mask_size, int board_sqrt);
 

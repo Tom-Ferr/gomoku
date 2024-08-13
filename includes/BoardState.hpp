@@ -18,6 +18,8 @@ class BoardState
 			size_t	_move;
 			BigInt	_mystate;
 			BigInt	_otherstate;
+			BigInt	_inv_mystate;
+			BigInt	_inv_otherstate;
 			BigInt	_totalboard;
 
 		public:
@@ -35,8 +37,8 @@ class BoardState
 			int		const &size() const;
 			int		const &sqrt() const;
 			size_t 	const &move() const;
-			BigInt 	const &mystate() const;
-			BigInt 	const &otherstate() const;
+			BigInt 	const &mystate(bool inverted=false) const;
+			BigInt 	const &otherstate(bool inverted=false) const;
 			BigInt 	const &totalboard() const;
 			BigInt 	expanded_free() const;
 			void swap_states();

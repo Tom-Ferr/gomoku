@@ -6,6 +6,7 @@
 # include <utility>
 # include <random>
 # include <Free_Three_Checker.hpp>
+# include <Heuristics.hpp>
 
 class Node
 {

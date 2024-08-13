@@ -30,6 +30,11 @@ Node& Node::operator=(const Node& other)
 
 std::pair<int, BigInt> Node::minimax()
 {
+	Heuristics h = Heuristics(_state);
+	int score = h.run(true);
+	if(score == 32 || score == -32)
+		return std::make_pair(score, 0);
+
 	if (_depth == 0)
 	{
 		/*

@@ -18,7 +18,7 @@ int main (void)
 	Game g;
 
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-	g.step();
+	//g.step();
 	while (g.step())
 		continue;
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;

@@ -68,7 +68,7 @@ bool Node::is_double_free_three(const size_t &pos)
 {
 	Free_Three_Checker ftc = Free_Three_Checker(_state.sqrt(), _state.mystate(), _state.otherstate());
 	//uncomment from here
-	
+
 	// if(ftc.check(pos, 's'))
 	// 	return true;
 	// return false;
@@ -90,7 +90,7 @@ bool Node::is_double_free_three(const size_t &pos)
 
 bool Node::is_valid(const size_t &pos, BigInt &freepos)
 {
-	if(freepos.get_bit(pos) && !is_double_free_three(pos))
+	if(freepos.get_bit(pos))// && !is_double_free_three(pos))
 		return true;
 	return false;
 }

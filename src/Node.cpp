@@ -30,6 +30,11 @@ Node& Node::operator=(const Node& other)
 
 std::pair<int, BigInt> Node::minimax()
 {
+	Heuristics h = Heuristics(_state.sqrt(), _state.mystate(), _state.otherstate());
+	int score = h.run(true);
+	if(score == 32 || score == -32)
+		return std::make_pair(score, 0);
+	
 	if (_depth == 0)
 	{
 		/*
@@ -90,7 +95,7 @@ bool Node::is_double_free_three(const size_t &pos)
 
 bool Node::is_valid(const size_t &pos, BigInt &freepos)
 {
-	if(freepos.get_bit(pos) && !is_double_free_three(pos))
+	if(freepos.get_bit(pos))// && !is_double_free_three(pos))
 		return true;
 	return false;
 }

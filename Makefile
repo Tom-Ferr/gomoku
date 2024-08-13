@@ -16,7 +16,7 @@ NAME			= 	gomoku
 
 CXX				=	clang++
 
-CXXFLAGS		= 	#-Wall -Wextra -Werror -g
+CXXFLAGS		= 	-O3 #-Wall -Wextra -Werror -g
 
 GMP				= 	-lgmp -lgmpxx
 

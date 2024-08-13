@@ -18,6 +18,7 @@ Heuristics::Heuristics(const Heuristics& other)
     // _scores = other._scores;
     _max_score = other._max_score;
     _min_score = other._min_score;
+    _heuristic = other._heuristic;
 }
 
 Heuristics &Heuristics::operator=(const Heuristics& other)
@@ -32,6 +33,7 @@ Heuristics &Heuristics::operator=(const Heuristics& other)
         // _scores = other._scores;
         _max_score = other._max_score;
         _min_score = other._min_score;
+        _heuristic = other._heuristic;
     }
 	return *this;
 }
@@ -40,7 +42,7 @@ Heuristics::~Heuristics() {}
 
 void Heuristics::set_masks(int mask_size, int board_sqrt)
 {
-    Heuristics::_masks = Mask(mask_size, board_sqrt);
+    Heuristics::_masks = Mask(mask_size, board_sqrt, true);
 }
 
     
@@ -105,55 +107,61 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     return score;
 }
 
-bool Heuristics::board_eval(int pos, char orientation)
-{
-        Mask::inner_map masks = _masks[orientation];
-        
-        if (masks["full"][pos][0] == 0)
-            return false;
-        BigInt edge = (_other_state & masks["edge"][pos][0]);
-        edge = edge | (_my_state & masks["edge"][pos][0]);
+bool Heuristics::board_eval(int pos, char orientation, bool endgame)
+{       
+    Mask::inner_map masks = _masks[orientation];
 
-        BigInt target = (_my_state & masks["full"][pos][0]);
+    if (masks["full"][pos][0] == 0)
+        return false;
+        
+    BigInt target = (_my_state & masks["full"][pos][0]);
+    BigInt other_target = (_other_state & masks["full"][pos][0]);
+    
+    if(endgame)
+    {
         if (target == masks["full"][pos][0])
         {
             _heuristic = 32;
             return true;
         }
-        BigInt other_target = (_other_state & masks["full"][pos][0]);
         if (other_target == masks["full"][pos][0])
         {
             _heuristic = -32;
             return true;
         }
-        
-        int score = get_score(target, edge, other_target, pos, masks);
-        if (score == 32)
-        {
-            _max_score = score;
-            return true;
-        }
-        if (score > _max_score)
-            _max_score = score;
-
-        score = get_score(other_target, edge, target, pos, masks) * -1;
-        if (score == -32)
-        {
-            _min_score = score;
-            return true;
-        }
-        if (score < _min_score)
-            _min_score = score;
         return false;
+    }
+        
+    BigInt edge = (_other_state & masks["edge"][pos][0]);
+    edge = edge | (_my_state & masks["edge"][pos][0]);
+    
+    int score = get_score(target, edge, other_target, pos, masks);
+    if (score == 32)
+    {
+        _max_score = score;
+        return true;
+    }
+    if (score > _max_score)
+        _max_score = score;
+    
+    score = get_score(other_target, edge, target, pos, masks) * -1;
+    if (score == -32)
+    {
+        _min_score = score;
+        return true;
+    }
+    if (score < _min_score)
+        _min_score = score;
+    return false;
 }
 
-int Heuristics::run()
+int Heuristics::run(bool endgame)
 {
     for (size_t pos = 0; pos < _board_size; pos++)
     {
         for (size_t i = 0; i < 4; i++)
         {
-            if (board_eval(pos, _modes[i]))
+            if (board_eval(pos, _modes[i], endgame))
                 return _heuristic;
         }
     }

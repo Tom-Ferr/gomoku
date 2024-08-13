@@ -15,6 +15,7 @@
 int main (void)
 {
 	Free_Three_Checker::set_masks(6, 19);
+	Heuristics::set_masks(5, 19);
 	Game g;
 
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();

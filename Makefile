@@ -16,13 +16,13 @@ NAME			= 	gomoku
 
 CXX				=	clang++
 
-CXXFLAGS		= 	-std=c++11 # -Wall -Wextra -Werror -g
+CXXFLAGS		= 	#-Wall -Wextra -Werror -g
 
-GMP				= 	-L/opt/homebrew/Cellar/gmp/6.3.0/lib -lgmp -lgmpxx -ldl
+GMP				= 	-lgmp -lgmpxx
 
 INCLUDE 		= 	-I${INC}
 
-SANITIZE 		= 	#-fsanitize=address -g
+SANITIZE 		= 	-O3#-fsanitize=address
 
 UNAME			=	$(shell uname)
 
@@ -30,7 +30,7 @@ LINUX			= 	-D _LINUX
 
 GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
 
-GMP_LIB			=
+GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 ifeq ($(UNAME),Linux)
 	CXXFLAGS += $(LINUX)
@@ -42,7 +42,7 @@ endif
 
 
 %.o: %.cpp
-				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${INCLUDE} -c $< -o $@
 
 $(NAME):		${OBJS} $(DEPS)
 				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${GMP} ${INCLUDE} -o ${NAME}

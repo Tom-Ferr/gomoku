@@ -53,7 +53,7 @@ class Board
 		sf::RenderWindow &window() const;
 		sf::Vector2f const &get_dimensions() const;
 		sf::Vector2f const &get_position() const;
-		bool hover(sf::Event::MouseMoveEvent &mousemove);
+		bool hover();
 		bool click();
 		bool enabled();
 		void enable();

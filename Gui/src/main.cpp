@@ -6,12 +6,11 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Gomoku");
-
 	Board board(19, &window);
     while (window.isOpen())
     {
         sf::Event event;
-        if (window.pollEvent(event))
+        while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();

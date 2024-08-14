@@ -32,6 +32,7 @@ bool Game::step()
 	{
 		BoardState other(_board);
 		other.swap_states();
+		other._random = true;
 		result = Node(3, INT_MIN, INT_MAX, other).minimax();
 	}
 	if (result.second == 0)

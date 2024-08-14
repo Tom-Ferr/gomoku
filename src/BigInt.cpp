@@ -1,5 +1,13 @@
 #include <BigInt.hpp>
 
+BigInt BigInt::tmp = BigInt();
+
+BigInt &BigInt::bi_and(const BigInt &one, const BigInt &other)
+{
+	mpz_and(tmp._value, one._value, other._value);
+	return tmp;
+}
+
 BigInt::BigInt()
 {
 	mpz_init(_value);

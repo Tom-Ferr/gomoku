@@ -8,7 +8,8 @@ BoardState::BoardState(int _sqrt)
 :
 	_turn(true),
 	_size(_sqrt * _sqrt),
-	_sqrt(_sqrt)
+	_sqrt(_sqrt),
+	_random(false)
 {
 	if (BoardState::mask == BigInt(0))
 	{
@@ -32,7 +33,7 @@ BoardState::BoardState(const BoardState& other)
 : _turn(other._turn), _size(other._size), _sqrt(other._sqrt),
 _mystate(other._mystate), _otherstate(other._otherstate),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
-_totalboard(other._totalboard)
+_totalboard(other._totalboard), _random(other._random)
 { }
 
 BoardState::BoardState(BoardState&& other) noexcept
@@ -40,7 +41,7 @@ BoardState::BoardState(BoardState&& other) noexcept
 _mystate(std::move(other._mystate)),
 _otherstate(std::move(other._otherstate)),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
-_totalboard(other._totalboard)
+_totalboard(other._totalboard), _random(other._random)
 { }
 
 BoardState::BoardState(const BoardState& other, BigInt move)
@@ -49,7 +50,7 @@ _mystate(other._otherstate), _otherstate(other._mystate ^ move),
 _inv_mystate(other._inv_otherstate),
 _inv_otherstate((~_otherstate) & BoardState::mask),
 _totalboard(~(_mystate ^ _otherstate) & BoardState::mask),
-_move(move)
+_move(move), _random(other._random)
 { }
 
 void BoardState::applymove(size_t pos, bool mystate)
@@ -129,6 +130,10 @@ void BoardState::swap_states()
 	BigInt temp = _mystate;
 	_mystate = _otherstate;
 	_otherstate = temp;
+	temp = _inv_mystate;
+	_inv_mystate = _inv_otherstate;
+	_inv_otherstate = temp;
+	_turn = !_turn;
 }
 
 void BoardState::flip_turn()

@@ -23,6 +23,7 @@ class BoardState
 			BigInt	_totalboard;
 
 		public:
+			bool 	_random;
 			BoardState(int sqrt=19);
 			BoardState(const BoardState& other);
 			BoardState(BoardState&& other) noexcept;

@@ -11,6 +11,10 @@ class BigInt
 		mpz_t _value;
 
 	public:
+		static BigInt tmp;
+
+		static BigInt &bi_and(const BigInt &one, const BigInt &other);
+
 		// Default Constructor
 		BigInt();
 

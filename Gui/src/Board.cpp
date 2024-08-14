@@ -153,17 +153,19 @@ bool Board::click()
 {
 	if (enabled() && _hovered_tile && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		disable();
-		_hovered_tile->click();
-		_game.board().applymove(_hovered_tile->pos(), false);
-		_hovered_tile = nullptr;
-		if (_game.step())
+		if (_hovered_tile->click())
 		{
-			_tiles[_game.move()].hover(true);
-			_tiles[_game.move()].click();
-			enable();
+			disable();
+			_game.board().applymove(_hovered_tile->pos(), false);
+			_hovered_tile = nullptr;
+			if (_game.step())
+			{
+				_tiles[_game.move()].hover(true);
+				_tiles[_game.move()].click();
+				enable();
+			}
+			std::cout << _game.move() << std::endl;
 		}
-		std::cout << _game.move() << std::endl;
 	}
 	return true;
 }

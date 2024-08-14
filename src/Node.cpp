@@ -51,9 +51,8 @@ std::pair<int, BigInt> Node::minimax()
 		/*comment this line to test with heuristics*/
 		return std::make_pair(std::rand() % 65 - 32, 0);
 
-		//Heuristics h = Heuristics(_state);
-		//_heuristic = h.run();
-		//std::cout << "heuristic" << _heuristic << '\n';
+		Heuristics h = Heuristics(_state);
+		_heuristic = h.run();
 		return std::make_pair(_heuristic, 0);
 	}
 	if (_state.turn())
@@ -120,7 +119,7 @@ bool Node::possible_moves(std::vector<size_t>& moves)
 {
 	Node::_freepos = _state.expanded_free();
 
-	Heuristics h = Heuristics(_state);
+	//Heuristics h = Heuristics(_state);
 	for (size_t pos = 0; pos < _state.size(); pos++)
 	{
 		//_heuristic = h.endgame(pos);

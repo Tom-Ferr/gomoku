@@ -1,6 +1,13 @@
 #include <Free_Three_Checker.hpp>
 
+BoardState Free_Three_Checker::dummy_state;
+
 Mask Free_Three_Checker::_masks = Mask();
+BigInt Free_Three_Checker::_static_state = BigInt();
+
+Free_Three_Checker::Free_Three_Checker()
+: _state(Free_Three_Checker::dummy_state)
+{}
 
 Free_Three_Checker::Free_Three_Checker(BoardState &state)
 : _state(state) {}
@@ -11,7 +18,8 @@ Free_Three_Checker::Free_Three_Checker(const Free_Three_Checker& other)
 
 Free_Three_Checker &Free_Three_Checker::operator=(const Free_Three_Checker& other)
 {
-	(void)other;
+	if (this != &other)
+		_state = other._state;
 	return *this;
 }
 
@@ -21,22 +29,22 @@ Free_Three_Checker::~Free_Three_Checker(){};
 bool Free_Three_Checker::check(int pos, char orientation)
 {
     const Mask::inner_map &masks = Free_Three_Checker::_masks.at(orientation);
-    BigInt target = BigInt::bi_and(_state.mystate(true), Mask::targets(pos));
+    //_static_target = BigInt::bi_and(_state.mystate(true), Mask::targets(pos));
 
     const Mask::variations_vector &full_vec = masks.at(FULL);
     Mask::mask_vector::const_iterator full_mask = full_vec[pos].begin();
     Mask::mask_vector::const_iterator end = full_vec[pos].end();
     Mask::mask_vector::const_iterator mid_mask = masks.at(MIDDLE)[pos].begin();
     Mask::mask_vector::const_iterator edge_mask = masks.at(EDGE)[pos].begin();
-	BigInt state;
+//	BigInt state;
 
     for (; full_mask != end; full_mask++, mid_mask++, edge_mask++)
     {
         if((BigInt::bi_and(_state.otherstate(true), *full_mask)) != 0)
             continue;
-        state = BigInt::bi_and(_state.mystate(true), *full_mask);
-        if((BigInt::bi_and(state, *edge_mask)) == *edge_mask)
-            if ((BigInt::bi_and(*mid_mask, state)).bitCount() == 2)
+        _static_state = BigInt::bi_and(_state.mystate(true), *full_mask);
+        if((BigInt::bi_and(_static_state, *edge_mask)) == *edge_mask)
+            if ((BigInt::bi_and(*mid_mask, _static_state)).bitCount() == 2)
                 return true;
     }
     return false;

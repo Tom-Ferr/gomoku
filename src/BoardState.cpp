@@ -133,7 +133,7 @@ void BoardState::swap_states()
 	temp = _inv_mystate;
 	_inv_mystate = _inv_otherstate;
 	_inv_otherstate = temp;
-	_turn = !_turn;
+	_turn = true;
 }
 
 void BoardState::flip_turn()

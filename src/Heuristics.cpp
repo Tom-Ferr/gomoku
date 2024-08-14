@@ -119,7 +119,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     BigInt target = _state.mystate(true) & full_mask;
     BigInt other_target = _state.otherstate(true) & full_mask;
 
-    
+
     if (target == full_mask)
     {
         _heuristic = 32;
@@ -130,7 +130,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
         _heuristic = -32;
         return true;
     }
-    if(endgame) 
+    if(endgame)
         return false;
 
     BigInt edge = (_state.otherstate(true) & masks.at(EDGE)[pos][0]);

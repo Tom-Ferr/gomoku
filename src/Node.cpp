@@ -1,6 +1,7 @@
 #include <Node.hpp>
 
 size_t Node::node_count = 0;
+BigInt Node::_freepos;
 
 int max(int &a, int &b)
 {
@@ -17,12 +18,15 @@ Node::Node() {}
 Node::Node(int depth, int alpha, int beta, BoardState state)
 : _depth(depth), _alpha(alpha), _beta(beta), _state(state)
 {
+	_ftc = Free_Three_Checker(_state);
 	Node::node_count++;
 }
 
 Node::Node(const Node& other)
 : _depth(other._depth), _alpha(other._alpha), _beta(other._beta), _state(other._state)
-{}
+{
+	_ftc = Free_Three_Checker(_state);
+}
 
 Node::~Node() {}
 
@@ -34,6 +38,7 @@ Node& Node::operator=(const Node& other)
 		_alpha = other._alpha;
 		_beta = other._beta;
 		_state = other._state;
+		_ftc = Free_Three_Checker(_state);
 	}
 	return *this;
 }
@@ -44,11 +49,10 @@ std::pair<int, BigInt> Node::minimax()
 	if (_depth == 0)
 	{
 		/*comment this line to test with heuristics*/
-		if (_state._random)
-			return std::make_pair(std::rand() % 65 - 32, 0);
+		return std::make_pair(std::rand() % 65 - 32, 0);
 
-		Heuristics h = Heuristics(_state);
-		_heuristic = h.run();
+		//Heuristics h = Heuristics(_state);
+		//_heuristic = h.run();
 		//std::cout << "heuristic" << _heuristic << '\n';
 		return std::make_pair(_heuristic, 0);
 	}
@@ -59,19 +63,21 @@ std::pair<int, BigInt> Node::minimax()
 
 std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 {
-	BigInt best_child = 0;
-	std::vector<BigInt> moves;
+	BigInt best_child;
+	std::vector<size_t> moves;
+	BigInt *move;
 	if(possible_moves(moves) == false)
 		return std::make_pair(_heuristic, _state.move());
-	for (std::vector<BigInt>::iterator it = moves.begin(); it != moves.end(); it++)
+	for (std::vector<size_t>::iterator it = moves.begin(); it != moves.end(); it++)
 	{
-		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *it));
+		move = &Mask::targets(*it);
+		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *move));
 		std::pair<int, BigInt> score = child.minimax();
 		_heuristic = f(x, score.first);
 		if(_heuristic == score.first && _heuristic != x)
 		{
 			x = _heuristic;
-			best_child = *it;
+			best_child = *move;
 		}
 		if (_alpha >= _beta)
 			break;
@@ -81,7 +87,7 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 
 bool Node::is_double_free_three(const size_t &pos)
 {
-	Free_Three_Checker ftc = Free_Three_Checker(_state);
+
 	//uncomment from here
 
 	// if(ftc.check(pos))
@@ -95,7 +101,7 @@ bool Node::is_double_free_three(const size_t &pos)
 
 	for (size_t i = 0; i < 4; i++)
 	{
-		if(ftc.check(pos, modes[i]))
+		if(_ftc.check(pos, modes[i]))
 			c++;
 		if(c == 2)
 			return true;
@@ -110,18 +116,18 @@ bool Node::is_valid(const size_t &pos, BigInt &freepos)
 	return false;
 }
 
-bool Node::possible_moves(std::vector<BigInt>& moves)
+bool Node::possible_moves(std::vector<size_t>& moves)
 {
-	BigInt freepos = _state.expanded_free();
+	Node::_freepos = _state.expanded_free();
 
 	Heuristics h = Heuristics(_state);
 	for (size_t pos = 0; pos < _state.size(); pos++)
 	{
-		_heuristic = h.endgame(pos);
-		if(_heuristic == 32 || _heuristic == -32)
-			return false;
-		if (is_valid(pos, freepos))
-			moves.push_back(Mask::targets(pos));
+		//_heuristic = h.endgame(pos);
+		//if(_heuristic == 32 || _heuristic == -32)
+		//	return false;
+		if (is_valid(pos, _freepos))
+			moves.push_back(pos);
 	}
 	return true;
 }

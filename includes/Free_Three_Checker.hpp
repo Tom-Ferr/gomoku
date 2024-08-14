@@ -8,20 +8,23 @@
 class Free_Three_Checker
 {
 
-private:
-	static Mask _masks;
-	BoardState &_state;
+	private:
+		static Mask _masks;
+		BoardState &_state;
+		static BigInt _static_state;
+		static BoardState dummy_state;
 
-public:
-		Free_Three_Checker(BoardState &state);
-        Free_Three_Checker(const Free_Three_Checker& other);
-		Free_Three_Checker &operator=(const Free_Three_Checker& other);
-        ~Free_Three_Checker();
+	public:
+			Free_Three_Checker();
+			Free_Three_Checker(BoardState &state);
+			Free_Three_Checker(const Free_Three_Checker& other);
+			Free_Three_Checker &operator=(const Free_Three_Checker& other);
+			~Free_Three_Checker();
 
-        bool check(int pos, char orientation);
-        bool check(int pos);
+			bool check(int pos, char orientation);
+			bool check(int pos);
 
-        static void set_masks(int mask_size, int board_sqrt);
+			static void set_masks(int mask_size, int board_sqrt);
 
 };
 

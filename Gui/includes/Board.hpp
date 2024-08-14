@@ -22,7 +22,7 @@ class Tile;
 class Board
 {
 	private:
-		sf::Texture 		_button_texture[2];
+		sf::Texture 		_button_texture;
 		sf::Texture 		_tile_texture[9];
 		sf::Texture 		_texture;
 		size_t				_sqrt;
@@ -63,7 +63,7 @@ class Board
 		sf::Vector2f get_tile_position(int i);
 		sf::Vector2f& get_tile_dimensions();
 		sf::Texture& get_tile_texture(int i);
-		sf::Texture& get_button_texture(int i);
+		sf::Texture& get_button_texture();
 		size_t get_hovered_tile(sf::Vector2f &mouse);
 };
 

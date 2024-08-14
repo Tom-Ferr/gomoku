@@ -2,7 +2,7 @@
 
 Tile::Tile() {}
 
-sf::Color Tile::p1_color = sf::Color::Black;
+sf::Color Tile::p1_color = sf::Color(100, 100, 100, 255);
 sf::Color Tile::p2_color = sf::Color::White;
 
 Tile::Tile(Board *board, size_t pos)
@@ -34,7 +34,7 @@ Tile::Tile(Board *board, size_t pos)
 	_square = sf::RectangleShape(sf::Vector2f(417, 417));
 	_piece = sf::CircleShape(20, 500);
 	_piece.setFillColor(sf::Color::Transparent);
-	//_piece.setTexture(&_board->get_button_texture(0));
+	_piece.setTexture(&_board->get_button_texture());
 	_square.setTexture(&_board->get_tile_texture(tex), true);
 
 }

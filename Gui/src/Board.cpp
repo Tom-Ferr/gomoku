@@ -77,8 +77,7 @@ void Board::_load_textures()
 				TILE_SIZE, TILE_SIZE
 			), TX_TILE);
 	}
-	_load_texture(_button_texture[0], "assets/white_piece.png", sf::IntRect(), TX_WHITE);
-	_load_texture(_button_texture[1], "assets/black_piece.png", sf::IntRect(), TX_BLACK);
+	_load_texture(_button_texture, "assets/white_piece.png", sf::IntRect(), TX_WHITE);
 }
 
 void Board::resize()
@@ -190,9 +189,9 @@ sf::Texture& Board::get_tile_texture(int i)
 	return _tile_texture[i];
 }
 
-sf::Texture& Board::get_button_texture(int i)
+sf::Texture& Board::get_button_texture()
 {
-	return _button_texture[i];
+	return _button_texture;
 }
 
 sf::Vector2f Board::get_tile_position(int pos)

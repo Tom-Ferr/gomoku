@@ -14,6 +14,7 @@
 
 int main (void)
 {
+	std::srand(42);
 	Free_Three_Checker::set_masks(6, 19);
 	Heuristics::set_masks(5, 19);
 	Game g;

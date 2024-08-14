@@ -78,10 +78,13 @@ void Tile::resize()
 
 bool Tile::hover()
 {
-	if (enabled() && _square.getGlobalBounds().contains(
-			_board->window().mapPixelToCoords(
-				sf::Mouse::getPosition(_board->window()))))
+	if (!enabled())
+		return false;
+
+	sf::Vector2f mouse = sf::Vector2f(sf::Mouse::getPosition(_board->window()));
+	if (_square.getGlobalBounds().contains(mouse))
 	{
+		std::cout << "hover" << _pos << std::endl;
 		sf::Color color;
 		if (_board->TURN)
 			color = Tile::p1_color;
@@ -90,9 +93,8 @@ bool Tile::hover()
 		color.a = 100;
 		_piece.setFillColor(color);
 		return true;
-
 	}
-	else if (enabled())
+	else if (_piece.getFillColor() != sf::Color::Transparent)
 	{
 		_piece.setFillColor(sf::Color::Transparent);
 	}

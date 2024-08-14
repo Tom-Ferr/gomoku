@@ -75,8 +75,8 @@ bool Free_Three_Checker::check(int pos, char orientation)
     }
     return false;
 }
-*/
-/*
+
+
  bool Free_Three_Checker::check(int pos)
  {
 	const Mask::inner_map &masks = Free_Three_Checker::_masks.at(SUPERPOSITION);

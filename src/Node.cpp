@@ -2,6 +2,16 @@
 
 size_t Node::node_count = 0;
 
+int max(int &a, int &b)
+{
+	return std::max(a,b);
+}
+
+int min(int &a, int &b)
+{
+	return std::min(a,b);
+}
+
 Node::Node() {}
 
 Node::Node(int depth, int alpha, int beta, BoardState state)
@@ -30,42 +40,38 @@ Node& Node::operator=(const Node& other)
 
 std::pair<int, BigInt> Node::minimax()
 {
-	Heuristics h = Heuristics(_state);
 
 	if (_depth == 0)
 	{
+		Heuristics h = Heuristics(_state);
 		/*comment this line to test with heuristics*/
 		return std::make_pair(std::rand() % 65 - 32, 0);
 
-		int score = h.run(false);
-		return std::make_pair(score, 0);
-	}
-	else
-	{
-		int score = h.run(true);
-		if(score == 32 || score == -32)
-			return std::make_pair(score, 0);
+		_heuristic = h.run();
+		std::cout << "heuristic" << _heuristic << '\n';
+		return std::make_pair(_heuristic, 0);
 	}
 	if (_state.turn())
-		return alpha_beta_prune(_alpha, true);
-	return alpha_beta_prune(_beta, false);
+		return alpha_beta_prune(_alpha, max);
+	return alpha_beta_prune(_beta, min);
 }
 
-std::pair<int, BigInt> Node::alpha_beta_prune(int x, bool maximizing)
+std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 {
 	BigInt best_child = 0;
-	std::vector<BigInt> moves = possible_moves();
+	std::vector<BigInt> moves;
+	if(possible_moves(moves) == false)
+		return std::make_pair(_heuristic, _state.move());
 	for (std::vector<BigInt>::iterator it = moves.begin(); it != moves.end(); it++)
 	{
 		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *it));
 		std::pair<int, BigInt> score = child.minimax();
-		x = maximizing ? std::max(x, score.first) : std::min(x, score.first);
-		if(x == score.first)
+		_heuristic = f(x, score.first);
+		if(_heuristic == score.first && _heuristic != x)
+		{
+			x = _heuristic;
 			best_child = *it;
-		if (maximizing)
-			_alpha = std::max(_alpha, score.first);
-		else
-			_beta = std::min(_beta, score.first);
+		}
 		if (_alpha >= _beta)
 			break;
 	}
@@ -103,15 +109,20 @@ bool Node::is_valid(const size_t &pos, BigInt &freepos)
 	return false;
 }
 
-std::vector<BigInt> Node::possible_moves()
+bool Node::possible_moves(std::vector<BigInt>& moves)
 {
-	std::vector<BigInt> moves;
 	BigInt freepos = _state.expanded_free();
 
-	for (size_t pos = 0; pos < freepos.size(); pos++)
+	Heuristics h = Heuristics(_state);
+	for (size_t pos = 0; pos < _state.size(); pos++)
 	{
+		{
+			_heuristic = h.endgame(pos);
+			if(_heuristic == 32 || _heuristic == -32)
+				return false;
+		}
 		if (is_valid(pos, freepos))
 			moves.push_back(Mask::targets(pos));
 	}
-	return moves;
+	return true;
 }

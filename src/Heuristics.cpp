@@ -82,6 +82,8 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
         return check_captures(target, other_target, pos, masks);
 
     size_t bits = target.bitCount();
+    if (bits < 1)
+        return 0;
     int score = 1 << bits;
 
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
@@ -92,18 +94,10 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     BigInt  edge_last = edge & vectorized[6];
     for (size_t i = 0; i < 2; i++)
     {
-        BigInt sub_target = target & masks.at(SUPERPOSITION)[pos][i];
+        BigInt sub_target = target & masks.at(SUBMASK)[pos][i];
         size_t sub_bits = sub_target.bitCount();
-        if (bits == sub_bits && bits > 1)
+        if (bits == sub_bits)
         {
-            // if (masks['e'][pos][0] != o)
-                // edge_first = edge & vectorized[0];
-            // else
-            //     edge_first = target_first;
-            // if (masks['e'][pos][0] != o)
-                // edge_last = edge & vectorized[6];
-            // else
-                // edge_last = target_last;
             if ((target_first != 0 && edge_first == 0)
             || (target_last != 0 && edge_last == 0)
             || ((target_first == 0 && target_last == 0) && (edge_first == 0 || edge_last == 0))
@@ -125,20 +119,19 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     BigInt target = _state.mystate(true) & full_mask;
     BigInt other_target = _state.otherstate(true) & full_mask;
 
-    if(endgame)
+    
+    if (target == full_mask)
     {
-        if (target == full_mask)
-        {
-            _heuristic = 32;
-            return true;
-        }
-        if (other_target == full_mask)
-        {
-            _heuristic = -32;
-            return true;
-        }
-        return false;
+        _heuristic = 32;
+        return true;
     }
+    if (other_target == full_mask)
+    {
+        _heuristic = -32;
+        return true;
+    }
+    if(endgame) 
+        return false;
 
     BigInt edge = (_state.otherstate(true) & masks.at(EDGE)[pos][0]);
     edge = edge | (_state.mystate(true) & masks.at(EDGE)[pos][0]);
@@ -163,13 +156,13 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     return false;
 }
 
-int Heuristics::run(bool endgame)
+int Heuristics::run()
 {
     for (size_t pos = 0; pos < _state.size(); pos++)
     {
         for (size_t i = 0; i < 4; i++)
         {
-            if (board_eval(pos, _modes[i], endgame))
+            if (board_eval(pos, _modes[i], false))
                 return _heuristic;
         }
     }
@@ -180,4 +173,14 @@ int Heuristics::run(bool endgame)
     }
     _heuristic = _min_score;
     return _min_score;
+}
+
+int Heuristics::endgame(size_t pos)
+{
+    for (size_t i = 0; i < 4; i++)
+    {
+        if (board_eval(pos, _modes[i], true))
+            return _heuristic;
+    }
+    return 0;
 }

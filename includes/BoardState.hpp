@@ -15,7 +15,7 @@ class BoardState
 			bool	_turn;
 			int		_size;
 			int 	_sqrt;
-			size_t	_move;
+			BigInt	_move;
 			BigInt	_mystate;
 			BigInt	_otherstate;
 			BigInt	_inv_mystate;
@@ -36,7 +36,7 @@ class BoardState
 			bool	const &turn() const;
 			int		const &size() const;
 			int		const &sqrt() const;
-			size_t 	const &move() const;
+			BigInt 	const &move() const;
 			BigInt 	const &mystate(bool inverted=false) const;
 			BigInt 	const &otherstate(bool inverted=false) const;
 			BigInt 	const &totalboard() const;

@@ -26,7 +26,8 @@ public:
     Heuristics& operator=(const Heuristics& other);
     ~Heuristics();
 
-    int run(bool endgame);
+    int run();
+    int endgame(size_t pos);
 
     static void set_masks(int mask_size, int board_sqrt);
 private:

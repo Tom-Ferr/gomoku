@@ -48,7 +48,8 @@ BoardState::BoardState(const BoardState& other, BigInt move)
 _mystate(other._otherstate), _otherstate(other._mystate ^ move),
 _inv_mystate(other._inv_otherstate),
 _inv_otherstate((~_otherstate) & BoardState::mask),
-_totalboard(~(_mystate ^ _otherstate) & BoardState::mask)
+_totalboard(~(_mystate ^ _otherstate) & BoardState::mask),
+_move(move)
 { }
 
 void BoardState::applymove(size_t pos, bool mystate)
@@ -118,7 +119,7 @@ int const &BoardState::sqrt() const
 	return _sqrt;
 }
 
-size_t const &BoardState::move() const
+BigInt const &BoardState::move() const
 {
 	return _move;
 }

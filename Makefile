@@ -22,7 +22,7 @@ GMP				= 	-lgmp -lgmpxx
 
 INCLUDE 		= 	-I${INC}
 
-SANITIZE 		= 	-fsanitize=address
+SANITIZE 		= 	-O3#-fsanitize=address
 
 UNAME			=	$(shell uname)
 
@@ -42,7 +42,7 @@ endif
 
 
 %.o: %.cpp		
-				${CXX} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${INCLUDE} -c $< -o $@
 
 $(NAME):		${OBJS} $(DEPS)
 				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${GMP} ${INCLUDE} -o ${NAME}

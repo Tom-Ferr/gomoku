@@ -31,6 +31,8 @@ class Board
 		sf::Vector2f		_dimensions;
 		sf::Vector2f		_position;
 		std::vector<Tile>	_tiles;
+		sf::Vector2f		_tiles_dimensions;
+		Tile				*_hovered_tile;
 		bool				_enabled;
 
 	void _load_texture(sf::Texture &texture, std::string path,
@@ -56,9 +58,11 @@ class Board
 		bool enabled();
 		void enable();
 		void disable();
+		sf::Vector2f get_tile_position(int i);
+		sf::Vector2f& get_tile_dimensions();
 		sf::Texture& get_tile_texture(int i);
 		sf::Texture& get_button_texture(int i);
-
+		size_t get_hovered_tile(sf::Vector2f &mouse);
 };
 
 #endif

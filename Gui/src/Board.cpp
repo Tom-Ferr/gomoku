@@ -3,7 +3,7 @@
 Board::Board() {}
 
 Board::Board(size_t sqrt, sf::RenderWindow* window)
-: _sqrt(sqrt), _size(sqrt * sqrt), _window(window), _enabled(true)
+: _sqrt(sqrt), _size(sqrt * sqrt), _window(window), _hovered_tile(nullptr), _enabled(true)
 {
 	TURN = true;
 	_shape = sf::RectangleShape();
@@ -16,7 +16,7 @@ Board::Board(size_t sqrt, sf::RenderWindow* window)
 
 Board::Board(Board const &other)
 : _sqrt(other._sqrt), _size(other._size), _shape(other._shape), _window(other._window),
-_dimensions(other._dimensions), _position(other._position), _tiles(other._tiles), _enabled(other._enabled) {}
+_dimensions(other._dimensions), _position(other._position), _tiles(other._tiles), _hovered_tile(nullptr), _enabled(other._enabled) {}
 
 Board::~Board() {}
 
@@ -91,9 +91,11 @@ void Board::resize()
 	_shape.setSize(_dimensions);
 	_shape.setOrigin(_dimensions.x / 2, _dimensions.y / 2);
 	_shape.setPosition(_position);
+	_tiles_dimensions = sf::Vector2f(
+		(_dimensions.x / sqrt()), (_dimensions.y / sqrt()));
 	for (std::vector<Tile>::iterator it = _tiles.begin();
 			it != _tiles.end(); ++it)
-		it->resize();
+		it->resize(_tiles_dimensions, get_tile_position(it->pos()));
 }
 
 void Board::draw()
@@ -125,13 +127,23 @@ sf::Vector2f const &Board::get_position() const
 
 bool Board::hover()
 {
+	Tile				*hovered;
 	sf::Vector2f mouse = sf::Vector2f(sf::Mouse::getPosition(window()));
 	if (enabled() && _shape.getGlobalBounds().contains(mouse))
 	{
-		for (std::vector<Tile>::iterator it = _tiles.begin();
-				it != _tiles.end(); ++it)
-			it->hover(mouse);
+		hovered = &_tiles[get_hovered_tile(mouse)];
+		if (hovered == _hovered_tile)
+			return true;
+		if (_hovered_tile)
+			_hovered_tile->hover(false);
+		_hovered_tile = hovered;
+		_hovered_tile->hover(true);
 		return true;
+	}
+	else if (_hovered_tile)
+	{
+		_hovered_tile->hover(false);
+		_hovered_tile = NULL;
 	}
 	return false;
 }
@@ -139,12 +151,7 @@ bool Board::hover()
 bool Board::click()
 {
 	if (enabled() && hover() && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		sf::Vector2f mouse = sf::Vector2f(sf::Mouse::getPosition(window()));
-		for (std::vector<Tile>::iterator it = _tiles.begin();
-				it != _tiles.end(); ++it)
-			it->click(mouse);
-	}
+		_hovered_tile->click();
 	return false;
 }
 
@@ -171,4 +178,29 @@ sf::Texture& Board::get_tile_texture(int i)
 sf::Texture& Board::get_button_texture(int i)
 {
 	return _button_texture[i];
+}
+
+sf::Vector2f Board::get_tile_position(int pos)
+{
+	return sf::Vector2f(
+	(get_position().x + get_dimensions().x / 2) - get_tile_dimensions().x * (pos % sqrt()),
+	(get_position().y + get_dimensions().y / 2) - get_tile_dimensions().y * (pos / sqrt()));
+}
+
+sf::Vector2f& Board::get_tile_dimensions()
+{
+	return _tiles_dimensions;
+}
+
+size_t Board::get_hovered_tile(sf::Vector2f &mouse)
+{
+    sf::Vector2f board_center(
+        get_position().x + get_dimensions().x / 2,
+        get_position().y + get_dimensions().y / 2
+    );
+	sf::Vector2i tile(
+		(board_center.x - mouse.x) / get_tile_dimensions().x,
+		(board_center.y - mouse.y) / get_tile_dimensions().y
+	);
+    return (tile.y * sqrt() + tile.x);
 }

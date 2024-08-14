@@ -31,13 +31,14 @@ class Tile
 		Tile(Tile const &other);
 		~Tile();
 		Tile &operator=(Tile const &other);
-		void resize();
+		void resize(sf::Vector2f &dimension, sf::Vector2f position);
 		void draw();
-		bool hover(sf::Vector2f &mouse);
-		bool click(sf::Vector2f &mouse);
+		bool hover(bool on);
+		bool click();
 		bool enabled();
 		void enable();
 		void disable();
+		size_t &pos();
 };
 
 #endif

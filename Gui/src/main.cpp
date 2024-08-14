@@ -22,7 +22,7 @@ int main()
 				board.resize();
 			}
 			if (event.type == sf::Event::MouseMoved && board.enabled())
-				board.hover();
+				board.hover(event.mouseMove);
 			if (event.type == sf::Event::MouseButtonPressed && board.enabled())
 				board.click();
         }

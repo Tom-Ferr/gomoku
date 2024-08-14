@@ -10,6 +10,7 @@ class Game
 {
 	private:
 		BoardState		_board;
+		size_t			_move;
 
 	public:
 		Game(int size=19);
@@ -17,6 +18,8 @@ class Game
 		Game &operator=(const Game& other);
 		~Game();
 		bool step();
+		size_t move() const;
+		BoardState &board();
 };
 
 

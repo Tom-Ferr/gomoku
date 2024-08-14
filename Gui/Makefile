@@ -1,28 +1,34 @@
-FILES			=	main.cpp Tile.cpp Board.cpp
+FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp Game.cpp Heuristics.cpp Mask.cpp Node.cpp
 
-SRCDIR			= 	src/
+GUI_FILES		=	Tile.cpp Board.cpp main.cpp
+GUI_SRCDIR			= 	src/
 
-SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
+SRCDIR			= 	../src/
+
+SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) $(addprefix $(GUI_SRCDIR), $(GUI_FILES))
 
 OBJS			= 	${SRCS:.cpp=.o}
 
-HEADS			=
+HEADS			=	BigInt.hpp BoardState.hpp Free_Three_Checker.hpp Game.hpp gomoku.hpp Heuristics.hpp Mask.hpp Node.hpp
+GUI_HEADS		=	Tile.hpp Board.hpp
 
-INC				= 	./includes/
-
-DEPS			= 	$(addprefix ${INC}, $(HEADS))
+INC				= 	../includes/
+GUI_INC			=	./includes/
+DEPS			= 	$(addprefix ${INC}, $(HEADS)) $(addprefix ${GUI_INC}, $(GUI_HEADS))
 
 NAME			= 	gui
 
 CXX				=	clang++
 
-CXXFLAGS		= 	 -Wall -Wextra -Werror -std=c++11
+CXXFLAGS		= 	 -std=c++11 #-Wall -Wextra -Werror
 
 
-SFML_INC			=	-I/opt/homebrew/Cellar/sfml/2.6.1/include
-SFML_LIB			=	-L/opt/homebrew/Cellar/sfml/2.6.1/lib
+SFML_INC		=	-I/opt/homebrew/Cellar/sfml/2.6.1/include
+SFML_LIB		=	-L/opt/homebrew/Cellar/sfml/2.6.1/lib
+GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
+GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
-INCLUDE 		= 	-I${INC}
+INCLUDE 		= 	-I${INC} -I${GUI_INC}
 
 SANITIZE 		= 	-fsanitize=address -g
 
@@ -30,13 +36,15 @@ UNAME			=	$(shell uname)
 
 LINUX			= -D _LINUX
 
-LIBS 			= -lsfml-graphics -lsfml-window -lsfml-system
+LIBS 			= -lsfml-graphics -lsfml-window -lsfml-system -lgmp -lgmpxx
 
 ifeq ($(UNAME),Linux)
     CXXFLAGS += $(LINUX)
 else ifeq ($(shell uname -s), Darwin)
     INCLUDE += $(SFML_INC)
     LIBS += $(SFML_LIB)
+	INCLUDE += $(GMP_INC)
+    LIBS += $(GMP_LIB)
 endif
 
 all:			${NAME}

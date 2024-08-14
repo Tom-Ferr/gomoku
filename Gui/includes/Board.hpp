@@ -3,6 +3,7 @@
 
 # include <SFML/Graphics.hpp>
 # include <Tile.hpp>
+# include <Game.hpp>
 
 # define TILE_SIZE 500
 # define BACKGROUND_SIZE 1024
@@ -34,6 +35,7 @@ class Board
 		sf::Vector2f		_tiles_dimensions;
 		Tile				*_hovered_tile;
 		bool				_enabled;
+		Game				_game;
 
 	void _load_texture(sf::Texture &texture, std::string path,
 						sf::IntRect rect = sf::IntRect(), int type=TX_BG);

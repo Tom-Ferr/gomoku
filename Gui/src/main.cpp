@@ -2,9 +2,14 @@
 #include <SFML/Graphics.hpp>
 
 #include <Board.hpp>
+#include <Heuristics.hpp>
+#include <Free_Three_Checker.hpp>
 
 int main()
 {
+	std::srand(42);
+	Free_Three_Checker::set_masks(6, 19);
+	Heuristics::set_masks(5, 19);
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Gomoku");
 	Board board(19, &window);
     while (window.isOpen())

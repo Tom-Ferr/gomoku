@@ -16,7 +16,7 @@ NAME			= 	gomoku
 
 CXX				=	clang++
 
-CXXFLAGS		= 	 -Wall -Wextra -Werror -std=c++11
+CXXFLAGS		= 	 -std=c++11#-Wall -Wextra -Werror
 
 
 GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include

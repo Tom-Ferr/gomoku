@@ -317,3 +317,8 @@ std::istream& operator>>(std::istream& is, BigInt& big_int) {
 	mpz_set_str(big_int._value, str.c_str(), 10);
 	return is;
 }
+
+size_t BigInt::pos() const
+{
+	return mpz_scan1(_value, 0);
+}

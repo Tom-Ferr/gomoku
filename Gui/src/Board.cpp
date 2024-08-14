@@ -6,7 +6,7 @@ Board::Board(size_t sqrt, sf::RenderWindow* window)
 : _sqrt(sqrt), _size(sqrt * sqrt), _window(window), _hovered_tile(nullptr), _enabled(true)
 {
 	TURN = true;
-
+	_game = Game(sqrt);
 	_shape = sf::RectangleShape();
 	_load_textures();
 	_shape.setTexture(&_texture);
@@ -152,8 +152,20 @@ bool Board::hover()
 bool Board::click()
 {
 	if (enabled() && _hovered_tile && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		disable();
 		_hovered_tile->click();
-	return false;
+		_game.board().applymove(_hovered_tile->pos(), false);
+		_hovered_tile = nullptr;
+		if (_game.step())
+		{
+			_tiles[_game.move()].hover(true);
+			_tiles[_game.move()].click();
+			enable();
+		}
+		std::cout << _game.move() << std::endl;
+	}
+	return true;
 }
 
 bool Board::enabled()

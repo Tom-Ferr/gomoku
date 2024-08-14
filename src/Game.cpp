@@ -3,8 +3,6 @@
 Game::Game(int size)
 : _board(size)
 {
-	_board.applymove(180, false);
-	std::cout << _board << std::endl;
 
 }
 
@@ -41,12 +39,25 @@ bool Game::step()
 		_board.applymove(result.second, _board.turn());
 		std::cout << "Move: " << result.second << std::endl;
 		_board.flip_turn();
+		//gets the last active bit of the move
+		_move = result.second.pos();
 	}
 	std::cout << _board << std::endl;
 	_board.print();
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
+	std::cout << "Move: " << _move << std::endl;
 	if (result.second == 0)
 		return false;
 	return true;
+}
+
+BoardState &Game::board()
+{
+	return _board;
+}
+
+size_t Game::move() const
+{
+	return _move;
 }

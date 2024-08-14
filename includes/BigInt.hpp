@@ -124,6 +124,7 @@ class BigInt
 		void clear_bit(size_t bit);
 
 		size_t size() const;
+		size_t pos() const;
 
 		// Output Stream
 		friend std::ostream& operator<<(std::ostream& os, const BigInt& big_int);

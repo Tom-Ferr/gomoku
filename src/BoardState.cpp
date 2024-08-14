@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 14:43:15 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/08 19:20:17 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:27:31 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,15 @@ BoardState::BoardState(int _sqrt)
 	}
 	_mystate = BoardState::mask;
 	_otherstate = BoardState::mask;
+	_inv_mystate = BigInt(0);
+	_inv_otherstate = BigInt(0);
 	_totalboard = BoardState::mask;
 }
 
 BoardState::BoardState(const BoardState& other)
 : _turn(other._turn), _size(other._size), _sqrt(other._sqrt),
 _mystate(other._mystate), _otherstate(other._otherstate),
+_inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
 _totalboard(other._totalboard)
 { }
 
@@ -48,12 +51,16 @@ BoardState::BoardState(BoardState&& other) noexcept
 : _turn(other._turn), _size(other._size), _sqrt(other._sqrt),
 _mystate(std::move(other._mystate)),
 _otherstate(std::move(other._otherstate)),
+_inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
 _totalboard(other._totalboard)
 { }
 
 BoardState::BoardState(const BoardState& other, BigInt move)
 : _turn(!other._turn), _size(other._size), _sqrt(other._sqrt),
+_move(move),
 _mystate(other._otherstate), _otherstate(other._mystate ^ move),
+_inv_mystate(other._inv_otherstate),
+_inv_otherstate((~_otherstate) & BoardState::mask),
 _totalboard(~(_mystate ^ _otherstate) & BoardState::mask)
 { }
 
@@ -61,30 +68,46 @@ void BoardState::applymove(size_t pos, bool mystate)
 {
 	BigInt mv = BigInt(1) << pos;
 	if (mystate)
+	{
 		_mystate = _mystate ^ mv;
+		_inv_mystate = (~_mystate) & BoardState::mask;
+	}
 	else
+	{
 		_otherstate = _otherstate ^ mv;
+		_inv_otherstate = (~_otherstate) & BoardState::mask;
+	}
 	_totalboard = _totalboard ^ mv;
 }
 
 void BoardState::applymove(BigInt move, bool mystate)
 {
 	if (mystate)
+	{
 		_mystate = _mystate ^ move;
+		_inv_mystate = (~_mystate) & BoardState::mask;
+	}
 	else
+	{
 		_otherstate = _otherstate ^ move;
+		_inv_otherstate = (~_otherstate) & BoardState::mask;
+	}
 	_totalboard = _totalboard ^ move;
 }
 
 BoardState::~BoardState() { }
 
-BigInt const &BoardState::mystate() const
+BigInt const &BoardState::mystate(bool inverted) const
 {
+	if (inverted)
+		return _inv_mystate;
 	return _mystate;
 }
 
-BigInt const &BoardState::otherstate() const
+BigInt const &BoardState::otherstate(bool inverted) const
 {
+	if (inverted)
+		return _inv_otherstate;
 	return _otherstate;
 }
 
@@ -108,7 +131,7 @@ int const &BoardState::sqrt() const
 	return _sqrt;
 }
 
-size_t const &BoardState::move() const
+BigInt const &BoardState::move() const
 {
 	return _move;
 }
@@ -118,6 +141,10 @@ void BoardState::swap_states()
 	BigInt temp = _mystate;
 	_mystate = _otherstate;
 	_otherstate = temp;
+	temp = _inv_mystate;
+	_inv_mystate = _inv_otherstate;
+	_inv_otherstate = temp;
+	_turn = true;
 }
 
 void BoardState::flip_turn()
@@ -138,7 +165,7 @@ BigInt BoardState::expanded_free() const
 	e[6] = (e[0] >> _sqrt) & BoardState::mask;
 	e[7] = (e[1] >> _sqrt) & BoardState::mask;
 	return ((e[0] | e[1] | e[2] | e[3] | e[4] | e[5] | e[6] | e[7])
-				& ~t);
+				& totalboard() & mask);
 }
 
 void BoardState::print()
@@ -170,6 +197,8 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_mystate = other._mystate;
 		_otherstate = other._otherstate;
 		_totalboard = other._totalboard;
+		_inv_mystate = other._mystate;
+		_inv_otherstate = other._inv_otherstate;
 	}
 	return *this;
 }

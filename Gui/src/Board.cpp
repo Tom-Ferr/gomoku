@@ -6,6 +6,7 @@ Board::Board(size_t sqrt, sf::RenderWindow* window)
 : _sqrt(sqrt), _size(sqrt * sqrt), _window(window), _hovered_tile(nullptr), _enabled(true)
 {
 	TURN = true;
+
 	_shape = sf::RectangleShape();
 	_load_textures();
 	_shape.setTexture(&_texture);

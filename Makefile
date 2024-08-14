@@ -1,4 +1,4 @@
-FILES			=	BigInt.cpp BoardState.cpp Node.cpp main.cpp Mask.cpp Game.cpp
+FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp Game.cpp Heuristics.cpp main.cpp Mask.cpp Node.cpp
 
 SRCDIR			= 	src/
 
@@ -6,7 +6,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES))
 
 OBJS			= 	${SRCS:.cpp=.o}
 
-HEADS			=	BigInt.hpp BoardState.hpp gomoku.hpp Node.hpp
+HEADS			=	BigInt.hpp BoardState.hpp Free_Three_Checker.hpp Game.hpp gomoku.hpp Heuristics.hpp Mask.hpp Node.hpp
 
 INC				= 	./includes/
 
@@ -24,7 +24,7 @@ GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 INCLUDE 		= 	-I${INC}
 
-SANITIZE 		= 	-fsanitize=address -g
+SANITIZE 		= 	-O3#-fsanitize=address
 
 UNAME			=	$(shell uname)
 
@@ -42,6 +42,13 @@ else ifeq ($(shell uname -s), Darwin)
     INCLUDE += $(GMP_INC)
     LIBS += $(GMP_LIB)
 endif
+
+
+%.o: %.cpp
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${INCLUDE} -c $< -o $@
+
+$(NAME):		${OBJS} $(DEPS)
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${GMP} ${INCLUDE} -o ${NAME}
 
 all:			${NAME}
 

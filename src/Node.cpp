@@ -1,18 +1,32 @@
 #include <Node.hpp>
 
 size_t Node::node_count = 0;
+BigInt Node::_freepos;
+
+int max(int &a, int &b)
+{
+	return std::max(a,b);
+}
+
+int min(int &a, int &b)
+{
+	return std::min(a,b);
+}
 
 Node::Node() {}
 
 Node::Node(int depth, int alpha, int beta, BoardState state)
 : _depth(depth), _alpha(alpha), _beta(beta), _state(state)
 {
+	_ftc = Free_Three_Checker(_state);
 	Node::node_count++;
 }
 
 Node::Node(const Node& other)
 : _depth(other._depth), _alpha(other._alpha), _beta(other._beta), _state(other._state)
-{}
+{
+	_ftc = Free_Three_Checker(_state);
+}
 
 Node::~Node() {}
 
@@ -24,61 +38,96 @@ Node& Node::operator=(const Node& other)
 		_alpha = other._alpha;
 		_beta = other._beta;
 		_state = other._state;
+		_ftc = Free_Three_Checker(_state);
 	}
 	return *this;
 }
 
 std::pair<int, BigInt> Node::minimax()
 {
+
 	if (_depth == 0)
 	{
-		/*
-		** calculates all the score here
-		*/
-
+		/*comment this line to test with heuristics*/
 		return std::make_pair(std::rand() % 65 - 32, 0);
+
+		//Heuristics h = Heuristics(_state);
+		//_heuristic = h.run();
+		//std::cout << "heuristic" << _heuristic << '\n';
+		return std::make_pair(_heuristic, 0);
 	}
 	if (_state.turn())
-		return alpha_beta_prune(_alpha, true);
-	return alpha_beta_prune(_beta, false);
+		return alpha_beta_prune(_alpha, max);
+	return alpha_beta_prune(_beta, min);
 }
 
-std::pair<int, BigInt> Node::alpha_beta_prune(int x, bool maximizing)
+std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 {
-	BigInt best_child = 0;
-	std::vector<BigInt> moves = possible_moves();
-	for (std::vector<BigInt>::iterator it = moves.begin(); it != moves.end(); it++)
+	BigInt best_child;
+	std::vector<size_t> moves;
+	BigInt *move;
+	if(possible_moves(moves) == false)
+		return std::make_pair(_heuristic, _state.move());
+	for (std::vector<size_t>::iterator it = moves.begin(); it != moves.end(); it++)
 	{
-		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *it));
+		move = &Mask::targets(*it);
+		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *move));
 		std::pair<int, BigInt> score = child.minimax();
-		x = maximizing ? std::max(x, score.first) : std::min(x, score.first);
-		if(x == score.first)
-			best_child = *it;
-		if (maximizing)
-			_alpha = std::max(_alpha, score.first);
-		else
-			_beta = std::min(_beta, score.first);
+		_heuristic = f(x, score.first);
+		if(_heuristic == score.first && _heuristic != x)
+		{
+			x = _heuristic;
+			best_child = *move;
+		}
 		if (_alpha >= _beta)
 			break;
 	}
 	return std::make_pair(x, best_child);
 }
 
-std::vector<BigInt> Node::possible_moves()
+bool Node::is_double_free_three(const size_t &pos)
 {
-	std::vector<BigInt> moves;
-	BigInt freepos = _state.expanded_free();
 
-	for (size_t i = 0; i < freepos.size(); i++)
+	//uncomment from here
+
+	// if(ftc.check(pos))
+	// 	return true;
+	// return false;
+
+	// to here to change to the other check method
+
+	char modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
+	int c = 0;
+
+	for (size_t i = 0; i < 4; i++)
 	{
-		if (freepos.get_bit(i) && !check_double_tree(i))
-			moves.push_back(BigInt(1) << i);
+		if(_ftc.check(pos, modes[i]))
+			c++;
+		if(c == 2)
+			return true;
 	}
-	return moves;
+	return false;
 }
 
-bool Node::check_double_tree(size_t pos)
+bool Node::is_valid(const size_t &pos, BigInt &freepos)
 {
-	(void)pos;
+	if(freepos.get_bit(pos) && !is_double_free_three(pos))
+		return true;
 	return false;
+}
+
+bool Node::possible_moves(std::vector<size_t>& moves)
+{
+	Node::_freepos = _state.expanded_free();
+
+	Heuristics h = Heuristics(_state);
+	for (size_t pos = 0; pos < _state.size(); pos++)
+	{
+		//_heuristic = h.endgame(pos);
+		//if(_heuristic == 32 || _heuristic == -32)
+		//	return false;
+		if (is_valid(pos, _freepos))
+			moves.push_back(pos);
+	}
+	return true;
 }

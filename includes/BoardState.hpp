@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 13:49:52 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/08 19:13:58 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:24:03 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ class BoardState
 			bool	_turn;
 			int		_size;
 			int 	_sqrt;
-			size_t	_move;
+			BigInt	_move;
 			BigInt	_mystate;
 			BigInt	_otherstate;
+			BigInt	_inv_mystate;
+			BigInt	_inv_otherstate;
 			BigInt	_totalboard;
 
 		public:
@@ -46,9 +48,9 @@ class BoardState
 			bool	const &turn() const;
 			int		const &size() const;
 			int		const &sqrt() const;
-			size_t 	const &move() const;
-			BigInt 	const &mystate() const;
-			BigInt 	const &otherstate() const;
+			BigInt 	const &move() const;
+			BigInt 	const &mystate(bool inverted=false) const;
+			BigInt 	const &otherstate(bool inverted=false) const;
 			BigInt 	const &totalboard() const;
 			BigInt 	expanded_free() const;
 			void swap_states();

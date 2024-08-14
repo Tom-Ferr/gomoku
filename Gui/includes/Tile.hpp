@@ -33,8 +33,8 @@ class Tile
 		Tile &operator=(Tile const &other);
 		void resize();
 		void draw();
-		bool hover();
-		bool click();
+		bool hover(sf::Vector2f &mouse);
+		bool click(sf::Vector2f &mouse);
 		bool enabled();
 		void enable();
 		void disable();

@@ -76,12 +76,12 @@ void Tile::resize()
 	_piece.setPosition(_position);
 }
 
-bool Tile::hover()
+bool Tile::hover(sf::Vector2f &mouse)
 {
 	if (!enabled())
 		return false;
-
-	sf::Vector2f mouse = sf::Vector2f(sf::Mouse::getPosition(_board->window()));
+	if (_hover)
+		return true;
 	if (_square.getGlobalBounds().contains(mouse))
 	{
 		std::cout << "hover" << _pos << std::endl;
@@ -101,9 +101,9 @@ bool Tile::hover()
 	return false;
 }
 
-bool Tile::click()
+bool Tile::click(sf::Vector2f &mouse)
 {
-	if (enabled() && hover())
+	if (enabled() && hover(mouse))
 	{
 		std::cout << "click" << _pos << std::endl;
 		sf::Color color;

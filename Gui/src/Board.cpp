@@ -125,12 +125,12 @@ sf::Vector2f const &Board::get_position() const
 
 bool Board::hover()
 {
-	if (enabled() && _shape.getGlobalBounds().contains(
-			_window->mapPixelToCoords(sf::Mouse::getPosition(window()))))
+	sf::Vector2f mouse = sf::Vector2f(sf::Mouse::getPosition(window()));
+	if (enabled() && _shape.getGlobalBounds().contains(mouse))
 	{
 		for (std::vector<Tile>::iterator it = _tiles.begin();
 				it != _tiles.end(); ++it)
-			it->hover();
+			it->hover(mouse);
 		return true;
 	}
 	return false;
@@ -140,9 +140,10 @@ bool Board::click()
 {
 	if (enabled() && hover() && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
+		sf::Vector2f mouse = sf::Vector2f(sf::Mouse::getPosition(window()));
 		for (std::vector<Tile>::iterator it = _tiles.begin();
 				it != _tiles.end(); ++it)
-			it->click();
+			it->click(mouse);
 	}
 	return false;
 }

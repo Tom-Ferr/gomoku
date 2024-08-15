@@ -1,6 +1,6 @@
 FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp Game.cpp Heuristics.cpp Mask.cpp Node.cpp
 
-GUI_FILES		=	Tile.cpp Board.cpp main.cpp
+GUI_FILES		=	Tile.cpp Board.cpp Menu.cpp Gui.cpp main.cpp
 GUI_SRCDIR			= 	src/
 
 SRCDIR			= 	../src/
@@ -10,7 +10,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) $(addprefix $(GUI_SRCDIR), $(GUI_FILE
 OBJS			= 	${SRCS:.cpp=.o}
 
 HEADS			=	BigInt.hpp BoardState.hpp Free_Three_Checker.hpp Game.hpp gomoku.hpp Heuristics.hpp Mask.hpp Node.hpp
-GUI_HEADS		=	Tile.hpp Board.hpp
+GUI_HEADS		=	Tile.hpp Board.hpp Menu.hpp Gui.hpp
 
 INC				= 	../includes/
 GUI_INC			=	./includes/
@@ -20,7 +20,7 @@ NAME			= 	gui
 
 CXX				=	clang++
 
-CXXFLAGS		= 	 -std=c++11 #-Wall -Wextra -Werror
+CXXFLAGS		= 	 -std=c++11 -Wall -Wextra -Werror
 
 
 SFML_INC		=	-I/opt/homebrew/Cellar/sfml/2.6.1/include
@@ -66,7 +66,7 @@ endif
 
 
 $(NAME):		check-gmp ${OBJS} $(DEPS)
-				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} ${LIBS} -o ${NAME}
+				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}  ${LIBS}
 
 %.o: %.cpp
 				${CXX} ${CXXFLAGS} ${SANITIZE} ${INCLUDE} -c $< -o $@

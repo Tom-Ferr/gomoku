@@ -11,26 +11,30 @@ int main()
 	Free_Three_Checker::set_masks(6, 19);
 	Heuristics::set_masks(5, 19);
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Gomoku");
+	window.setVerticalSyncEnabled(true);
+	Gui gui(&window);
+
 	Board board(19, &window);
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed)
                 window.close();
-			if (event.type == sf::Event::Resized)
+			else if (event.type == sf::Event::Resized)
 			{
 				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
         		window.setView(sf::View(visibleArea));
 				board.resize();
 			}
-			if (event.type == sf::Event::MouseMoved && board.enabled())
+			else if (event.type == sf::Event::MouseMoved && board.enabled())
 				board.hover();
-			if (event.type == sf::Event::MouseButtonPressed && board.enabled())
+			else if (event.type == sf::Event::MouseButtonPressed && board.enabled())
 				board.click();
         }
         window.clear();
+		gui.draw();
 		board.draw();
         window.display();
     }

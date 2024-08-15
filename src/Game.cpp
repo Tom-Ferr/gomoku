@@ -3,7 +3,6 @@
 Game::Game(int size)
 : _board(size)
 {
-
 }
 
 Game::Game(const Game& other)
@@ -20,11 +19,26 @@ Game &Game::operator=(const Game& other)
 
 Game::~Game() {}
 
-bool Game::step()
+/*
+** if both players are maximizing, it makes no sense to have a turn
+** in the board state (this will always be true, unless during minimax)
+** where next depth is min, then the following is max and so on...
+** So the turn will be determined by the game itself
+*/
+bool Game::step(bool turn)
 {
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	std::pair<int, BigInt> result;
-	if (_board.turn())
+
+	if (((~_board.totalboard()) & BoardState::mask) == 0)
+	{
+		_move = _board.size() / 2;
+		_board.applymove(_move, turn);
+		std::cout << "Move: " << _move << std::endl;
+		return true;
+	}
+
+	if (turn)
 		result = Node(3, INT_MIN, INT_MAX, _board).minimax();
 	else
 	{
@@ -36,11 +50,9 @@ bool Game::step()
 		std::cout << "No move found" << std::endl;
 	else
 	{
-		_board.applymove(result.second, _board.turn());
-		std::cout << "Move: " << result.second << std::endl;
-		_board.flip_turn();
-		//gets the last active bit of the move
 		_move = result.second.pos();
+		_board.applymove(_move, turn);
+		std::cout << "Move: " << _move << std::endl;
 	}
 	std::cout << _board << std::endl;
 	_board.print();

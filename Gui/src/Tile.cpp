@@ -34,8 +34,8 @@ Tile::Tile(Board *board, size_t pos)
 	_square = sf::RectangleShape(sf::Vector2f(417, 417));
 	_piece = sf::CircleShape(20, 500);
 	_piece.setFillColor(sf::Color::Transparent);
-	_piece.setTexture(&_board->get_button_texture());
-	_square.setTexture(&_board->get_tile_texture(tex), true);
+	_piece.setTexture(Gui::texture(TX_PIECE, tex));
+	_square.setTexture(Gui::texture(TX_TILE, tex), true);
 
 }
 
@@ -93,7 +93,7 @@ void Tile::resize()
 }
 */
 
-bool Tile::hover(bool on)
+bool Tile::hover(bool on, bool turn)
 {
 	if (!enabled())
 		return false;
@@ -102,7 +102,7 @@ bool Tile::hover(bool on)
 		_hover = true;
 		std::cout << "hover" << _pos << std::endl;
 		sf::Color color;
-		if (_board->TURN)
+		if (turn)
 			color = Tile::p1_color;
 		else
 			color = Tile::p2_color;
@@ -118,18 +118,17 @@ bool Tile::hover(bool on)
 	}
 }
 
-bool Tile::click()
+bool Tile::click(bool turn)
 {
 	if (enabled() && _hover)
 	{
 		std::cout << "click" << _pos << std::endl;
 		sf::Color color;
-		if (_board->TURN)
+		if (turn)
 			color = Tile::p1_color;
 		else
 			color = Tile::p2_color;
 		_piece.setFillColor(color);
-		_board->TURN = !_board->TURN;
 		disable();
 		return true;
 	}

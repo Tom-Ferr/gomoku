@@ -49,15 +49,25 @@ std::pair<int, BigInt> Node::minimax()
 	if (_depth == 0)
 	{
 		/*comment this line to test with heuristics*/
-		return std::make_pair(std::rand() % 65 - 32, 0);
-
+		//return std::make_pair(std::rand() % 65 - 32, 0);
 		Heuristics h = Heuristics(_state);
 		_heuristic = h.run();
+		//std::cout << "Depth: " << _depth << " Heuristic: " << _heuristic << " Move: " << _state.move().pos() << std::endl;
 		return std::make_pair(_heuristic, 0);
 	}
 	if (_state.turn())
-		return alpha_beta_prune(_alpha, max);
-	return alpha_beta_prune(_beta, min);
+	{
+
+		std::pair<int, BigInt> abmax = alpha_beta_prune(_alpha, max);
+		//std::cout << "Depth: " << _depth << " Alpha: " << _alpha << " Beta: " << _beta << " Heuristic: " << abmax.first << " Move: " << (abmax.second != 0 ? std::to_string(abmax.second.pos()) : std::string("none")) << std::endl;
+		return abmax;
+	}
+	else
+	{
+		std::pair<int, BigInt> abmin = alpha_beta_prune(_beta, min);
+		//std::cout << "Depth: " << _depth << " Alpha: " << _alpha << " Beta: " << _beta << " Heuristic: " << abmin.first << " Move: " << (abmin.second != 0 ? std::to_string(abmin.second.pos()) : std::string("none")) << std::endl;
+		return abmin;
+	}
 }
 
 std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
@@ -119,12 +129,12 @@ bool Node::possible_moves(std::vector<size_t>& moves)
 {
 	Node::_freepos = _state.expanded_free();
 
-	//Heuristics h = Heuristics(_state);
-	for (size_t pos = 0; pos < _state.size(); pos++)
+	Heuristics h = Heuristics(_state);
+	for (int pos = 0; pos < _state.size(); pos++)
 	{
-		//_heuristic = h.endgame(pos);
-		//if(_heuristic == 32 || _heuristic == -32)
-		//	return false;
+		_heuristic = h.endgame(pos);
+		if(_heuristic == 32 || _heuristic == -32)
+			return false;
 		if (is_valid(pos, _freepos))
 			moves.push_back(pos);
 	}

@@ -17,10 +17,9 @@ class Game
 		Game(const Game& other);
 		Game &operator=(const Game& other);
 		~Game();
-		bool step();
+		bool step(bool turn=true);
 		size_t move() const;
 		BoardState &board();
 };
-
 
 #endif

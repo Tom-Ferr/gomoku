@@ -4,32 +4,20 @@
 # include <SFML/Graphics.hpp>
 # include <Tile.hpp>
 # include <Game.hpp>
+# include <Gui.hpp>
 
 # define TILE_SIZE 500
 # define BACKGROUND_SIZE 1024
 # define BUTTON_SIZE 200
-
-enum e_texturetype
-{
-	TX_BG,
-	TX_TILE,
-	TX_BLACK,
-	TX_WHITE,
-	TX_BACKGROUND
-};
 
 class Tile;
 
 class Board
 {
 	private:
-		sf::Texture 		_background_texture;
-		sf::Texture 		_button_texture;
-		sf::Texture 		_tile_texture[9];
-		sf::Texture 		_texture;
+
 		size_t				_sqrt;
 		size_t				_size;
-		sf::RectangleShape	_background;
 		sf::RectangleShape	_shape;
 		sf::RenderWindow*	_window;
 		sf::Vector2f		_dimensions;
@@ -40,13 +28,7 @@ class Board
 		bool				_enabled;
 		Game				_game;
 
-	void _load_texture(sf::Texture &texture, std::string path,
-						sf::IntRect rect = sf::IntRect(), int type=TX_BG);
-	void _load_textures();
-
-
 	public:
-		bool				TURN;
 		Board(size_t sqrt, sf::RenderWindow* window);
 		Board();
 		Board(Board const &other);
@@ -58,6 +40,7 @@ class Board
 		sf::RenderWindow &window() const;
 		sf::Vector2f const &get_dimensions() const;
 		sf::Vector2f const &get_position() const;
+		void init();
 		bool hover();
 		bool click();
 		bool enabled();
@@ -65,8 +48,6 @@ class Board
 		void disable();
 		sf::Vector2f get_tile_position(int i);
 		sf::Vector2f& get_tile_dimensions();
-		sf::Texture& get_tile_texture(int i);
-		sf::Texture& get_button_texture();
 		size_t get_hovered_tile(sf::Vector2f &mouse);
 };
 

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 13:49:52 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/14 18:24:03 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/15 12:08:47 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class BoardState
 			~BoardState();
 			BoardState& operator=(const BoardState& other);
 			void applymove(size_t pos, bool mystate=true);
-			void applymove(BigInt move, bool mystate);
+			void applymove(BigInt move, bool mystate=true);
 
 			// getters
 			bool	const &turn() const;

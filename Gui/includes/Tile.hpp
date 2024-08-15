@@ -4,6 +4,7 @@
 # include <iostream>
 # include <SFML/Graphics.hpp>
 # include <Board.hpp>
+# include <Gui.hpp>
 # include <map>
 
 class Board;
@@ -33,8 +34,8 @@ class Tile
 		Tile &operator=(Tile const &other);
 		void resize(sf::Vector2f &dimension, sf::Vector2f position);
 		void draw();
-		bool hover(bool on);
-		bool click();
+		bool hover(bool on, bool turn);
+		bool click(bool turn);
 		bool enabled();
 		void enable();
 		void disable();

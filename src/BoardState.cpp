@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 14:43:15 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/14 18:27:31 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/15 13:41:22 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ BoardState::BoardState(int _sqrt)
 
 BoardState::BoardState(const BoardState& other)
 : _turn(other._turn), _size(other._size), _sqrt(other._sqrt),
+_move(other._move),
 _mystate(other._mystate), _otherstate(other._otherstate),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
 _totalboard(other._totalboard)
@@ -49,6 +50,7 @@ _totalboard(other._totalboard)
 
 BoardState::BoardState(BoardState&& other) noexcept
 : _turn(other._turn), _size(other._size), _sqrt(other._sqrt),
+_move(other._move),
 _mystate(std::move(other._mystate)),
 _otherstate(std::move(other._otherstate)),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
@@ -80,20 +82,6 @@ void BoardState::applymove(size_t pos, bool mystate)
 	_totalboard = _totalboard ^ mv;
 }
 
-void BoardState::applymove(BigInt move, bool mystate)
-{
-	if (mystate)
-	{
-		_mystate = _mystate ^ move;
-		_inv_mystate = (~_mystate) & BoardState::mask;
-	}
-	else
-	{
-		_otherstate = _otherstate ^ move;
-		_inv_otherstate = (~_otherstate) & BoardState::mask;
-	}
-	_totalboard = _totalboard ^ move;
-}
 
 BoardState::~BoardState() { }
 
@@ -171,6 +159,7 @@ BigInt BoardState::expanded_free() const
 void BoardState::print()
 {
 	std::cout << "\033[2J\033[1;1H";
+
 	for (int y = _sqrt - 1; y >= 0; y--)
 	{
 		for (int x = _sqrt - 1; x >= 0; x--)
@@ -194,6 +183,7 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_turn = other._turn;
 		_size = other._size;
 		_sqrt = other._sqrt;
+		_move = other._move;
 		_mystate = other._mystate;
 		_otherstate = other._otherstate;
 		_totalboard = other._totalboard;

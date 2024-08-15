@@ -55,6 +55,11 @@ void Heuristics::set_masks(int mask_size, int board_sqrt)
 
 int Heuristics::check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
 {
+	(void)target;
+	(void)other_target;
+	(void)pos;
+	(void)masks;
+
         // size_t my_bits = (target & masks[FULL][pos][0]).bitCount();
         // size_t other_bits = (other_target & masks[FULL][pos][0]).bitCount();
         // if (other_bits == 2 and my_bits < 3)
@@ -158,7 +163,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 
 int Heuristics::run()
 {
-    for (size_t pos = 0; pos < _state.size(); pos++)
+    for (int pos = 0; pos < _state.size(); pos++)
     {
         for (size_t i = 0; i < 4; i++)
         {

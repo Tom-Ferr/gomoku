@@ -129,6 +129,10 @@ void BoardState::swap_states()
 	BigInt temp = _mystate;
 	_mystate = _otherstate;
 	_otherstate = temp;
+	temp = _inv_mystate;
+	_inv_mystate = _inv_otherstate;
+	_inv_otherstate = temp;
+	_turn = true;
 }
 
 void BoardState::flip_turn()
@@ -178,6 +182,7 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_turn = other._turn;
 		_size = other._size;
 		_sqrt = other._sqrt;
+		_move = other._move;
 		_mystate = other._mystate;
 		_otherstate = other._otherstate;
 		_totalboard = other._totalboard;

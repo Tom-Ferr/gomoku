@@ -20,7 +20,7 @@ Free_Three_Checker::~Free_Three_Checker(){};
 bool Free_Three_Checker::check(int pos, char orientation)
 {
     const Mask::inner_map &masks = Free_Three_Checker::_masks.at(orientation);
-    BigInt target = _state.mystate(true) & Mask::targets(pos);
+    // BigInt target = _state.mystate(true) & Mask::targets(pos);
 
     const Mask::variations_vector &full_vec = masks.at(FULL);
     Mask::mask_vector::const_iterator full_mask = full_vec[pos].begin();

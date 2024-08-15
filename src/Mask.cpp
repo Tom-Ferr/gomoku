@@ -98,11 +98,17 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
     }
 
     pos = src - (2 * shift) - (2 * inc);
+    bool s = (src + shift + inc) % _board_sqrt >= src % _board_sqrt;
+    bool f = pos % _board_sqrt > src % _board_sqrt;
+    bool l = (pos + ((_mask_size + 1) * shift) + ((_mask_size + 1) * inc)) % _board_sqrt > src % _board_sqrt;
     for (int i = 0; i < (int)_mask_size + 2; i++)
     {
         BigInt t;
-
-        if (pos < 0 )
+        if(s == f && i == 0)
+            t = targets(pos + shift + inc);
+        else if(s != l && i == _mask_size + 1)
+            t = targets(pos - shift - inc);
+        else if (pos < 0 )
             t = targets(pos + shift + inc);
         else if (pos >= (int)_board_size)
             t = targets(pos - shift - inc);
@@ -264,9 +270,9 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
         else
         {
             if (pos % _board_sqrt == 1)
-                edge_mask = ((edge_mask >> 2) & full_mask) << 1;
+                edge_mask = full_mask ^ (full_mask << 1);
             else if (pos % _board_sqrt > _board_sqrt - (_mask_size))
-                edge_mask = (full_mask & edge_mask) >> 1;
+                edge_mask = full_mask ^ (full_mask >> 1);
             else
                 edge_mask = edge_mask >> 1;
             f_vec.push_back(full_mask );
@@ -370,9 +376,9 @@ Mask::inner_map Mask::vertical_mask() const
             int shift = _board_sqrt;
 
             if (pos < _board_sqrt * 2)
-                edge_mask = ((edge_mask >> 2 * shift) & full_mask) << shift;
+                edge_mask = full_mask ^ (full_mask << shift);
             else if (pos >= _board_sqrt * (_board_sqrt - (_mask_size - 1)))
-                edge_mask = (full_mask & edge_mask) >> shift;
+                edge_mask = full_mask ^ (full_mask >> shift);
             else
                 edge_mask = edge_mask >> shift;
             f_vec.push_back(full_mask );
@@ -479,12 +485,12 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
         {
             int shift = _board_sqrt;
 
-            if ( pos == _board_sqrt + (_mask_size - 2) || pos == _board_size - (_board_sqrt + _mask_size - 1))
-                edge_mask = BigInt(0);
-            if ( pos < 2 * _board_sqrt || pos % _board_sqrt == _board_sqrt - 2)
-                edge_mask = ((edge_mask >> 2) & (full_mask << ((2 * shift) - 2))) >> (shift - 1);
-            else if (pos >= _board_size * (_board_sqrt - (_mask_size - 1)) || pos % _board_sqrt == _mask_size - 2)
-                edge_mask = (edge_mask & (full_mask << 2)) >> (shift + 1);
+            if ( pos == _board_sqrt + (_mask_size - 2) || pos == _board_size - (_board_sqrt * 3 + _mask_size - 3))
+                edge_mask = full_mask ^ mid_mask;
+            else if ( pos < 2 * _board_sqrt || pos % _board_sqrt == _board_sqrt - 2)
+                edge_mask = full_mask ^ (full_mask << (shift - 1));
+            else if (pos >= _board_size * (_board_sqrt - (_mask_size - 1)) || pos % _board_sqrt == _mask_size - 2 || pos >= _board_size - (_board_sqrt * 4) + _mask_size - 2)
+                edge_mask = full_mask ^ (full_mask >> (shift - 1));
             else
                 edge_mask = edge_mask >> (shift + 1);
             f_vec.push_back(full_mask );
@@ -588,11 +594,11 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
             int shift = _board_sqrt;
 
             if ( pos == 2 * _board_sqrt - (_mask_size - 1) || pos == (_board_sqrt * (_board_sqrt - (_mask_size - 1))) + 1)
-                edge_mask = BigInt(0);
-            if ( pos < 2 * _board_sqrt || pos % _board_sqrt == 1)
-                edge_mask = (edge_mask  & (full_mask << ((2 * shift) + 2))) >> (shift + 1);
-            else if (pos >= _board_size * (_board_sqrt - (_mask_size - 1)) || pos % _board_sqrt == _board_sqrt - (_mask_size - 1))
-                edge_mask = (full_mask & (edge_mask << (shift + 1))) >> ((2 * shift) + 2);
+                edge_mask = full_mask ^ mid_mask;
+            else if ( pos < 2 * _board_sqrt || pos % _board_sqrt == 1)
+                edge_mask = full_mask ^ (full_mask << (shift + 1));
+            else if (pos >= _board_size * (_board_sqrt - (_mask_size - 1)) || pos % _board_sqrt == _board_sqrt - (_mask_size - 1) || pos > (_board_sqrt * (_board_sqrt - (_mask_size - 1))) + 1)
+                edge_mask = full_mask ^ (full_mask >> (shift + 1));
             else
                 edge_mask = edge_mask >> (shift + 1);
             f_vec.push_back(full_mask );

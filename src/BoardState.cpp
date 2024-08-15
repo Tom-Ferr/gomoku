@@ -183,6 +183,7 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_turn = other._turn;
 		_size = other._size;
 		_sqrt = other._sqrt;
+		_move = other._move;
 		_mystate = other._mystate;
 		_otherstate = other._otherstate;
 		_totalboard = other._totalboard;

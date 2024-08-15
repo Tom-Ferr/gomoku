@@ -96,7 +96,7 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     {
         BigInt sub_target = target & masks.at(SUBMASK)[pos][i];
         size_t sub_bits = sub_target.bitCount();
-        if (bits == sub_bits)
+        if (bits == sub_bits && bits > 1)
         {
             if ((target_first != 0 && edge_first == 0)
             || (target_last != 0 && edge_last == 0)

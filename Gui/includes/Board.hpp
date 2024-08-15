@@ -14,7 +14,8 @@ enum e_texturetype
 	TX_BG,
 	TX_TILE,
 	TX_BLACK,
-	TX_WHITE
+	TX_WHITE,
+	TX_BACKGROUND
 };
 
 class Tile;
@@ -22,11 +23,13 @@ class Tile;
 class Board
 {
 	private:
+		sf::Texture 		_background_texture;
 		sf::Texture 		_button_texture;
 		sf::Texture 		_tile_texture[9];
 		sf::Texture 		_texture;
 		size_t				_sqrt;
 		size_t				_size;
+		sf::RectangleShape	_background;
 		sf::RectangleShape	_shape;
 		sf::RenderWindow*	_window;
 		sf::Vector2f		_dimensions;

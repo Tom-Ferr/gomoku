@@ -7,9 +7,12 @@ Board::Board(size_t sqrt, sf::RenderWindow* window)
 {
 	TURN = true;
 	_game = Game(sqrt);
+	_background = sf::RectangleShape();
 	_shape = sf::RectangleShape();
 	_load_textures();
 	_shape.setTexture(&_texture);
+	_background.setTexture(&_background_texture);
+
 	for (size_t i = 0; i < _size; i++)
 		_tiles.push_back(Tile(this, i));
 	resize();
@@ -46,7 +49,7 @@ void Board::_load_texture(sf::Texture &texture, std::string path, sf::IntRect re
 		{
 			if (type == TX_BG)
 				pixels[0] = 200;
-			else if (type == TX_TILE)
+			else if (type == TX_TILE || type == TX_BACKGROUND)
 				pixels[3] = 0;
 			else if (type == TX_BLACK)
 			{
@@ -78,11 +81,13 @@ void Board::_load_textures()
 			), TX_TILE);
 	}
 	_load_texture(_button_texture, "assets/white_piece.png", sf::IntRect(), TX_WHITE);
+	_load_texture(_background_texture, "assets/background.jpg", sf::IntRect(), TX_BACKGROUND);
 }
 
 void Board::resize()
 {
 	sf::Vector2u wsize = _window->getSize();
+	_background.setSize(sf::Vector2f(wsize.x, wsize.y));
 	_dimensions = sf::Vector2f (
 		(std::min(wsize.x * .8, wsize.y * .8)),
 		(std::min(wsize.x * .8, wsize.y * .8))
@@ -100,6 +105,7 @@ void Board::resize()
 
 void Board::draw()
 {
+	_window->draw(_background);
 	_window->draw(_shape);
 	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
 		it->draw();

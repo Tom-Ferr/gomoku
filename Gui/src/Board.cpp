@@ -155,8 +155,9 @@ bool Board::click()
 		if (_hovered_tile->click())
 		{
 			disable();
-			_game.board().applymove(_hovered_tile->pos(), false);
 			draw();
+			_window->display();
+			_game.board().applymove(_hovered_tile->pos(), false);
 			_hovered_tile = nullptr;
 			if (_game.step())
 			{

@@ -16,7 +16,6 @@ class Node
 
 	public:
 		static size_t node_count;
-		int					_heuristic;
 
 	private:
 		int					_depth;
@@ -25,6 +24,7 @@ class Node
 		BigInt				_move;
 		BoardState			_state;
 		std::vector<Node> 	_children;
+		int					_heuristic;
 		Node();
 
 	public:

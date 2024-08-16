@@ -48,7 +48,6 @@ std::pair<int, BigInt> Node::minimax()
 		// return std::make_pair(std::rand() % 65 - 32, 0);
 
 		_heuristic = h.run();
-		// std::cout << _heuristic << '\n' << " move: " << _state.move() << " turn: " <<_state.turn() << '\n';
 		return std::make_pair(_heuristic, _state.move());
 	}
 	if (_state.turn())
@@ -61,25 +60,19 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 	BigInt best_child = 0;
 	std::vector<BigInt> moves;
 	if(possible_moves(moves) == false)
-	{
-		// std::cout << _heuristic << '\n' << " move: " <<  _state.move() << " depth: " << _depth << '\n';
 		return std::make_pair(_heuristic, _state.move());
-	}
 	for (std::vector<BigInt>::iterator it = moves.begin(); it != moves.end(); it++)
 	{
 		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *it));
 		std::pair<int, BigInt> score = child.minimax();
-			// std::cout << score.first << '\n' << " move: " << *it << " depth: " << _depth << '\n';
 		if (score.first == 32 || score.first == -32)
 		{
-			std::cout << score.first << '\n' << " move: " << score.second << " depth: " << _depth << '\n';
 			x = score.first;
 			return std::make_pair(x, score.second);
 		}
 		_heuristic = f(x, score.first);
 		if(_heuristic == score.first && _heuristic != x)
 		{
-			// std::cout << _heuristic << '\n' << " move: " << *it << " depth: " << _depth << '\n';
 			x = _heuristic;
 			best_child = *it;
 		}

@@ -84,6 +84,8 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     size_t bits = target.bitCount();
     if (bits < 1)
         return 0;
+    if (bits == 1)
+        return 2;
     int score = 1 << bits;
 
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
@@ -96,7 +98,7 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     {
         BigInt sub_target = target & masks.at(SUBMASK)[pos][i];
         size_t sub_bits = sub_target.bitCount();
-        if (bits == sub_bits && bits > 1)
+        if (bits == sub_bits)
         {
             if ((target_first != 0 && edge_first == 0)
             || (target_last != 0 && edge_last == 0)

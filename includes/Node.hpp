@@ -16,7 +16,6 @@ class Node
 
 	public:
 		static size_t node_count;
-		int					_heuristic;
 
 	private:
 		static BigInt		_freepos;
@@ -27,6 +26,7 @@ class Node
 		BoardState			_state;
 		std::vector<Node> 	_children;
 		Free_Three_Checker	_ftc;
+		int					_heuristic;
 		Node();
 
 	public:

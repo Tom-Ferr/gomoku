@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 13:49:52 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/15 12:08:47 by iwillens         ###   ########.fr       */
+/*   Updated: 2024/08/16 16:30:42 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class BoardState
 		static BigInt rightmask;
 
 		private:
-			bool	_turn;
+			bool	_maximizing;
 			int		_size;
 			int 	_sqrt;
 			BigInt	_move;
@@ -45,7 +45,7 @@ class BoardState
 			void applymove(BigInt move, bool mystate=true);
 
 			// getters
-			bool	const &turn() const;
+			bool	const &maximizing() const;
 			int		const &size() const;
 			int		const &sqrt() const;
 			BigInt 	const &move() const;
@@ -54,7 +54,6 @@ class BoardState
 			BigInt 	const &totalboard() const;
 			BigInt 	expanded_free() const;
 			void swap_states();
-			void flip_turn();
 			void print();
 
 };

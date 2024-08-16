@@ -100,6 +100,7 @@ int main (void)
 	std::cout << g.board() << std::endl;
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	bool turn = true; /* indicates the starting player */
+	g.board().applymove(180, false);
 	while (g.step(turn))
 		turn = !turn;
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;

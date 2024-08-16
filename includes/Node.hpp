@@ -25,7 +25,6 @@ class Node
 		BigInt				_move;
 		BoardState			_state;
 		std::vector<Node> 	_children;
-		Free_Three_Checker	_ftc;
 		int					_heuristic;
 		Node();
 

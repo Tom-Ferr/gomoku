@@ -12,10 +12,9 @@ class Free_Three_Checker
 		static Mask _masks;
 		BoardState &_state;
 		static BigInt _static_state;
-		static BoardState dummy_state;
+		Free_Three_Checker();
 
 	public:
-			Free_Three_Checker();
 			Free_Three_Checker(BoardState &state);
 			Free_Three_Checker(const Free_Three_Checker& other);
 			Free_Three_Checker &operator=(const Free_Three_Checker& other);

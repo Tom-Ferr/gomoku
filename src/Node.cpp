@@ -18,14 +18,12 @@ Node::Node() {}
 Node::Node(int depth, int alpha, int beta, BoardState state)
 : _depth(depth), _alpha(alpha), _beta(beta), _state(state)
 {
-	_ftc = Free_Three_Checker(_state);
 	Node::node_count++;
 }
 
 Node::Node(const Node& other)
 : _depth(other._depth), _alpha(other._alpha), _beta(other._beta), _state(other._state)
 {
-	_ftc = Free_Three_Checker(_state);
 }
 
 Node::~Node() {}
@@ -38,7 +36,6 @@ Node& Node::operator=(const Node& other)
 		_alpha = other._alpha;
 		_beta = other._beta;
 		_state = other._state;
-		_ftc = Free_Three_Checker(_state);
 	}
 	return *this;
 }
@@ -96,13 +93,13 @@ bool Node::is_double_free_three(const size_t &pos)
 	// return false;
 
 	// to here to change to the other check method
-
+	Free_Three_Checker ftc = Free_Three_Checker(_state);
 	char modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 	int c = 0;
 
 	for (size_t i = 0; i < 4; i++)
 	{
-		if(_ftc.check(pos, modes[i]))
+		if(ftc.check(pos, modes[i]))
 			c++;
 		if(c == 2)
 			return true;

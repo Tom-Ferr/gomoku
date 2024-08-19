@@ -36,16 +36,12 @@ UNAME			=	$(shell uname)
 
 LINUX			= -D _LINUX
 
-LIBS 			=  -lmlx42 -lglfw -lgmp -lgmpxx   -framework Cocoa -framework OpenGL -framework IOKit #-lsfml-graphics -lsfml-window -lsfml-system
+LIBS 			=  -lmlx42 -lglfw -lgmp -lgmpxx #  -framework Cocoa -framework OpenGL -framework IOKit #-lsfml-graphics -lsfml-window -lsfml-system
 
-ifeq ($(UNAME),Linux)
-    CXXFLAGS += $(LINUX)
-else ifeq ($(shell uname -s), Darwin)
-    INCLUDE += $(MLX_INC)
-    LIBS += $(MLX_LIB)
-	INCLUDE += $(GMP_INC)
-    LIBS += $(GMP_LIB)
-endif
+INCLUDE += $(MLX_INC)
+LIBS += $(MLX_LIB)
+INCLUDE += $(GMP_INC)
+LIBS += $(GMP_LIB)
 
 all:			${NAME}
 

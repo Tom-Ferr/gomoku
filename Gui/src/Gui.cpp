@@ -20,6 +20,14 @@ Gui::Gui()
 
 Gui::~Gui()
 {
+	if (Gui::_button_texture)
+		mlx_delete_texture(Gui::_button_texture);
+	if (Gui::_tile_texture)
+		mlx_delete_texture(Gui::_tile_texture);
+	if (Gui::_board_texture)
+		mlx_delete_texture(Gui::_board_texture);
+	if (_background)
+		mlx_delete_texture(_background_texture);
 	mlx_terminate(_mlx);
 }
 /*

@@ -34,7 +34,12 @@ Board::Board(Board const &other)
 	*this = other;
 }
 
-Board::~Board() {}
+Board::~Board()
+{
+	if (_background)
+		mlx_delete_image(Gui::mlx(), _background);
+	_background = nullptr;
+}
 
 Board &Board::operator=(Board const &other)
 {

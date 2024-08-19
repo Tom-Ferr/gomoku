@@ -1,5 +1,6 @@
 #ifndef GUI_HPP
 # define GUI_HPP
+#include <string.h>
 
 # include <iostream>
 # include <Rect.hpp>

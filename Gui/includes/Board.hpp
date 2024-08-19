@@ -3,7 +3,7 @@
 
 //# include <SFML/Graphics.hpp>
 //# include <Tile.hpp>
-//# include <Game.hpp>
+# include <Game.hpp>
 //# include <Gui.hpp>
 #include <MLX42/MLX42.h>
 #include <vector>
@@ -46,7 +46,7 @@ class Board
 		//sf::RenderWindow*	_window;
 		//sf::Vector2f		_dimensions;
 		//sf::Vector2f		_position;
-		//Game				_game;
+		Game				_game;
 
 	public:
 		Board();
@@ -64,7 +64,7 @@ class Board
 		//Rect const &get_dimensions() const;
 		//sf::Vector2f const &get_position() const;
 		bool hover();
-		//bool click();
+		bool click();
 		bool enabled();
 		void enable();
 		void disable();

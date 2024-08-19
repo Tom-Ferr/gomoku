@@ -196,7 +196,7 @@ void	Gui::mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, v
 	(void)gui;
 	(void)mods;
 	if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_PRESS)
-		std::cout << "Mouse left button pressed" << std::endl;
+		gui->_board.click();
 }
 
 void	Gui::cursor_hook(double x, double y, void *param)

@@ -30,13 +30,13 @@ GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 INCLUDE 		= 	-I${INC} -I${GUI_INC}
 
-SANITIZE 		= 	-fsanitize=address -g
+SANITIZE 		= 	-O3#-fsanitize=address -g
 
 UNAME			=	$(shell uname)
 
 LINUX			= -D _LINUX
 
-LIBS 			=  -lmlx42 -lglfw -lgmp -lgmpxx #  -framework Cocoa -framework OpenGL -framework IOKit #-lsfml-graphics -lsfml-window -lsfml-system
+LIBS 			=  -lmlx42 -lglfw -lgmp -lgmpxx -ldl -lglfw -pthread -lm#  -framework Cocoa -framework OpenGL -framework IOKit #-lsfml-graphics -lsfml-window -lsfml-system
 
 INCLUDE += $(MLX_INC)
 LIBS += $(MLX_LIB)

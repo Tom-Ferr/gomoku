@@ -40,7 +40,7 @@ class Tile
 		void resize(Rect dimensions);
 		//void draw();
 		bool hover(bool on, bool turn);
-		//bool click(bool turn);
+		bool click(bool turn);
 		bool enabled();
 		void enable();
 		void disable();

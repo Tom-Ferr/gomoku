@@ -86,6 +86,9 @@ void Board::_reset()
 
 bool Board::_init()
 {
+	_game = Game(_sqrt);
+	Free_Three_Checker::set_masks(6, _sqrt);
+	Heuristics::set_masks(5, _sqrt);
 	for (size_t i = 0; i < 9; i++)
 	{
 		Board::_tile_images[i] = mlx_new_image(Gui::mlx(), TILE_SIZE, TILE_SIZE);
@@ -102,7 +105,6 @@ bool Board::_init()
 		_tiles.push_back(Tile(i));
 	resize();
 
-	//_game = Game(_sqrt);
 	//_shape = sf::RectangleShape();
 	//_shape.setTexture(Gui::texture(TX_BG));
 	//for (size_t i = 0; i < _size; i++)
@@ -214,16 +216,14 @@ bool Board::hover()
 	}
 	return false;
 }
-/*
+
 bool Board::click()
 {
-	if (enabled() && _hovered_tile && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (enabled() && _hovered_tile)
 	{
 		if (_hovered_tile->click(true))
 		{
 			disable();
-			draw();
-			_window->display();
 			_game.board().applymove(_hovered_tile->pos());
 			_hovered_tile = nullptr;
 			if (_game.step(false))
@@ -237,7 +237,7 @@ bool Board::click()
 	}
 	return true;
 }
-*/
+
 bool Board::enabled()
 {
 	return _enabled;
@@ -252,15 +252,7 @@ void Board::disable()
 {
 	_enabled = false;
 }
-/*
-Rect Board::get_tile_position(int pos)
-{
-	return Rect(
-	(dimensions().x + dimensions().width / 2) - get_tile_dimensions().x * (pos % sqrt()),
-	(dimensions().y + dimensions().height / 2) - get_tile_dimensions().y * (pos / sqrt()),
-	0, 0);
-}
-*/
+
 Rect	&Board::get_tile_dimensions()
 {
 	return _tile_dimensions;

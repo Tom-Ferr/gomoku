@@ -30,7 +30,10 @@ Tile::Tile(size_t pos)
 	_tile_idx = mlx_image_to_window(Gui::mlx(), Board::_tile_images[tex], 0, 0);
 	_tile_tex = tex;
 	for (size_t i = 0; i < 5; i++)
+	{
 		_pieces[i] = mlx_image_to_window(Gui::mlx(), Board::_piece_images[i], 0, 0);
+		piece(i).enabled = false;
+	}
 }
 
 Tile::Tile(Tile const &other)
@@ -73,7 +76,6 @@ void Tile::resize(Rect dimensions)
 	{
 		piece(i).x = dimensions.x;
 		piece(i).y = dimensions.y;
-		piece(i).enabled = false;
 	}
 }
 
@@ -98,24 +100,22 @@ bool Tile::hover(bool on, bool turn)
 		_hover = false;
 	return false;
 }
-/*
+
 bool Tile::click(bool turn)
 {
 	if (enabled() && _hover)
 	{
 		std::cout << "click" << _pos << std::endl;
-		sf::Color color;
 		if (turn)
-			color = Tile::p1_color;
+			piece(PT_BLACK).enabled = true;
 		else
-			color = Tile::p2_color;
-		_piece.setFillColor(color);
+			piece(PT_WHITE).enabled = true;
 		disable();
 		return true;
 	}
 	return false;
 }
-*/
+
 bool Tile::enabled()
 {
 	return _enabled;

@@ -36,8 +36,8 @@ Board::Board(Board const &other)
 
 Board::~Board()
 {
-	if (_background)
-		mlx_delete_image(Gui::mlx(), _background);
+//	if (_background)
+//		mlx_delete_image(Gui::mlx(), _background);
 	_background = nullptr;
 }
 

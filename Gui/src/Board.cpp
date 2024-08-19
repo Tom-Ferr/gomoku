@@ -196,9 +196,21 @@ sf::Vector2f const &Board::get_position() const
 bool Board::hover()
 {
 	Tile				*hovered;
+	int					tile;
 	_enabled = true;
+
 	if (enabled() && Board::dimensions().contains(Gui::_mouse.x, Gui::_mouse.y))
 	{
+		tile = get_hovered_tile();
+		if (tile == -1)
+		{
+			if (_hovered_tile)
+			{
+				_hovered_tile->hover(false, true);
+				_hovered_tile = nullptr;
+			}
+			return false;
+		}
 		std::cout << "Board Hovered. Tile: " << get_hovered_tile() << "  mouse: " << Gui::_mouse << std::endl;
 		hovered = &_tiles[get_hovered_tile()];
 		if (hovered == _hovered_tile)
@@ -258,9 +270,14 @@ Rect	&Board::get_tile_dimensions()
 	return _tile_dimensions;
 }
 
-size_t Board::get_hovered_tile()
+/*
+** returns -1 if no tile is hovered.
+*/
+int Board::get_hovered_tile()
 {
 	size_t x = (Board::dimensions().x + Board::dimensions().width - Gui::_mouse.x) / get_tile_dimensions().width;
 	size_t y = (Board::dimensions().y + Board::dimensions().height - Gui::_mouse.y) / get_tile_dimensions().height;
+	if (x >= sqrt() || y >= sqrt())
+		return -1;
     return (y * sqrt() + x);
 }

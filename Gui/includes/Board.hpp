@@ -70,7 +70,7 @@ class Board
 		void disable();
 		Rect get_tile_position(int pos);
 		Rect& get_tile_dimensions();
-		size_t get_hovered_tile();
+		int get_hovered_tile();
 
 };
 

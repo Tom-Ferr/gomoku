@@ -1,6 +1,6 @@
 FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp Game.cpp Heuristics.cpp Mask.cpp Node.cpp
 
-GUI_FILES		=	Tile.cpp Board.cpp Menu.cpp Gui.cpp main.cpp
+GUI_FILES		=	main.cpp  Gui.cpp Board.cpp Rect.cpp Tile.cpp #Menu.cpp
 GUI_SRCDIR			= 	src/
 
 SRCDIR			= 	../src/
@@ -10,7 +10,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) $(addprefix $(GUI_SRCDIR), $(GUI_FILE
 OBJS			= 	${SRCS:.cpp=.o}
 
 HEADS			=	BigInt.hpp BoardState.hpp Free_Three_Checker.hpp Game.hpp gomoku.hpp Heuristics.hpp Mask.hpp Node.hpp
-GUI_HEADS		=	Tile.hpp Board.hpp Menu.hpp Gui.hpp
+GUI_HEADS		=	Board.hpp Gui.hpp Rect.hpp Tile.hpp # Menu.hpp Gui.hpp
 
 INC				= 	../includes/
 GUI_INC			=	./includes/
@@ -23,8 +23,8 @@ CXX				=	clang++
 CXXFLAGS		= 	 -std=c++11 -Wall -Wextra -Werror
 
 
-SFML_INC		=	-I/opt/homebrew/Cellar/sfml/2.6.1/include
-SFML_LIB		=	-L/opt/homebrew/Cellar/sfml/2.6.1/lib
+MLX_INC			=	-I./MLX42/include -I/opt/homebrew/Cellar/glfw/3.4/include
+MLX_LIB			=	-L./MLX42/build -L/opt/homebrew/Cellar/glfw/3.4/lib
 GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
 GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
@@ -36,13 +36,13 @@ UNAME			=	$(shell uname)
 
 LINUX			= -D _LINUX
 
-LIBS 			= -lsfml-graphics -lsfml-window -lsfml-system -lgmp -lgmpxx
+LIBS 			=  -lmlx42 -lglfw -lgmp -lgmpxx   -framework Cocoa -framework OpenGL -framework IOKit #-lsfml-graphics -lsfml-window -lsfml-system
 
 ifeq ($(UNAME),Linux)
     CXXFLAGS += $(LINUX)
 else ifeq ($(shell uname -s), Darwin)
-    INCLUDE += $(SFML_INC)
-    LIBS += $(SFML_LIB)
+    INCLUDE += $(MLX_INC)
+    LIBS += $(MLX_LIB)
 	INCLUDE += $(GMP_INC)
     LIBS += $(GMP_LIB)
 endif

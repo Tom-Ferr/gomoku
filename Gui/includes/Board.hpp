@@ -22,18 +22,19 @@ typedef enum e_piecetype
 	PT_HINT,
 	PT_BLACKHOVER,
 	PT_WHITEHOVER
-} e_piecetype;
+} t_piecetype;
 
 class Tile;
 
 class Board
 {
 	private:
-
 		mlx_image_t			*_background;
 		static Rect			_dimensions;
 		std::vector<Tile>	_tiles;
-
+		Tile				*_hovered_tile;
+		Rect				_tile_dimensions;
+		bool				_enabled;
 
 		bool _init();
 		void _reset();
@@ -45,9 +46,6 @@ class Board
 		//sf::RenderWindow*	_window;
 		//sf::Vector2f		_dimensions;
 		//sf::Vector2f		_position;
-		//sf::Vector2f		_tiles_dimensions;
-		//Tile				*_hovered_tile;
-		//bool				_enabled;
 		//Game				_game;
 
 	public:
@@ -63,16 +61,17 @@ class Board
 		static Rect const &dimensions();
 		//void draw();
 		//sf::RenderWindow &window() const;
-		//sf::Vector2f const &get_dimensions() const;
+		//Rect const &get_dimensions() const;
 		//sf::Vector2f const &get_position() const;
-		//bool hover();
+		bool hover();
 		//bool click();
-		//bool enabled();
-		//void enable();
-		//void disable();
-		//sf::Vector2f get_tile_position(int i);
-		//sf::Vector2f& get_tile_dimensions();
-		//size_t get_hovered_tile(sf::Vector2f &mouse);
+		bool enabled();
+		void enable();
+		void disable();
+		Rect get_tile_position(int pos);
+		Rect& get_tile_dimensions();
+		size_t get_hovered_tile();
+
 };
 
 #endif

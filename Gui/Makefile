@@ -1,6 +1,6 @@
 FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp Game.cpp Heuristics.cpp Mask.cpp Node.cpp
 
-GUI_FILES		=	main.cpp  Gui.cpp Board.cpp Rect.cpp Tile.cpp #Menu.cpp
+GUI_FILES		=	main.cpp  Gui.cpp Board.cpp Rect.cpp Tile.cpp Color.cpp#Menu.cpp
 GUI_SRCDIR			= 	src/
 
 SRCDIR			= 	../src/
@@ -10,7 +10,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) $(addprefix $(GUI_SRCDIR), $(GUI_FILE
 OBJS			= 	${SRCS:.cpp=.o}
 
 HEADS			=	BigInt.hpp BoardState.hpp Free_Three_Checker.hpp Game.hpp gomoku.hpp Heuristics.hpp Mask.hpp Node.hpp
-GUI_HEADS		=	Board.hpp Gui.hpp Rect.hpp Tile.hpp # Menu.hpp Gui.hpp
+GUI_HEADS		=	Board.hpp Gui.hpp Rect.hpp Tile.hpp Color.hpp# Menu.hpp Gui.hpp
 
 INC				= 	../includes/
 GUI_INC			=	./includes/
@@ -45,23 +45,8 @@ LIBS += $(GMP_LIB)
 
 all:			${NAME}
 
-check-gmp:
-ifeq ($(shell pkg-config --exists sfml-graphics && echo yes || echo no), no)
-	@echo "sfml is not installed. Installing sfml..."
-ifeq ($(shell uname -s), Linux)
-	@sudo apt-get update && sudo apt-get install -y libsfml-dev
-else ifeq ($(shell uname -s), Darwin)
-	@brew install lsfm
-else
-	@echo "Unsupported OS. Please install LSFM manually."
-	exit 1
-endif
-else
-	@echo "sfml is already installed."
-endif
 
-
-$(NAME):		check-gmp ${OBJS} $(DEPS)
+$(NAME):		${OBJS} $(DEPS)
 				${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}  ${LIBS}
 
 %.o: %.cpp

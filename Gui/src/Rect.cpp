@@ -36,7 +36,7 @@ bool Rect::operator!=(const Rect& other)
 	return (!(*this == other));
 }
 
-bool Rect::contains(size_t x, size_t y)
+bool Rect::contains(size_t x, size_t y) const
 {
 	return x >= this->x && x <= this->x + width && y >= this->y && y <= this->y + height;
 }

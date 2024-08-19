@@ -28,7 +28,7 @@ class Tile
 		//sf::RectangleShape	_square;
 		//sf::CircleShape		_piece;
 		//bool				_set;
-		//bool				_hover;
+		bool				_hover;
 		//bool				_hint;
 
     public:
@@ -39,12 +39,13 @@ class Tile
 		Tile &operator=(Tile const &other);
 		void resize(Rect dimensions);
 		//void draw();
-		//bool hover(bool on, bool turn);
+		bool hover(bool on, bool turn);
 		//bool click(bool turn);
 		bool enabled();
 		void enable();
 		void disable();
 		size_t &pos();
+		mlx_instance_t &piece(int type);
 };
 
 #endif

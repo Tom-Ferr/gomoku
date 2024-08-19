@@ -1,10 +1,11 @@
 #ifndef GUI_HPP
 # define GUI_HPP
 #include <string.h>
-
+# include <chrono>
 # include <iostream>
 # include <Rect.hpp>
 # include <Board.hpp>
+#include <Color.hpp>
 #include <MLX42/MLX42.h>
 
 /*
@@ -19,54 +20,7 @@ enum e_texturetype
 
 #define WIDTH 1280
 #define HEIGHT 720
-class Color ;
 
-class Color
-{
-	public:
-		static Color const white;
-		static Color const black;
-		static Color const yellow;
-		static Color const white_alpha;
-		static Color const black_alpha;
-
-		uint8_t r;
-		uint8_t g;
-		uint8_t b;
-		uint8_t a;
-
-		Color()
-		: r(255), g(255), b(255), a(255)
-		{};
-		Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-		: r(r), g(g), b(b), a(a)
-		{};
-		Color(uint8_t r, uint8_t g, uint8_t b)
-		: r(r), g(g), b(b), a(255)
-		{};
-		Color(const Color &other)
-		: r(other.r), g(other.g), b(other.b), a(other.a)
-		{};
-		~Color()
-		{};
-		Color &operator=(const Color &other)
-		{
-			r = other.r;
-			g = other.g;
-			b = other.b;
-			a = other.a;
-			return *this;
-		};
-		bool operator==(const Color &other) const
-		{
-			return (r == other.r && g == other.g
-					&& b == other.b && a == other.a);
-		};
-		bool operator!=(const Color &other) const
-		{
-			return (!(*this == other));
-		};
-};
 
 class Gui
 {
@@ -79,15 +33,15 @@ class Gui
 		void _resize(int width, int height);
 
 	public:
-		static mlx_t					*_mlx;
-		static mlx_texture_t			*_button_texture;
-		static mlx_texture_t			*_tile_texture;
-		static mlx_texture_t			*_board_texture;
-		static Rect						_dimensions;
-
-		mlx_texture_t 					*_background_texture;
-		mlx_image_t						*_background;
-		Board							_board;
+		static mlx_t									*_mlx;
+		static mlx_texture_t							*_button_texture;
+		static mlx_texture_t							*_tile_texture;
+		static mlx_texture_t							*_board_texture;
+		static Rect										_dimensions;
+		static Rect										_mouse;
+		mlx_texture_t 									*_background_texture;
+		mlx_image_t										*_background;
+		Board											_board;
 
 		/*
 		** input hooks

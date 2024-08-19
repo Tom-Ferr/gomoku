@@ -5,12 +5,7 @@ mlx_texture_t	*Gui::_button_texture = nullptr;
 mlx_texture_t	*Gui::_tile_texture = nullptr;
 mlx_texture_t	*Gui::_board_texture = nullptr;
 Rect			Gui::_dimensions;
-
-Color const Color::white = Color(255, 255, 255);
-Color const Color::black = Color(100, 100, 100);
-Color const Color::yellow = Color(255, 255, 120, 150);
-Color const Color::white_alpha = Color(255, 255, 255, 150);
-Color const Color::black_alpha = Color(100, 100, 100, 150);
+Rect			Gui::_mouse;
 
 Gui::Gui()
 {
@@ -100,90 +95,6 @@ void Gui::_run()
 	mlx_resize_hook(_mlx, resize_hook, this);
 	mlx_loop(_mlx);
 }
-
-
-
-
-
-//Gui::Gui(sf::RenderWindow* window)
-//{
-//	_load_textures();
-//	_background = sf::RectangleShape();
-//	_background.setSize(sf::Vector2f(_window->getSize().x, _window->getSize().y));
-//	_background.setTexture(&_background_texture);
-//}
-/*
-void Gui::_load_texture(sf::Texture &texture, std::string path, sf::IntRect rect, int type)
-{
-	uint8_t pixels[4] = {255, 255, 255, 255};
-
-	if ((rect == sf::IntRect() && !texture.loadFromFile(path))
-		|| (rect != sf::IntRect() && !texture.loadFromFile(path, rect)))
-	{
-		std::cerr << "Warning: Error loading texture: " << path << std::endl;
-		if (texture.create(1, 1))
-		{
-			if (type == TX_BG)
-				pixels[0] = 200;
-			else if (type == TX_TILE || type == TX_BACKGROUND)
-				pixels[3] = 0;
-			else if (type == TX_PIECE)
-			{
-				pixels[0] = 0;
-				pixels[1] = 0;
-				pixels[2] = 0;
-			}
-			texture.update(pixels);
-			texture.setRepeated(true);
-		}
-	}
-	else
-	{
-		texture.setRepeated(false);
-		texture.setSmooth(true);
-	}
-}
-
-void Gui::_load_textures()
-{
-	_load_texture(_texture, "assets/marble_bg.jpg");
-	for (size_t i = 0; i < 9; i++)
-	{
-		_load_texture(_tile_texture[i], "assets/marble_tiles.png",
-			sf::IntRect(
-				(i % 3) * TILE_SIZE,
-				(i / 3) * TILE_SIZE,
-				TILE_SIZE, TILE_SIZE
-			), TX_TILE);
-	}
-	_load_texture(_button_texture, "assets/white_piece.png", sf::IntRect(), TX_PIECE);
-	_load_texture(_background_texture, "assets/background.jpg", sf::IntRect(), TX_BACKGROUND);
-}
-
-sf::Texture *Gui::texture(int type, int index)
-{
-	if (type == TX_BG)
-		return &_texture;
-	else if (type == TX_TILE)
-		return &_tile_texture[index];
-	else if (type == TX_PIECE)
-		return &_button_texture;
-	else if (type == TX_BACKGROUND)
-		return &_background_texture;
-	return &_texture;
-}
-
-void Gui::draw()
-{
-	_window->draw(_background);
-}
-
-sf::RenderWindow *Gui::window()
-{
-	return _window;
-}
-*/
-
 
 void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color)
 {
@@ -291,7 +202,9 @@ void	Gui::mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, v
 void	Gui::cursor_hook(double x, double y, void *param)
 {
 	Gui *gui = static_cast<Gui*>(param);
-	(void)gui;
+
+	Gui::_mouse = Rect((int)x, (int)y, 0, 0);
+	gui->_board.hover();
 	std::cout << "Cursor position: " << x << ", " << y << std::endl;
 }
 

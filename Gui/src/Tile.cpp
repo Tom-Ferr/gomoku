@@ -12,31 +12,25 @@ Tile::Tile(size_t pos)
 	size_t y = pos / Board::sqrt();
 	size_t tex = 4;
 	if (x == 0 && y == 0)
-		tex = 0;
-	else if (x == 0 && y == Board::sqrt() - 1)
-		tex = 6;
-	else if (x == 0)
-		tex = 3;
-	else if (x == Board::sqrt() - 1 && y == 0)
-		tex = 2;
-	else if (x == Board::sqrt() - 1 && y == Board::sqrt() - 1)
 		tex = 8;
-	else if (x == Board::sqrt() - 1)
+	else if (x == 0 && y == Board::sqrt() - 1)
+		tex = 2;
+	else if (x == 0)
 		tex = 5;
+	else if (x == Board::sqrt() - 1 && y == 0)
+		tex = 6;
+	else if (x == Board::sqrt() - 1 && y == Board::sqrt() - 1)
+		tex = 0;
+	else if (x == Board::sqrt() - 1)
+		tex = 3;
 	else if (y == 0)
-		tex = 1;
-	else if (y == Board::sqrt() - 1)
 		tex = 7;
+	else if (y == Board::sqrt() - 1)
+		tex = 1;
 	_tile_idx = mlx_image_to_window(Gui::mlx(), Board::_tile_images[tex], 0, 0);
 	_tile_tex = tex;
 	for (size_t i = 0; i < 5; i++)
 		_pieces[i] = mlx_image_to_window(Gui::mlx(), Board::_piece_images[i], 0, 0);
-	//_square = sf::RectangleShape(sf::Vector2f(417, 417));
-	//_piece = sf::CircleShape(20, 500);
-	//_piece.setFillColor(sf::Color::Transparent);
-	//_piece.setTexture(Gui::texture(TX_PIECE, tex));
-	//_square.setTexture(Gui::texture(TX_TILE, tex), true);
-
 }
 
 Tile::Tile(Tile const &other)
@@ -63,71 +57,48 @@ Tile &Tile::operator=(Tile const &other)
 	return *this;
 }
 
+
 /*
 ** since image sizes is defined globally at Board, this is really
 ** just repositioning
 */
 void Tile::resize(Rect dimensions)
 {
-	(void)dimensions;
-	//std::cout << "Old Tile resize:" << dimensions << std::endl;
-	dimensions.x = Board::dimensions().x + dimensions.width * (_pos % Board::sqrt());
-	dimensions.y = Board::dimensions().y + dimensions.height * (_pos / Board::sqrt());
-	//std::cout << "Board dimensions:" << _board->dimensions() << std::endl;
-	//std::cout << "New Tile resize:" << dimensions << std::endl;
+	dimensions.x = (Board::dimensions().x + Board::dimensions().width) - (dimensions.width * ((_pos % Board::sqrt()) + 1));
+	dimensions.y = (Board::dimensions().y + Board::dimensions().height) - (dimensions.height * ((_pos / Board::sqrt()) + 1));
 	Board::_tile_images[_tile_tex]->instances[_tile_idx].x = dimensions.x;
 	Board::_tile_images[_tile_tex]->instances[_tile_idx].y = dimensions.y;
 
-	for (int i = 4; i >= 0; i--)
+	for (int i = 0; i < 5; i++)
 	{
-		Board::_piece_images[i]->instances[_pieces[i]].x = dimensions.x;
-		Board::_piece_images[i]->instances[_pieces[i]].y = dimensions.y;
-		Board::_piece_images[i]->instances[_pieces[i]].enabled = false;
+		piece(i).x = dimensions.x;
+		piece(i).y = dimensions.y;
+		piece(i).enabled = false;
 	}
-	Board::_piece_images[_pos % 5]->instances[_pieces[_pos % 5]].enabled = true;
-	//float diameter;
-	//_square.setSize(dimensions);
-	//_square.setOrigin(dimensions.x, dimensions.y);
-	//_square.setPosition(position);
-//
-	//diameter = (dimensions.x * .9);
-	//_piece.setRadius(diameter / 2);
-	//_piece.setOrigin(dimensions.x - (dimensions.x - diameter) / 2,
-	//					dimensions.y - (dimensions.y - diameter) / 2);
-	//_piece.setPosition(position);
-
-
-//	_piece.setRadius(diameter / 2);
-//	_piece.setOrigin(dimensions.x / 2, dimensions.y / 2);
-//	_piece.setPosition(position);
 }
 
-/*
+
 bool Tile::hover(bool on, bool turn)
 {
 	if (!enabled())
 		return false;
+	piece(PT_BLACKHOVER).enabled = false;
+	piece(PT_WHITEHOVER).enabled = false;
 	if (on)
 	{
 		_hover = true;
 		std::cout << "hover" << _pos << std::endl;
-		sf::Color color;
 		if (turn)
-			color = Tile::p1_color;
+			piece(PT_BLACKHOVER).enabled = true;
 		else
-			color = Tile::p2_color;
-		color.a = 100;
-		_piece.setFillColor(color);
+			piece(PT_WHITEHOVER).enabled = true;
 		return true;
 	}
 	else
-	{
 		_hover = false;
-		_piece.setFillColor(sf::Color::Transparent);
-		return false;
-	}
+	return false;
 }
-
+/*
 bool Tile::click(bool turn)
 {
 	if (enabled() && _hover)
@@ -144,7 +115,7 @@ bool Tile::click(bool turn)
 	}
 	return false;
 }
-
+*/
 bool Tile::enabled()
 {
 	return _enabled;
@@ -160,13 +131,13 @@ void Tile::disable()
 	_enabled = false;
 }
 
-void Tile::draw()
-{
-	_board->window().draw(_square);
-	_board->window().draw(_piece);
-}
-*/
 size_t &Tile::pos()
 {
 	return _pos;
+}
+
+mlx_instance_t &Tile::piece(int type)
+{
+	(void)type;
+	return Board::_piece_images[type]->instances[_pieces[type]];
 }

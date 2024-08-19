@@ -16,7 +16,7 @@ class Rect
 		~Rect();
 		bool operator==(const Rect& other);
 		bool operator!=(const Rect& other);
-		bool contains(size_t x, size_t y);
+		bool contains(size_t x, size_t y) const;
 		static Rect subrect(const Rect& parent, size_t width, size_t index);
 		static Rect subrect(const Rect &parent, float ratio);
 		static Rect subrect(const Rect &parent, float wratio, float hratio, int valign);

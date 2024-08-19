@@ -69,6 +69,7 @@ Board &Board::operator=(Board const &other)
 void Board::_reset()
 {
 	_tiles.clear();
+	_hovered_tile = nullptr;
 	for (size_t i = 0; i < 9; i++)
 	{
 		if (Board::_tile_images[i])
@@ -92,11 +93,11 @@ bool Board::_init()
 	}
 	for (size_t i = 0; i < 5; i++)
 		Board::_piece_images[i] = mlx_new_image(Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
-	Gui::apply_texture(Board::_piece_images[0], Gui::_button_texture, Color::white);
-	Gui::apply_texture(Board::_piece_images[1], Gui::_button_texture, Color::black);
-	Gui::apply_texture(Board::_piece_images[2], Gui::_button_texture, Color::white_alpha);
-	Gui::apply_texture(Board::_piece_images[3], Gui::_button_texture, Color::black_alpha);
-	Gui::apply_texture(Board::_piece_images[4], Gui::_button_texture, Color::yellow);
+	Gui::apply_texture(Board::_piece_images[0], Gui::_button_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[1], Gui::_button_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[2], Gui::_button_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[3], Gui::_button_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[4], Gui::_button_texture, Color(255, 0, 0, 255));
 	for (size_t i = 0; i < Board::_size; i++)
 		_tiles.push_back(Tile(i));
 	resize();
@@ -115,34 +116,27 @@ bool Board::_init()
 
 void Board::resize()
 {
-	Rect tile_dimensions;
-
 	_dimensions = Rect::subrect(Gui::dimensions(), .9);
-	std::cout << "New Board resize:" << _dimensions;
 	mlx_resize_image(_background, _dimensions.width, _dimensions.height);
 	Gui::apply_texture(_background, Gui::_board_texture);
 	_background->instances[0].x = _dimensions.x;
 	_background->instances[0].y = _dimensions.y;
-	std::cout << "Board dimensions:" << _dimensions << std::endl;
-	tile_dimensions = Rect::subrect(_dimensions, 1.0 / sqrt());
+	_tile_dimensions = Rect::subrect(_dimensions, 1.0 / sqrt());
 	for (size_t i = 0; i < 9; i++)
 	{
-		mlx_resize_image(Board::_tile_images[i], tile_dimensions.width, tile_dimensions.height);
+		mlx_resize_image(Board::_tile_images[i], _tile_dimensions.width, _tile_dimensions.height);
 		Gui::apply_texture(Board::_tile_images[i], Gui::_tile_texture, i);
 	}
 	for (size_t i = 0; i < 5; i++)
-		mlx_resize_image(Board::_piece_images[i], tile_dimensions.width, tile_dimensions.height);
-	Gui::apply_texture(Board::_piece_images[0], Gui::_button_texture, Color::white);
-	Gui::apply_texture(Board::_piece_images[1], Gui::_button_texture, Color::black);
-	Gui::apply_texture(Board::_piece_images[2], Gui::_button_texture, Color::white_alpha);
-	Gui::apply_texture(Board::_piece_images[3], Gui::_button_texture, Color::black_alpha);
-	Gui::apply_texture(Board::_piece_images[4], Gui::_button_texture, Color::yellow);
+		mlx_resize_image(Board::_piece_images[i], _tile_dimensions.width, _tile_dimensions.height);
+	Gui::apply_texture(Board::_piece_images[PT_BLACK], Gui::_button_texture, Color::black);
+	Gui::apply_texture(Board::_piece_images[PT_WHITE], Gui::_button_texture, Color::white);
+	Gui::apply_texture(Board::_piece_images[PT_HINT], Gui::_button_texture, Color::yellow);
+	Gui::apply_texture(Board::_piece_images[PT_BLACKHOVER], Gui::_button_texture, Color::black_alpha);
+	Gui::apply_texture(Board::_piece_images[PT_WHITEHOVER], Gui::_button_texture, Color::white_alpha);
 	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
 	{
-		std::cout << "Resizing Tile" << std::endl;
-		std::cout << "dim: " <<  dimensions() << std::endl;
-		std::cout << "This addr: " << this << std::endl;
-		it->resize(tile_dimensions);
+		it->resize(_tile_dimensions);
 	}
 
 //	sf::Vector2u wsize = _window->getSize();
@@ -190,23 +184,21 @@ sf::RenderWindow &Board::window() const
 	return *_window;
 }
 
-sf::Vector2f const &Board::get_dimensions() const
-{
-	return _dimensions;
-}
 
 sf::Vector2f const &Board::get_position() const
 {
 	return _position;
 }
+*/
 
 bool Board::hover()
 {
 	Tile				*hovered;
-	sf::Vector2f mouse = sf::Vector2f(sf::Mouse::getPosition(window()));
-	if (enabled() && _shape.getGlobalBounds().contains(mouse))
+	_enabled = true;
+	if (enabled() && Board::dimensions().contains(Gui::_mouse.x, Gui::_mouse.y))
 	{
-		hovered = &_tiles[get_hovered_tile(mouse)];
+		std::cout << "Board Hovered. Tile: " << get_hovered_tile() << "  mouse: " << Gui::_mouse << std::endl;
+		hovered = &_tiles[get_hovered_tile()];
 		if (hovered == _hovered_tile)
 			return true;
 		if (_hovered_tile)
@@ -222,7 +214,7 @@ bool Board::hover()
 	}
 	return false;
 }
-
+/*
 bool Board::click()
 {
 	if (enabled() && _hovered_tile && sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -245,7 +237,7 @@ bool Board::click()
 	}
 	return true;
 }
-
+*/
 bool Board::enabled()
 {
 	return _enabled;
@@ -260,29 +252,23 @@ void Board::disable()
 {
 	_enabled = false;
 }
-
-sf::Vector2f Board::get_tile_position(int pos)
+/*
+Rect Board::get_tile_position(int pos)
 {
-	return sf::Vector2f(
-	(get_position().x + get_dimensions().x / 2) - get_tile_dimensions().x * (pos % sqrt()),
-	(get_position().y + get_dimensions().y / 2) - get_tile_dimensions().y * (pos / sqrt()));
-}
-
-sf::Vector2f& Board::get_tile_dimensions()
-{
-	return _tiles_dimensions;
-}
-
-size_t Board::get_hovered_tile(sf::Vector2f &mouse)
-{
-    sf::Vector2f board_center(
-        get_position().x + get_dimensions().x / 2,
-        get_position().y + get_dimensions().y / 2
-    );
-	sf::Vector2i tile(
-		(board_center.x - mouse.x) / get_tile_dimensions().x,
-		(board_center.y - mouse.y) / get_tile_dimensions().y
-	);
-    return (tile.y * sqrt() + tile.x);
+	return Rect(
+	(dimensions().x + dimensions().width / 2) - get_tile_dimensions().x * (pos % sqrt()),
+	(dimensions().y + dimensions().height / 2) - get_tile_dimensions().y * (pos / sqrt()),
+	0, 0);
 }
 */
+Rect	&Board::get_tile_dimensions()
+{
+	return _tile_dimensions;
+}
+
+size_t Board::get_hovered_tile()
+{
+	size_t x = (Board::dimensions().x + Board::dimensions().width - Gui::_mouse.x) / get_tile_dimensions().width;
+	size_t y = (Board::dimensions().y + Board::dimensions().height - Gui::_mouse.y) / get_tile_dimensions().height;
+    return (y * sqrt() + x);
+}

@@ -66,11 +66,6 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 		move = &Mask::targets(*it);
 		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *move));
 		std::pair<int, BigInt> score = child.minimax();
-		if (score.first == 32 || score.first == -32)
-		{
-			x = score.first;
-			return std::make_pair(x, score.second);
-		}
 		_heuristic = f(x, score.first);
 		if(_heuristic == score.first && _heuristic != x)
 		{
@@ -123,7 +118,10 @@ bool Node::possible_moves(std::vector<size_t>& moves)
 	{
 		_heuristic = h.endgame(pos);
 		if(_heuristic == 32 || _heuristic == -32)
-			return false;
+        {
+            _heuristic <<= _depth;
+            return false;
+        }
 		if (is_valid(pos, _freepos))
 			moves.push_back(pos);
 	}

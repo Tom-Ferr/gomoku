@@ -55,28 +55,35 @@ void Heuristics::set_masks(int mask_size, int board_sqrt)
 
 int Heuristics::check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
 {
-	(void)target;
+    (void)target;
 	(void)other_target;
 	(void)pos;
 	(void)masks;
+    
+        // bool capture = false;
 
-        // size_t my_bits = (target & masks[FULL][pos][0]).bitCount();
-        // size_t other_bits = (other_target & masks[FULL][pos][0]).bitCount();
-        // if (other_bits == 2 and my_bits < 3)
+        // for (size_t i = 0; i < 2; i++)
         // {
-        //     size_t sub_bits = 0;
-        //     bool capture = false;
-        //     for (size_t i = 0; i < 2; i++)
+        //     BigInt sub_target = target & masks[SUBMASK][pos][i];
+        //     BigInt other_sub_target = other_target & masks[SUBMASK][pos][i];
+            
+        //     size_t my_bits = sub_target.bitCount();
+        //     size_t other_bits = other_sub_target.bitCount();
+
+        //     if (other_bits == 2 && my_bits == 1)
         //     {
-        //         BigInt other_sub_target = other_target & masks[SUPERPOSITION][pos][i];
-        //         sub_bits += other_sub_target.bitCount();
-        //         BigInt sub_target = target & masks[SUPERPOSITION][pos][i];
-        //         if (sub_target.bitCount() == 1 and other_sub_target > sub_target)
-        //             capture = true;
+        //         BigInt other_mid_target = other_sub_target & masks[MIDDLE][pos][i];
+        //         if (other_mid_target.bitCount() != 2)
+        //             continue;
+        //         BigInt other_mid_target = other_sub_target & masks[MIDDLE][pos][i+1];
+        //         if (other_mid_target.bitCount() != 2)
+        //             break;
+        //         capture = true;
+        //         break ;
         //     }
-        //     if (sub_bits == 4 and capture == true)
-        //         return (1 << captures) + 1;
         // }
+        // if (capture == true)
+        //     return (1 << captures) + 1;
         // else
             return 0;
 }

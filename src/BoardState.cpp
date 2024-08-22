@@ -65,25 +65,24 @@ _totalboard(other._totalboard)
 	applymove(_move, !_maximizing);
 }
 
-void BoardState::applymove(size_t pos, bool mystate)
+void BoardState::applymove(BigInt move, bool mystate)
 {
-	BigInt mv = BigInt(1) << pos;
 	if (mystate)
 	{
-		_mystate = _mystate ^ mv;
+		_mystate = _mystate ^ move;
 		_inv_mystate = (~_mystate) & BoardState::mask;
 	}
 	else
 	{
-		_otherstate = _otherstate ^ mv;
+		_otherstate = _otherstate ^ move;
 		_inv_otherstate = (~_otherstate) & BoardState::mask;
 	}
-	_totalboard = _totalboard ^ mv;
+	_totalboard = _totalboard ^ move;
 }
 
-void BoardState::applymove(BigInt move, bool mystate)
+void BoardState::applymove(size_t pos, bool mystate)
 {
-	applymove(move.pos(), mystate);
+	applymove(BigInt(1) << pos, mystate);
 }
 
 BoardState::~BoardState() { }

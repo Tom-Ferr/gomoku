@@ -39,6 +39,7 @@ class Node
 		bool possible_moves(std::vector<size_t>& moves);
 		bool is_double_free_three(const size_t &pos);
 		bool is_valid(const size_t &pos, BigInt &freepos);
+		void print(std::pair<int, BigInt>&result);
 };
 
 int max(int &a, int &b);

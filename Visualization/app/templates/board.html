@@ -1,0 +1,16 @@
+{% macro render_board(mystate, otherstate, lvl2=None, lvl1=None, lvl0=None) %}
+    <div class="board">
+        {% for i in range(361) %}
+            <div class="cell
+                {% if mystate[i] == '1' %}mystate{% elif otherstate[i] == '1' %}otherstate{% endif %}">
+				{% if lvl2 == 360 - i %}
+					2
+				{% elif lvl1 == 360 - i %}
+					1
+				{% elif lvl0 == 360 - i %}
+					0
+				{% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

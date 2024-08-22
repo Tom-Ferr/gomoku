@@ -40,18 +40,46 @@ Node& Node::operator=(const Node& other)
 	return *this;
 }
 
+void Node::print(std::pair<int, BigInt>&result)
+{
+	std::cerr << "{";
+	std::cerr << "\"depth\": " << _depth << ", ";
+	std::cerr << "\"maximizing\": \"";
+	if (_state.maximizing())
+		std::cerr << "True";
+	else
+		std::cerr << "False";
+	std::cerr << "\", ";
+	std::cerr << "\"orig_move\": " << _state.move().pos() << ", ";
+	std::cerr << "\"heuristics\": " << result.first << ", ";
+	std::cerr << "\"best_child\": " << result.second.pos() << ", ";
+	std::cerr << "\"mystate\": \"" << _state.mystate() << "\", ";
+	std::cerr << "\"otherstate\": \"" << _state.otherstate() << "\", ";
+	std::cerr << "\"alpha\": " << _alpha << ", ";
+	std::cerr << "\"beta\": " << _beta;
+	std::cerr << "}" << std::endl;
+}
+
 std::pair<int, BigInt> Node::minimax()
 {
-
+	std::pair<int, BigInt> result;
 	if (_depth == 0)
 	{
 		Heuristics h = Heuristics(_state);
 		_heuristic = h.run();
-		return std::make_pair(_heuristic, _state.move());
+		result = std::make_pair(_heuristic, _state.move());
+		print(result);
+		return result;
 	}
 	if (_state.maximizing())
-		return (alpha_beta_prune(_alpha, max));
-	return (alpha_beta_prune(_beta, min));
+	{
+		result =  alpha_beta_prune(_alpha, max);
+		print(result);
+		return result;
+	}
+	result = alpha_beta_prune(_beta, min);
+	print(result);
+	return result;
 }
 
 std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)

@@ -1,0 +1,1382 @@
+{
+    "rnpc6": [
+        {
+            "name": "Suite",
+            "description": "",
+            "branches": [
+                {
+                    "name": "Suite",
+                    "xp_required": 42,
+                    "projects_required": 1,
+                    "projects": [
+                        {
+                            "name": "42sh",
+                            "slug": "42cursus-42sh",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "BADASS",
+                            "slug": "bgp-at-doors-of-autonomous-systems-is-simple",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "doom-nukem",
+                            "slug": "42cursus-doom-nukem",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Inception-of-Things",
+                            "slug": "inception-of-things",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 25450,
+                            "xp": 31812.5
+                        },
+                        {
+                            "name": "humangl",
+                            "slug": "42cursus-humangl",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-2",
+                            "slug": "42cursus-kfs-2",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "override",
+                            "slug": "42cursus-override",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "pestilence",
+                            "slug": "42cursus-pestilence",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "rt",
+                            "slug": "42cursus-rt",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 31812.5,
+                    "projects_done": 1,
+                    "validated?": true,
+                    "xp_left": 0
+                }
+            ]
+        },
+        {
+            "name": "Option 1",
+            "description": "Web and mobile application development",
+            "branches": [
+                {
+                    "name": "Web",
+                    "xp_required": 15000,
+                    "projects_required": 2,
+                    "projects": [
+                        {
+                            "name": "Piscine PHP Symfony",
+                            "slug": "42cursus-piscine-php-symfony",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "[DEPRECATED] Piscine Python Django",
+                            "slug": "deprecated-piscine-python-django",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Piscine Ruby on Rails",
+                            "slug": "42cursus-piscine-ruby-on-rails",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "camagru",
+                            "slug": "42cursus-camagru",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "matcha",
+                            "slug": "42cursus-matcha",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "hypertube",
+                            "slug": "42cursus-hypertube",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "red-tetris",
+                            "slug": "42cursus-red-tetris",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "darkly",
+                            "slug": "42cursus-darkly",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "h42n42",
+                            "slug": "42cursus-h42n42",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Tokenizer",
+                            "slug": "tokenizer",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 0,
+                    "projects_done": 0,
+                    "validated?": false,
+                    "xp_left": 15000
+                },
+                {
+                    "name": "Mobile",
+                    "xp_required": 10000,
+                    "projects_required": 2,
+                    "projects": [
+                        {
+                            "name": "ft_hangouts",
+                            "slug": "42cursus-ft_hangouts",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "swifty-companion",
+                            "slug": "42cursus-swifty-companion",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "swifty-proteins",
+                            "slug": "42cursus-swifty-proteins",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Mobile",
+                            "slug": "mobile",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 0,
+                    "projects_done": 0,
+                    "validated?": false,
+                    "xp_left": 10000
+                }
+            ]
+        },
+        {
+            "name": "Option 2",
+            "description": "Applicative software development",
+            "branches": [
+                {
+                    "name": "Object Oriented Programming",
+                    "xp_required": 10000,
+                    "projects_required": 2,
+                    "projects": [
+                        {
+                            "name": "bomberman",
+                            "slug": "42cursus-bomberman",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "nibbler",
+                            "slug": "42cursus-nibbler",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Piscine PHP Symfony",
+                            "slug": "42cursus-piscine-php-symfony",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "[DEPRECATED] Piscine Python Django",
+                            "slug": "deprecated-piscine-python-django",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Piscine Ruby on Rails",
+                            "slug": "42cursus-piscine-ruby-on-rails",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "camagru",
+                            "slug": "42cursus-camagru",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "matcha",
+                            "slug": "42cursus-matcha",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "hypertube",
+                            "slug": "42cursus-hypertube",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "red-tetris",
+                            "slug": "42cursus-red-tetris",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "darkly",
+                            "slug": "42cursus-darkly",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "h42n42",
+                            "slug": "42cursus-h42n42",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Mobile",
+                            "slug": "mobile",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_hangouts",
+                            "slug": "42cursus-ft_hangouts",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "swifty-companion",
+                            "slug": "42cursus-swifty-companion",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "swifty-proteins",
+                            "slug": "42cursus-swifty-proteins",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "avaj-launcher",
+                            "slug": "42cursus-avaj-launcher",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "swingy",
+                            "slug": "42cursus-swingy",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "fix-me",
+                            "slug": "42cursus-fix-me",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Piscine Object",
+                            "slug": "piscine-object",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 0,
+                    "projects_done": 0,
+                    "validated?": false,
+                    "xp_left": 10000
+                },
+                {
+                    "name": "Functional Programming",
+                    "xp_required": 10000,
+                    "projects_required": 2,
+                    "projects": [
+                        {
+                            "name": "[DEPRECATED] Piscine OCaml",
+                            "slug": "deprecated-piscine-ocaml",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_turing",
+                            "slug": "42cursus-ft_turing",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_ality",
+                            "slug": "42cursus-ft_ality",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "h42n42",
+                            "slug": "42cursus-h42n42",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 0,
+                    "projects_done": 0,
+                    "validated?": false,
+                    "xp_left": 10000
+                },
+                {
+                    "name": "Imperative programming",
+                    "xp_required": 10000,
+                    "projects_required": 2,
+                    "projects": [
+                        {
+                            "name": "libasm",
+                            "slug": "libasm",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 966,
+                            "xp": 1207.5
+                        },
+                        {
+                            "name": "zappy",
+                            "slug": "42cursus-zappy",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "gbmu",
+                            "slug": "42cursus-gbmu",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_linux",
+                            "slug": "42cursus-ft_linux",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "little-penguin-1",
+                            "slug": "42cursus-little-penguin-1",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "taskmaster",
+                            "slug": "42cursus-taskmaster",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "strace",
+                            "slug": "42cursus-strace",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "malloc",
+                            "slug": "42cursus-malloc",
+                            "final_mark": 116,
+                            "validated?": true,
+                            "difficulty": 9450,
+                            "xp": 10962.0
+                        },
+                        {
+                            "name": "matt-daemon",
+                            "slug": "42cursus-matt-daemon",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "nm",
+                            "slug": "nm",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "lem-ipc",
+                            "slug": "42cursus-lem-ipc",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-1",
+                            "slug": "42cursus-kfs-1",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-2",
+                            "slug": "42cursus-kfs-2",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_malcolm",
+                            "slug": "ft_malcolm",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_ssl_md5",
+                            "slug": "42cursus-ft_ssl_md5",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "darkly",
+                            "slug": "42cursus-darkly",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "snow-crash",
+                            "slug": "42cursus-snow-crash",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "rainfall",
+                            "slug": "42cursus-rainfall",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "override",
+                            "slug": "42cursus-override",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "boot2root",
+                            "slug": "42cursus-boot2root",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_shield",
+                            "slug": "42cursus-ft_shield",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "durex",
+                            "slug": "durex",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "woody-woodpacker",
+                            "slug": "42cursus-woody-woodpacker",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "famine",
+                            "slug": "42cursus-famine",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "pestilence",
+                            "slug": "42cursus-pestilence",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 12169.5,
+                    "projects_done": 2,
+                    "validated?": true,
+                    "xp_left": 0
+                }
+            ]
+        }
+    ],
+    "rnpc7": [
+        {
+            "name": "Suite",
+            "description": "",
+            "branches": [
+                {
+                    "name": "",
+                    "xp_required": 42,
+                    "projects_required": 1,
+                    "projects": [
+                        {
+                            "name": "42sh",
+                            "slug": "42cursus-42sh",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "BADASS",
+                            "slug": "bgp-at-doors-of-autonomous-systems-is-simple",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "doom-nukem",
+                            "slug": "42cursus-doom-nukem",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Inception-of-Things",
+                            "slug": "inception-of-things",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 25450,
+                            "xp": 31812.5
+                        },
+                        {
+                            "name": "humangl",
+                            "slug": "42cursus-humangl",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-2",
+                            "slug": "42cursus-kfs-2",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "override",
+                            "slug": "42cursus-override",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "pestilence",
+                            "slug": "42cursus-pestilence",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "rt",
+                            "slug": "42cursus-rt",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 31812.5,
+                    "projects_done": 1,
+                    "validated?": true,
+                    "xp_left": 0
+                }
+            ]
+        },
+        {
+            "name": "Option 1",
+            "description": "Network Information Systems Architecture",
+            "branches": [
+                {
+                    "name": "Unix/Kernel",
+                    "xp_required": 30000,
+                    "projects_required": 2,
+                    "projects": [
+                        {
+                            "name": "libasm",
+                            "slug": "libasm",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 966,
+                            "xp": 1207.5
+                        },
+                        {
+                            "name": "zappy",
+                            "slug": "42cursus-zappy",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "gbmu",
+                            "slug": "42cursus-gbmu",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_linux",
+                            "slug": "42cursus-ft_linux",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "little-penguin-1",
+                            "slug": "42cursus-little-penguin-1",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "taskmaster",
+                            "slug": "42cursus-taskmaster",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "strace",
+                            "slug": "42cursus-strace",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "malloc",
+                            "slug": "42cursus-malloc",
+                            "final_mark": 116,
+                            "validated?": true,
+                            "difficulty": 9450,
+                            "xp": 10962.0
+                        },
+                        {
+                            "name": "matt-daemon",
+                            "slug": "42cursus-matt-daemon",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "nm",
+                            "slug": "nm",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "lem-ipc",
+                            "slug": "42cursus-lem-ipc",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-1",
+                            "slug": "42cursus-kfs-1",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-2",
+                            "slug": "42cursus-kfs-2",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-3",
+                            "slug": "42cursus-kfs-3",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-4",
+                            "slug": "42cursus-kfs-4",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-5",
+                            "slug": "42cursus-kfs-5",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-6",
+                            "slug": "42cursus-kfs-6",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-7",
+                            "slug": "42cursus-kfs-7",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-8",
+                            "slug": "42cursus-kfs-8",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-9",
+                            "slug": "42cursus-kfs-9",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "kfs-x",
+                            "slug": "42cursus-kfs-x",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 12169.5,
+                    "projects_done": 2,
+                    "validated?": false,
+                    "xp_left": 17830.5
+                },
+                {
+                    "name": "System administration",
+                    "xp_required": 50000,
+                    "projects_required": 3,
+                    "projects": [
+                        {
+                            "name": "cloud-1",
+                            "slug": "42cursus-cloud-1",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "BADASS",
+                            "slug": "bgp-at-doors-of-autonomous-systems-is-simple",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Inception-of-Things",
+                            "slug": "inception-of-things",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 25450,
+                            "xp": 31812.5
+                        },
+                        {
+                            "name": "taskmaster",
+                            "slug": "42cursus-taskmaster",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_ping",
+                            "slug": "42cursus-ft_ping",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 4200,
+                            "xp": 5250.0
+                        },
+                        {
+                            "name": "ft_traceroute",
+                            "slug": "42cursus-ft_traceroute",
+                            "final_mark": 83,
+                            "validated?": true,
+                            "difficulty": 4200,
+                            "xp": 3486.0
+                        },
+                        {
+                            "name": "ft_nmap",
+                            "slug": "42cursus-ft_nmap",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ActiveDiscovery",
+                            "slug": "activediscovery",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "AutomaticDirectory",
+                            "slug": "automaticdirectory",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "AdministrativeDirectory",
+                            "slug": "administrativedirectory",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "AccessibleDirectory",
+                            "slug": "accessibledirectory",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 40548.5,
+                    "projects_done": 3,
+                    "validated?": false,
+                    "xp_left": 9451.5
+                },
+                {
+                    "name": "Security",
+                    "xp_required": 50000,
+                    "projects_required": 3,
+                    "projects": [
+                        {
+                            "name": "ft_malcolm",
+                            "slug": "ft_malcolm",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_ssl_md5",
+                            "slug": "42cursus-ft_ssl_md5",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "darkly",
+                            "slug": "42cursus-darkly",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "snow-crash",
+                            "slug": "42cursus-snow-crash",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "rainfall",
+                            "slug": "42cursus-rainfall",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "override",
+                            "slug": "42cursus-override",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "boot2root",
+                            "slug": "42cursus-boot2root",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_shield",
+                            "slug": "42cursus-ft_shield",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "woody-woodpacker",
+                            "slug": "42cursus-woody-woodpacker",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "famine",
+                            "slug": "42cursus-famine",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "pestilence",
+                            "slug": "42cursus-pestilence",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Cybersecurity",
+                            "slug": "cybersecurity",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "UnleashTheBox",
+                            "slug": "unleashthebox",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ActiveConnect",
+                            "slug": "activeconnect",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "MicroForensX",
+                            "slug": "microforensx",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ActiveTechTales",
+                            "slug": "activetechtales",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 0,
+                    "projects_done": 0,
+                    "validated?": false,
+                    "xp_left": 50000
+                }
+            ]
+        },
+        {
+            "name": "Option 2",
+            "description": "Database architecture and data",
+            "branches": [
+                {
+                    "name": "Web - Database",
+                    "xp_required": 50000,
+                    "projects_required": 2,
+                    "projects": [
+                        {
+                            "name": "Piscine PHP Symfony",
+                            "slug": "42cursus-piscine-php-symfony",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "[DEPRECATED] Piscine Python Django",
+                            "slug": "deprecated-piscine-python-django",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Piscine Ruby on Rails",
+                            "slug": "42cursus-piscine-ruby-on-rails",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "camagru",
+                            "slug": "42cursus-camagru",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "matcha",
+                            "slug": "42cursus-matcha",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "hypertube",
+                            "slug": "42cursus-hypertube",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "red-tetris",
+                            "slug": "42cursus-red-tetris",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "darkly",
+                            "slug": "42cursus-darkly",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "h42n42",
+                            "slug": "42cursus-h42n42",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Tokenizer",
+                            "slug": "tokenizer",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 0,
+                    "projects_done": 0,
+                    "validated?": false,
+                    "xp_left": 50000
+                },
+                {
+                    "name": "Artificial Intelligence",
+                    "xp_required": 70000,
+                    "projects_required": 3,
+                    "projects": [
+                        {
+                            "name": "Piscine Machine Learning",
+                            "slug": "Piscine Machine Learning",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ft_linear_regression",
+                            "slug": "42cursus-ft_linear_regression",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 4200,
+                            "xp": 5250.0
+                        },
+                        {
+                            "name": "dslr",
+                            "slug": "42cursus-dslr",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 6000,
+                            "xp": 7500.0
+                        },
+                        {
+                            "name": "multilayer-perceptron",
+                            "slug": "42cursus-multilayer-perceptron",
+                            "final_mark": 125,
+                            "validated?": true,
+                            "difficulty": 9450,
+                            "xp": 11812.5
+                        },
+                        {
+                            "name": "gomoku",
+                            "slug": "42cursus-gomoku",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "total-perspective-vortex",
+                            "slug": "42cursus-total-perspective-vortex",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "expert-system",
+                            "slug": "42cursus-expert-system",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "krpsim",
+                            "slug": "42cursus-krpsim",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "matrix",
+                            "slug": "matrix",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "ready set boole",
+                            "slug": "ready-set-boole",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Leaffliction",
+                            "slug": "leaffliction",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "Piscine Data Science",
+                            "slug": "piscine-data-science",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        },
+                        {
+                            "name": "[DEPRECATED] Piscine Python Data Science",
+                            "slug": "deprecated-piscine-python-data-science",
+                            "validated?": false,
+                            "final_mark": 0,
+                            "difficulty": 0,
+                            "xp": 0
+                        }
+                    ],
+                    "xp_earned": 24562.5,
+                    "projects_done": 3,
+                    "validated?": false,
+                    "xp_left": 45437.5
+                }
+            ]
+        }
+    ]
+}

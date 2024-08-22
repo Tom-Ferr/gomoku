@@ -1,0 +1,277 @@
+{
+    "RNPC6": [
+			{
+				"name": "Suite",
+				"description": "",
+				"branches": [
+					{
+						"name": "Suite",
+                        "xp_required": 42,
+                        "projects_required": 1,
+						"projects": [
+							"42cursus-42sh",
+							"bgp-at-doors-of-autonomous-systems-is-simple",
+							"42cursus-doom-nukem",
+							"inception-of-things",
+							"42cursus-humangl",
+							"42cursus-kfs-2",
+							"42cursus-override",
+							"42cursus-pestilence",
+							"42cursus-rt"
+						]
+					}
+				]
+			},
+            {
+                "name": "Option 1",
+                "description": "Web and mobile application development",
+                "branches": [
+                    {
+                        "name": "Web",
+                        "xp_required": 15000,
+                        "projects_required": 2,
+                        "projects": [
+                            "42cursus-piscine-php-symfony",
+                            "deprecated-piscine-python-django",
+                            "42cursus-piscine-ruby-on-rails",
+                            "42cursus-camagru",
+                            "42cursus-matcha",
+                            "42cursus-hypertube",
+                            "42cursus-red-tetris",
+                            "42cursus-darkly",
+                            "42cursus-h42n42",
+                            "tokenizer"
+                        ]
+                    },
+                    {
+                        "name": "Mobile",
+                        "xp_required": 10000,
+                        "projects_required": 2,
+                        "projects": [
+                            "42cursus-ft_hangouts",
+                            "42cursus-swifty-companion",
+                            "42cursus-swifty-proteins",
+                            "mobile"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Option 2",
+                "description": "Applicative software development",
+                "branches": [
+                    {
+                        "name": "Object Oriented Programming",
+                        "xp_required": 10000,
+                        "projects_required": 2,
+                        "projects": [
+                            "42cursus-bomberman",
+                            "42cursus-nibbler",
+                            "42cursus-piscine-php-symfony",
+                            "deprecated-piscine-python-django",
+                            "42cursus-piscine-ruby-on-rails",
+                            "42cursus-camagru",
+                            "42cursus-matcha",
+                            "42cursus-hypertube",
+                            "42cursus-red-tetris",
+                            "42cursus-darkly",
+                            "42cursus-h42n42",
+                            "mobile",
+                            "42cursus-ft_hangouts",
+                            "42cursus-swifty-companion",
+                            "42cursus-swifty-proteins",
+                            "42cursus-avaj-launcher",
+                            "42cursus-swingy",
+                            "42cursus-fix-me",
+                            "piscine-object"
+                        ]
+                    },
+                    {
+                        "name": "Functional Programming",
+                        "xp_required": 10000,
+                        "projects_required": 2,
+                        "projects": [
+                            "deprecated-piscine-ocaml",
+                            "42cursus-ft_turing",
+                            "42cursus-ft_ality",
+                            "42cursus-h42n42"
+                        ]
+                    },
+                    {
+                        "name": "Imperative programming",
+                        "xp_required": 10000,
+                        "projects_required": 2,
+                        "projects": [
+                            "libasm",
+                            "42cursus-zappy",
+                            "42cursus-gbmu",
+                            "42cursus-ft_linux",
+                            "42cursus-little-penguin-1",
+                            "42cursus-taskmaster",
+                            "42cursus-strace",
+                            "42cursus-malloc",
+                            "42cursus-matt-daemon",
+                            "nm",
+                            "42cursus-lem-ipc",
+                            "42cursus-kfs-1",
+                            "42cursus-kfs-2",
+                            "ft_malcolm",
+                            "42cursus-ft_ssl_md5",
+                            "42cursus-darkly",
+                            "42cursus-snow-crash",
+                            "42cursus-rainfall",
+                            "42cursus-override",
+                            "42cursus-boot2root",
+                            "42cursus-ft_shield",
+                            "durex",
+                            "42cursus-woody-woodpacker",
+                            "42cursus-famine",
+                            "42cursus-pestilence"
+                        ]
+                    }
+                ]
+            }
+        ],
+    "RNPC7": [
+			{
+				"name": "Suite",
+				"description": "",
+				"branches": [
+					{
+						"name": "Suite",
+                        "xp_required": 42,
+                        "projects_required": 1,
+						"projects": [
+							"42cursus-42sh",
+							"bgp-at-doors-of-autonomous-systems-is-simple",
+							"42cursus-doom-nukem",
+							"inception-of-things",
+							"42cursus-humangl",
+							"42cursus-kfs-2",
+							"42cursus-override",
+							"42cursus-pestilence",
+							"42cursus-rt"
+						]
+					}
+				]
+			},
+            {
+                "name": "Option 1",
+                "description": "Network Information Systems Architecture",
+                "branches": [
+                    {
+                        "name": "Unix/Kernel",
+                        "xp_required": 30000,
+                        "projects_required": 2,
+                        "projects": [
+                            "libasm",
+                            "42cursus-zappy",
+                            "42cursus-gbmu",
+                            "42cursus-ft_linux",
+                            "42cursus-little-penguin-1",
+                            "42cursus-taskmaster",
+                            "42cursus-strace",
+                            "42cursus-malloc",
+                            "42cursus-matt-daemon",
+                            "nm",
+                            "42cursus-lem-ipc",
+                            "42cursus-kfs-1",
+                            "42cursus-kfs-2",
+                            "42cursus-kfs-3",
+                            "42cursus-kfs-4",
+                            "42cursus-kfs-5",
+                            "42cursus-kfs-6",
+                            "42cursus-kfs-7",
+                            "42cursus-kfs-8",
+                            "42cursus-kfs-9",
+                            "42cursus-kfs-x"
+                        ]
+                    },
+                    {
+                        "name": "System administration",
+                        "xp_required": 50000,
+                        "projects_required": 3,
+                        "projects": [
+                            "42cursus-cloud-1",
+                            "bgp-at-doors-of-autonomous-systems-is-simple",
+                            "inception-of-things",
+                            "42cursus-taskmaster",
+                            "42cursus-ft_ping",
+                            "42cursus-ft_traceroute",
+                            "42cursus-ft_nmap",
+                            "activediscovery",
+                            "automaticdirectory",
+                            "administrativedirectory",
+                            "accessibledirectory"
+                        ]
+                    },
+                    {
+                        "name": "Security",
+                        "xp_required": 50000,
+                        "projects_required": 3,
+                        "projects": [
+                            "ft_malcolm",
+                            "42cursus-ft_ssl_md5",
+                            "42cursus-darkly",
+                            "42cursus-snow-crash",
+                            "42cursus-rainfall",
+                            "42cursus-override",
+                            "42cursus-boot2root",
+                            "42cursus-ft_shield",
+                            "42cursus-woody-woodpacker",
+                            "42cursus-famine",
+                            "42cursus-pestilence",
+                            "cybersecurity",
+                            "unleashthebox",
+                            "activeconnect",
+                            "microforensx",
+                            "activetechtales"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Option 2",
+                "description": "Database architecture and data",
+                "branches": [
+                    {
+                        "name": "Web - Database",
+                        "xp_required": 50000,
+                        "projects_required": 2,
+                        "projects": [
+                            "42cursus-piscine-php-symfony",
+                            "deprecated-piscine-python-django",
+                            "42cursus-piscine-ruby-on-rails",
+                            "42cursus-camagru",
+                            "42cursus-matcha",
+                            "42cursus-hypertube",
+                            "42cursus-red-tetris",
+                            "42cursus-darkly",
+                            "42cursus-h42n42",
+                            "tokenizer"
+                        ]
+                    },
+                    {
+                        "name": "Artificial Intelligence",
+                        "xp_required": 70000,
+                        "projects_required": 3,
+                        "projects": [
+                            "Piscine Machine Learning",
+                            "42cursus-ft_linear_regression",
+                            "42cursus-dslr",
+                            "42cursus-multilayer-perceptron",
+                            "42cursus-gomoku",
+                            "42cursus-total-perspective-vortex",
+                            "42cursus-expert-system",
+                            "42cursus-krpsim",
+                            "matrix",
+                            "ready-set-boole",
+                            "leaffliction",
+                            "piscine-data-science",
+                            "deprecated-piscine-python-data-science"
+					]
+				}
+			]
+		}
+	]
+}

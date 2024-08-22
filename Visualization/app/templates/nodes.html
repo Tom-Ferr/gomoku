@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Gomoku Visualizer</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<style>
+		.accordion-validated {
+			background-color: #ccffcc !important;
+			color: #339933 !important;
+			font-weight: bold;
+		}
+		.accordion-description {
+			font-size: small;
+			padding-left: 10px;
+		}
+		.accordion-regular {
+			background-color: #efefef !important;
+			color: #545454 !important;
+			font-weight: bold;
+		}
+		.completion {
+			font-size: smaller;
+			padding-left: 10px;
+		}
+		.success-icon {
+			color: #339933;
+		}
+		.certification, .certification:hover {
+			background-color: #e4c01f;
+			font-weight: bolder;
+			color: white;
+			width: 100%;
+			cursor: default;
+		}
+		.site-background {
+			background-color: #EAE5E1;
+		}
+		#option_button {
+			white-space: pre;
+		}
+		.board {
+            display: grid;
+            grid-template-columns: repeat(19, 20px);
+            grid-template-rows: repeat(19, 20px);
+            gap: 1px;
+        }
+        .cell {
+			color: white;
+			font-weight: bold;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #333;
+        }
+        .mystate {
+            background-color: rgb(191, 0, 255);
+        }
+        .otherstate {
+            background-color: rgb(0, 107, 201);
+        }
+	</style>
+</head>
+<body>
+
+	{% import "board.html" as board %}
+
+<div class="container-fluid  pb-4">
+	<div class="row">
+			<div class="col-lg">
+
+
+				<div class="col-lg">
+
+
+					<div class="accordion" id="parent">
+						{% for level3 in items %}
+						{% set o_loop = loop %}
+
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="heading{{o_loop.index}}">
+								<button class="accordion-button accordion-regular" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{o_loop.index}}" aria-expanded="true" aria-controls="collapse{{o_loop.index}}">
+									Depth 3
+									<span class="text-muted accordion-description">     </span>
+								</button>
+								</h2>
+								<div id="collapse{{o_loop.index}}" class="accordion-collapse collapse show" aria-labelledby="heading{{o_loop.index}}">
+									<div class="accordion-body">
+										<div class="accordion" id="innerparent{{o_loop.index}}">
+											{{ board.render_board(level3['mystate'], level3['otherstate']) }}
+
+											{% for level2 in level3.children %}
+											{% set b_loop = loop %}
+											<div class="accordion-item">
+
+												<h2 class="accordion-header" id="heading{{o_loop.index}}-{{b_loop.index}}">
+													<button class="accordion-button  accordion-{{'validated' if level2['is_best'] else 'regular' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{o_loop.index}}-{{b_loop.index}}" aria-expanded="true" aria-controls="collapse{{o_loop.index}}-{{b_loop.index}}">
+														Depth 2. Move {{ level2['orig_move'] }}. H: {{ level2['heuristics']}}
+														<span class="text-muted accordion-description"> Alpha: {{ level2['alpha']}}    Beta: {{ level2['beta'] }}.    {{ "maximizing" if level2['maximizing'] else "minimizing" }} </span>
+													</button>
+												</h2>
+
+												<div id="collapse{{o_loop.index}}-{{b_loop.index}}" class="accordion-collapse collapse " aria-labelledby="heading{{o_loop.index}}-{{b_loop.index}}">
+													<div class="accordion-body">
+
+
+
+
+														<div class="accordion" id="innerparent{{o_loop.index}}">
+															{{ board.render_board(level2['mystate'], level2['otherstate'], level2['orig_move']) }}
+
+															{% for level1 in level2.children %}
+															{% set c_loop = loop %}
+															<div class="accordion-item">
+
+																<h2 class="accordion-header" id="heading{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}">
+																	<button class="accordion-button  accordion-{{'validated' if level1['is_best'] else 'regular' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}" aria-expanded="true" aria-controls="collapse{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}">
+																		Depth 1. Move {{ level1['orig_move'] }}. H: {{ level1['heuristics']}}
+																		<span class="text-muted accordion-description"> Alpha: {{ level1['alpha']}}    Beta: {{ level1['beta'] }}.    {{ "maximizing" if level1['maximizing'] else "minimizing" }} </span>
+
+																	</button>
+																</h2>
+
+																<div id="collapse{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}" class="accordion-collapse collapse " aria-labelledby="heading{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}">
+																	<div class="accordion-body">
+																		{{ board.render_board(level1['mystate'], level1['otherstate'], level2['orig_move'], level1['orig_move']) }}
+																		<div class="accordion" id="innerparent{{o_loop.index}}">
+																			{% for level0 in level1.children %}
+																			{% set d_loop = loop %}
+																			<div class="accordion-item">
+
+																				<h2 class="accordion-header" id="heading{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}-{{d_loop.index}}">
+																					<button class="accordion-button  accordion-{{'validated' if level0['is_best'] else 'regular' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}-{{d_loop.index}}" aria-expanded="true" aria-controls="collapse{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}-{{d_loop.index}}">
+																						Depth 0. Move {{ level0['orig_move'] }}. H: {{ level0['heuristics']}}
+																						<span class="text-muted accordion-description"> Alpha: {{ level0['alpha']}}    Beta: {{ level0['beta'] }}.    {{ "maximizing" if level0['maximizing'] else "minimizing" }} </span>
+																					</button>
+																				</h2>
+
+																				<div id="collapse{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}-{{d_loop.index}}" class="accordion-collapse collapse " aria-labelledby="heading{{o_loop.index}}-{{b_loop.index}}-{{c_loop.index}}-{{d_loop.index}}">
+																					<div class="accordion-body">
+
+
+																						{{ board.render_board(level0['mystate'], level0['otherstate'], level2['orig_move'], level1['orig_move'], level0['orig_move']) }}
+
+																					</div>
+																				</div>
+																			</div>
+																			{% endfor %}
+																		</div>
+																	</div>
+																</div>
+															</div>
+															{% endfor %}
+
+														</div>
+
+
+													</div>
+												</div>
+											</div>
+											{% endfor %}
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+						{% endfor %}
+					</div> <!--outer accordion-->
+				</div>
+
+			</div>
+
+		</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/d08f57a52a.js" crossorigin="anonymous"></script>
+</body>
+</html>

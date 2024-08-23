@@ -2,6 +2,14 @@
 # define RECT_HPP
 # include <algorithm>
 # include <ostream>
+
+template <typename T>
+struct s_coord
+{
+	T x;
+	T y;
+};
+
 class Rect
 {
 	public:

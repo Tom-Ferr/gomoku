@@ -1,9 +1,15 @@
 #include  <Gui.hpp>
 
 mlx_t			*Gui::_mlx = nullptr;
-mlx_texture_t	*Gui::_button_texture = nullptr;
+mlx_texture_t	*Gui::_piece_texture = nullptr;
 mlx_texture_t	*Gui::_tile_texture = nullptr;
 mlx_texture_t	*Gui::_board_texture = nullptr;
+mlx_texture_t	*Gui::_logo_texture = nullptr;
+mlx_texture_t	*Gui::_playbutton_texture = nullptr;
+mlx_texture_t	*Gui::_button_texture = nullptr;
+mlx_texture_t	*Gui::_font_regular_texture = nullptr;
+mlx_texture_t	*Gui::_font_bold_texture = nullptr;
+mlx_texture_t	*Gui::_font_heavy_texture = nullptr;
 Rect			Gui::_dimensions;
 Rect			Gui::_mouse;
 
@@ -15,12 +21,24 @@ Gui::Gui()
 
 Gui::~Gui()
 {
-	if (Gui::_button_texture)
-		mlx_delete_texture(Gui::_button_texture);
+	if (Gui::_logo_texture)
+		mlx_delete_texture(Gui::_logo_texture);
+	if (Gui::_piece_texture)
+		mlx_delete_texture(Gui::_piece_texture);
 	if (Gui::_tile_texture)
 		mlx_delete_texture(Gui::_tile_texture);
 	if (Gui::_board_texture)
 		mlx_delete_texture(Gui::_board_texture);
+	if (Gui::_piece_texture)
+		mlx_delete_texture(Gui::_playbutton_texture);
+	if (Gui::_button_texture)
+		mlx_delete_texture(Gui::_button_texture);
+	if (Gui::_font_regular_texture)
+		mlx_delete_texture(Gui::_font_regular_texture);
+	if (Gui::_font_bold_texture)
+		mlx_delete_texture(Gui::_font_bold_texture);
+	if (Gui::_font_heavy_texture)
+		mlx_delete_texture(Gui::_font_heavy_texture);
 	if (_background)
 		mlx_delete_texture(_background_texture);
 	mlx_terminate(_mlx);
@@ -42,8 +60,10 @@ bool Gui::_init()
 	if (!(_load_background()))
 		return (false);
 	mlx_image_to_window(_mlx, _background, 0, 0);
+
 	_board.init();
-	_board.reset(19);
+	//_board.show(19);
+	_menu.init();
 	return (true);
 }
 
@@ -77,11 +97,23 @@ bool Gui::_load_textures()
 {
 	if (!_load_texture(_background_texture, "assets/background.png"))
 		return (false);
-	if (!_load_texture(Gui::_button_texture, "assets/white_piece.png"))
+	if (!_load_texture(Gui::_piece_texture, "assets/white_piece.png"))
 		return (false);
 	if (!_load_texture(Gui::_tile_texture, "assets/marble_tiles.png"))
 		return (false);
 	if (!_load_texture(Gui::_board_texture, "assets/board.png"))
+		return (false);
+	if (!_load_texture(Gui::_logo_texture, "assets/logo.png"))
+		return (false);
+	if (!_load_texture(Gui::_playbutton_texture, "assets/playbutton.png"))
+		return (false);
+	if (!_load_texture(Gui::_button_texture, "assets/wbutton.png"))
+		return (false);
+	if (!_load_texture(Gui::_font_regular_texture, "assets/fontregular.png"))
+		return (false);
+	if (!_load_texture(Gui::_font_bold_texture, "assets/fontbold.png"))
+		return (false);
+	if (!_load_texture(Gui::_font_heavy_texture, "assets/fontheavy.png"))
 		return (false);
 	return (true);
 }
@@ -95,7 +127,7 @@ void Gui::_run()
 	mlx_resize_hook(_mlx, resize_hook, this);
 	mlx_loop(_mlx);
 }
-
+/*
 void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color)
 {
 	if (image == nullptr or texture == nullptr)
@@ -133,11 +165,59 @@ void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const 
 		}
 	}
 }
+*/
+void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color, size_t index, size_t gridsize, Rect dest)
+{
+	struct s_coord<uint8_t *> pixel;
+	struct s_coord<unsigned int> xy;
+	struct s_coord<float> scale;
+	Rect tex(0, 0, texture->width / gridsize, texture->height / gridsize);
+
+	if (dest.width == 0 || dest.height == 0
+		|| dest.width + dest.x > image->width
+		|| dest.height + dest.y > image->height)
+		dest = Rect(0, 0, image->width, image->height);
+	xy.x = index % gridsize;
+	xy.y = index / gridsize;
+	scale.x = static_cast<float>(tex.width) / dest.width;
+	scale.y = static_cast<float>(tex.height) / dest.height;
+	for (unsigned int j = 0; j < dest.height; j++)
+	{
+		for (unsigned int i = 0; i < dest.width; i++)
+		{
+			tex.x = static_cast<unsigned int>(i * scale.x) + tex.width * xy.x;
+			tex.y = static_cast<unsigned int>(j * scale.y) + tex.height * xy.y;
+			if (tex.x >= texture->width)
+				tex.x = texture->width - 1;
+			if (tex.y >= texture->height)
+				tex.y = texture->height - 1;
+			pixel.x = &texture->pixels[(tex.y * texture->width + tex.x) * texture->bytes_per_pixel];
+			pixel.y = &image->pixels[((j + dest.y) * image->width + i + dest.x) * texture->bytes_per_pixel];
+			//pixel.y = &image->pixels[(j * image->width + i) * texture->bytes_per_pixel];
+			if (color != Color::white)
+			{
+				pixel.y[0] = (pixel.x[0] * color.r) / 255;
+				pixel.y[1] = (pixel.x[1] * color.g) / 255;
+				pixel.y[2] = (pixel.x[2] * color.b) / 255;
+				pixel.y[3] = pixel.x[3];
+				if (pixel.x[3] == 255)
+					pixel.y[3] = color.a;
+			}
+			else
+				memmove(pixel.y, pixel.x, texture->bytes_per_pixel);
+		}
+	}
+}
+
+
+
+
 
 /*
 ** apply a subtexture to an image.
 ** size is understood to be 3 x 3.
 */
+/*
 void Gui::apply_texture(mlx_image_t *image, mlx_texture_t *texture, size_t index)
 {
 	if (image == nullptr or texture == nullptr)
@@ -169,14 +249,15 @@ void Gui::apply_texture(mlx_image_t *image, mlx_texture_t *texture, size_t index
 		}
 	}
 }
-
+*/
 void	Gui::_resize(int width, int height)
 {
 	Gui::_dimensions.width = width;
 	Gui::_dimensions.height = height;
 	mlx_resize_image(_background, width, height);
 	Gui::apply_texture(_background, _background_texture);
-	_board.resize();
+//	_board.resize();
+	_menu.resize();
 }
 
 /*
@@ -205,7 +286,7 @@ void	Gui::cursor_hook(double x, double y, void *param)
 
 	Gui::_mouse = Rect((int)x, (int)y, 0, 0);
 	gui->_board.hover();
-	std::cout << "Cursor position: " << x << ", " << y << std::endl;
+	//std::cout << "Cursor position: " << x << ", " << y << std::endl;
 }
 
 void	Gui::close_hook(void *param)

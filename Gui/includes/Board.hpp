@@ -34,7 +34,8 @@ class Board
 		std::vector<Tile>	_tiles;
 		Tile				*_hovered_tile;
 		Rect				_tile_dimensions;
-		bool				_enabled;
+		bool				_enabled; /*wether the board is clickable*/
+		bool				_visible;
 
 		bool _init();
 		void _reset();
@@ -52,7 +53,7 @@ class Board
 		Board();
 		Board(Board const &other);
 		~Board();
-		bool reset(size_t sqrt);
+		bool show(size_t sqrt);
 		bool init();
 		Board &operator=(Board const &other) ;
 		void resize();
@@ -68,6 +69,9 @@ class Board
 		bool enabled();
 		void enable();
 		void disable();
+		bool visible();
+		void show();
+		void hide();
 		Rect get_tile_position(int pos);
 		Rect& get_tile_dimensions();
 		int get_hovered_tile();

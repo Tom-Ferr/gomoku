@@ -17,13 +17,18 @@ bool Board::init()
 	Board::_dimensions = Rect::subrect(Gui::dimensions(), .9);
 	Gui::apply_texture(_background, Gui::_board_texture);
 	mlx_image_to_window(Gui::mlx(), _background, 0, 0);
+	disable();
+	hide();
 	return (true);
 }
 
-bool Board::reset(size_t sqrt)
+bool Board::show(size_t sqrt)
 {
+	_background->enabled = true;
+	_visible=true;
  	_sqrt = sqrt;
 	_size = sqrt * sqrt;
+	enable();
 	_reset();
 	_init();
 	return (true);
@@ -61,6 +66,17 @@ Board &Board::operator=(Board const &other)
 	//_game = other._game;
 	return *this;
 }
+bool Board::visible()
+{
+	return _visible;
+}
+
+void Board::hide()
+{
+	_background->enabled = false;
+	_visible=false;
+	_reset();
+}
 
 /*
 ** clears the tile_backgrounds (and all piece images)
@@ -92,32 +108,25 @@ bool Board::_init()
 	for (size_t i = 0; i < 9; i++)
 	{
 		Board::_tile_images[i] = mlx_new_image(Gui::mlx(), TILE_SIZE, TILE_SIZE);
-		Gui::apply_texture(Board::_tile_images[i], Gui::_tile_texture, i);
+		Gui::apply_texture(Board::_tile_images[i], Gui::_tile_texture, Color::white, i, 3);
 	}
 	for (size_t i = 0; i < 5; i++)
 		Board::_piece_images[i] = mlx_new_image(Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
-	Gui::apply_texture(Board::_piece_images[0], Gui::_button_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[1], Gui::_button_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[2], Gui::_button_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[3], Gui::_button_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[4], Gui::_button_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[0], Gui::_piece_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[1], Gui::_piece_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[2], Gui::_piece_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[3], Gui::_piece_texture, Color(255, 0, 0, 255));
+	Gui::apply_texture(Board::_piece_images[4], Gui::_piece_texture, Color(255, 0, 0, 255));
 	for (size_t i = 0; i < Board::_size; i++)
 		_tiles.push_back(Tile(i));
 	resize();
-
-	//_shape = sf::RectangleShape();
-	//_shape.setTexture(Gui::texture(TX_BG));
-	//for (size_t i = 0; i < _size; i++)
-	//	_tiles.push_back(Tile(this, i));
-	//resize();
-	/*
-	** depending on the turn, we'll make a game step here.
-	*/
 	return true;
 }
 
 void Board::resize()
 {
+	if (!enabled())
+		return;
 	_dimensions = Rect::subrect(Gui::dimensions(), .9);
 	mlx_resize_image(_background, _dimensions.width, _dimensions.height);
 	Gui::apply_texture(_background, Gui::_board_texture);
@@ -127,15 +136,15 @@ void Board::resize()
 	for (size_t i = 0; i < 9; i++)
 	{
 		mlx_resize_image(Board::_tile_images[i], _tile_dimensions.width, _tile_dimensions.height);
-		Gui::apply_texture(Board::_tile_images[i], Gui::_tile_texture, i);
+		Gui::apply_texture(Board::_tile_images[i], Gui::_tile_texture, Color::white, i, 3);
 	}
 	for (size_t i = 0; i < 5; i++)
 		mlx_resize_image(Board::_piece_images[i], _tile_dimensions.width, _tile_dimensions.height);
-	Gui::apply_texture(Board::_piece_images[PT_BLACK], Gui::_button_texture, Color::black);
-	Gui::apply_texture(Board::_piece_images[PT_WHITE], Gui::_button_texture, Color::white);
-	Gui::apply_texture(Board::_piece_images[PT_HINT], Gui::_button_texture, Color::yellow);
-	Gui::apply_texture(Board::_piece_images[PT_BLACKHOVER], Gui::_button_texture, Color::black_alpha);
-	Gui::apply_texture(Board::_piece_images[PT_WHITEHOVER], Gui::_button_texture, Color::white_alpha);
+	Gui::apply_texture(Board::_piece_images[PT_BLACK], Gui::_piece_texture, Color::black);
+	Gui::apply_texture(Board::_piece_images[PT_WHITE], Gui::_piece_texture, Color::white);
+	Gui::apply_texture(Board::_piece_images[PT_HINT], Gui::_piece_texture, Color::yellow);
+	Gui::apply_texture(Board::_piece_images[PT_BLACKHOVER], Gui::_piece_texture, Color::black_alpha);
+	Gui::apply_texture(Board::_piece_images[PT_WHITEHOVER], Gui::_piece_texture, Color::white_alpha);
 	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
 	{
 		it->resize(_tile_dimensions);

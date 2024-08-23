@@ -5,6 +5,7 @@
 # include <iostream>
 # include <Rect.hpp>
 # include <Board.hpp>
+# include <Menu.hpp>
 #include <Color.hpp>
 #include <MLX42/MLX42.h>
 
@@ -33,15 +34,22 @@ class Gui
 		void _resize(int width, int height);
 
 	public:
-		static mlx_t									*_mlx;
-		static mlx_texture_t							*_button_texture;
-		static mlx_texture_t							*_tile_texture;
-		static mlx_texture_t							*_board_texture;
-		static Rect										_dimensions;
-		static Rect										_mouse;
-		mlx_texture_t 									*_background_texture;
-		mlx_image_t										*_background;
-		Board											_board;
+		static mlx_t				*_mlx;
+		static mlx_texture_t		*_piece_texture;
+		static mlx_texture_t		*_tile_texture;
+		static mlx_texture_t		*_board_texture;
+		static mlx_texture_t		*_logo_texture;
+		static mlx_texture_t		*_playbutton_texture;
+		static mlx_texture_t		*_button_texture;
+		static mlx_texture_t		*_font_regular_texture;
+		static mlx_texture_t		*_font_bold_texture;
+		static mlx_texture_t		*_font_heavy_texture;
+		static Rect					_dimensions;
+		static Rect					_mouse;
+		mlx_texture_t 				*_background_texture;
+		mlx_image_t					*_background;
+		Board						_board;
+		Menu						_menu;
 
 		/*
 		** input hooks
@@ -58,8 +66,10 @@ class Gui
 		/*
 		** helpers
 		*/
-		static void	apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color=Color::white);
-		static void apply_texture(mlx_image_t *image, mlx_texture_t *texture, size_t index);
+
+		static void	apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color=Color::white, size_t index=0, size_t gridsize=1, Rect dest = Rect(0, 0, 0, 0));
+		//static void apply_texture(mlx_image_t *image, mlx_texture_t *texture, size_t index);
+		//static void apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color);
 
 		/*
 		** static getters

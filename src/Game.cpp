@@ -51,6 +51,7 @@ bool Game::step(bool turn)
 	else
 	{
 		_move = result.second.pos();
+		_board.check_capture(_move, !turn);
 		_board.applymove(_move, turn);
 		std::cout << "Move: " << _move << std::endl;
 	}

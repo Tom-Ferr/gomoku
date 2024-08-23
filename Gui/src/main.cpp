@@ -10,6 +10,7 @@ int main()
 	std::srand(42);
 	Free_Three_Checker::set_masks(6, 19);
 	Heuristics::set_masks(5, 19);
+	BoardState::set_masks(4, 19);
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Gomoku");
 	window.setVerticalSyncEnabled(true);
 	Gui gui(&window);

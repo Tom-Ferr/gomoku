@@ -3,6 +3,9 @@
 Game::Game(int size)
 : _board(size)
 {
+	Free_Three_Checker::set_masks(6, size);
+	Heuristics::set_masks(5, size);
+	BoardState::set_masks(4, size);
 }
 
 Game::Game(const Game& other)
@@ -51,6 +54,7 @@ bool Game::step(bool turn)
 	else
 	{
 		_move = result.second.pos();
+		_board.check_capture(_move, !turn);
 		_board.applymove(_move, turn);
 		std::cout << "Move: " << _move << std::endl;
 	}

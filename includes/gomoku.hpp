@@ -21,8 +21,8 @@
 # include <gmp.h>
 # include <gmpxx.h>
 # include <BigInt.hpp>
-# include <BoardState.hpp>
 # include <Mask.hpp>
+// # include <BoardState.hpp>
 
 
 #endif

@@ -39,11 +39,12 @@ private:
     unsigned int _board_sqrt;
     unsigned int _board_size;
     bool _submask;
+    bool _mirror;
     const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 
 public:
     Mask();
-    Mask(const int mask_size, unsigned int board_sqrt, bool submask=false);
+    Mask(const int mask_size, unsigned int board_sqrt, bool submask=false, bool mirror=false);
     Mask(const Mask& other);
 	Mask &operator=(const Mask& other);
     ~Mask();

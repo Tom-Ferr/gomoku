@@ -1,20 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   boardstate.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/07 14:43:15 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/16 16:30:55 by iwillens         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "BoardState.hpp"
 
 BigInt BoardState::mask = BigInt(0);
 BigInt BoardState::leftmask = BigInt(0);
 BigInt BoardState::rightmask = BigInt(0);
+Mask BoardState::_masks = Mask();
 
 BoardState::BoardState(int _sqrt)
 :
@@ -41,52 +30,102 @@ BoardState::BoardState(int _sqrt)
 }
 
 BoardState::BoardState(const BoardState& other)
-: _maximizing(other._maximizing), _size(other._size), _sqrt(other._sqrt), _move(other._move),
+: _maximizing(other._maximizing), _capture_move(other._capture_move), _size(other._size), _sqrt(other._sqrt),  _maxi_captures(other._maxi_captures), _mini_captures(other._mini_captures),
+_move(other._move),
 _mystate(other._mystate), _otherstate(other._otherstate),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
 _totalboard(other._totalboard)
 { }
 
 BoardState::BoardState(BoardState&& other) noexcept
-: _maximizing(other._maximizing), _size(other._size), _sqrt(other._sqrt), _move(other._move),
-_mystate(std::move(other._mystate)),
+: _maximizing(other._maximizing), _capture_move(other._capture_move), _size(other._size), _sqrt(other._sqrt), _maxi_captures(other._maxi_captures), _mini_captures(other._mini_captures), 
+_move(other._move), _mystate(std::move(other._mystate)),
 _otherstate(std::move(other._otherstate)),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
 _totalboard(other._totalboard)
 { }
 
 BoardState::BoardState(const BoardState& other, BigInt move)
-: _maximizing(!other._maximizing), _size(other._size), _sqrt(other._sqrt), _move(move),
-_mystate(other._mystate), _otherstate(other._otherstate),
+: _maximizing(!other._maximizing), _capture_move(other._capture_move), _size(other._size), _sqrt(other._sqrt), _maxi_captures(other._maxi_captures), _mini_captures(other._mini_captures),
+_move(move), _mystate(other._mystate), _otherstate(other._otherstate),
 _inv_mystate(other._inv_mystate),
 _inv_otherstate(other._inv_otherstate),
 _totalboard(other._totalboard)
 {
+	_capture_move = false;
+	size_t pos = _move.pos();
+	check_capture(pos, _maximizing);
 	applymove(_move, !_maximizing);
-}
-
-void BoardState::applymove(size_t pos, bool mystate)
-{
-	BigInt mv = BigInt(1) << pos;
-	if (mystate)
-	{
-		_mystate = _mystate ^ mv;
-		_inv_mystate = (~_mystate) & BoardState::mask;
-	}
-	else
-	{
-		_otherstate = _otherstate ^ mv;
-		_inv_otherstate = (~_otherstate) & BoardState::mask;
-	}
-	_totalboard = _totalboard ^ mv;
 }
 
 void BoardState::applymove(BigInt move, bool mystate)
 {
-	applymove(move.pos(), mystate);
+	if (mystate)
+	{
+		_mystate = _mystate ^ move;
+		_inv_mystate = (~_mystate) & BoardState::mask;
+	}
+	else
+	{
+		_otherstate = _otherstate ^ move;
+		_inv_otherstate = (~_otherstate) & BoardState::mask;
+	}
+	_totalboard = _totalboard ^ move;
+}
+
+void BoardState::applymove(size_t pos, bool mystate)
+{
+	applymove(BigInt(1) << pos, mystate);
 }
 
 BoardState::~BoardState() { }
+
+void BoardState::set_masks(int mask_size, int board_sqrt)
+{
+    BoardState::_masks = Mask(mask_size, board_sqrt, false, true);
+}
+
+void BoardState::check_capture(size_t pos, bool maximizing)
+{
+	BigInt* rival;
+	BigInt* self;
+	int *counter;
+
+	if (!maximizing == true)
+	{
+		self = &_inv_mystate;
+		rival = &_inv_otherstate;
+		counter = &_maxi_captures;
+	}
+	else
+	{
+		self = &_inv_otherstate;
+		rival = &_inv_mystate;
+		counter = &_mini_captures;
+	}
+	for (size_t i = 0; i < 4; i++)
+    {
+    	const Mask::inner_map &masks = BoardState::_masks.at(_modes[i]);
+		const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
+		const Mask::variations_vector &edge_vec = masks.at(EDGE);
+		Mask::mask_vector::const_iterator mid_mask = mid_vec[pos].begin();
+		Mask::mask_vector::const_iterator end = mid_vec[pos].end();
+		Mask::mask_vector::const_iterator edge_mask = edge_vec[pos].begin();
+
+		for (; mid_mask != end; mid_mask++, edge_mask++)
+		{
+			if ((*rival & *mid_mask) != *mid_mask )
+				continue ;
+			if ((*self & *edge_mask) == 0)
+				continue;
+				
+			(*counter)++;
+			_capture_move = true;
+			applymove(*mid_mask, maximizing);
+			return;
+		}
+    }
+}
 
 BigInt const &BoardState::mystate(bool inverted) const
 {
@@ -117,9 +156,32 @@ int const &BoardState::sqrt() const
 	return _sqrt;
 }
 
+int const &BoardState::maxi_captures() const
+{
+	return _maxi_captures;
+}
+
+int const &BoardState::mini_captures() const
+{
+	return _mini_captures;
+}
+
+bool const &BoardState::is_capture() const
+{
+	return _capture_move;
+}
+
 BigInt const &BoardState::move() const
 {
 	return _move;
+}
+
+void BoardState::increment_captures(bool turn)
+{
+	if (turn)
+		_maxi_captures++;
+	else
+		_mini_captures++;
 }
 
 void BoardState::swap_states()
@@ -131,6 +193,10 @@ void BoardState::swap_states()
 	_inv_mystate = _inv_otherstate;
 	_inv_otherstate = temp;
 	_maximizing = true;
+
+	int tmp = _maxi_captures;
+	_maxi_captures = _mini_captures;
+	_mini_captures = tmp;
 }
 
 BigInt BoardState::expanded_free() const
@@ -182,6 +248,9 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_totalboard = other._totalboard;
 		_inv_mystate = other._mystate;
 		_inv_otherstate = other._inv_otherstate;
+		_maxi_captures = other._maxi_captures;
+		_mini_captures = other._mini_captures;
+		_capture_move = other._capture_move;
 	}
 	return *this;
 }

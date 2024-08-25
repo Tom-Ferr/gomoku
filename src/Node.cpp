@@ -42,6 +42,7 @@ Node& Node::operator=(const Node& other)
 
 void Node::print(std::pair<int, BigInt>&result)
 {
+	return ;
 	std::cerr << "{";
 	std::cerr << "\"depth\": " << _depth << ", ";
 	std::cerr << "\"maximizing\": \"";
@@ -67,9 +68,22 @@ std::pair<int, BigInt> Node::minimax()
 	{
 		Heuristics h = Heuristics(_state);
 		_heuristic = h.run();
-		result = std::make_pair(_heuristic, _state.move());
-		print(result);
-		return result;
+		if(_state.is_capture())
+		{
+			if(_state.maximizing())
+			{
+				int score = (1 << _state.maxi_captures()) + 1;
+				if(score > std::abs(_heuristic))
+					_heuristic = score;
+			}
+			else
+			{
+				int score = (1 << _state.mini_captures()) + 1;
+				if(score > std::abs(_heuristic))
+					_heuristic = score * -1;
+			}
+		}
+		return std::make_pair(_heuristic, _state.move());
 	}
 	if (_state.maximizing())
 	{
@@ -94,11 +108,6 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 		move = &Mask::targets(*it);
 		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *move));
 		std::pair<int, BigInt> score = child.minimax();
-		if (score.first == 32 || score.first == -32)
-		{
-			x = score.first;
-			return std::make_pair(x, score.second);
-		}
 		_heuristic = f(x, score.first);
 		if(_heuristic == score.first && _heuristic != x)
 		{
@@ -151,7 +160,17 @@ bool Node::possible_moves(std::vector<size_t>& moves)
 	{
 		_heuristic = h.endgame(pos);
 		if(_heuristic == 32 || _heuristic == -32)
+        {
+            _heuristic <<= _depth;
+            return false;
+        }
+		else if(_state.maxi_captures() == 5 || _state.mini_captures() == 5)
+		{
+			_heuristic = 32 << _depth;
+			if (_state.mini_captures() == 5)
+				_heuristic *= -1;
 			return false;
+		}
 		if (is_valid(pos, _freepos))
 			moves.push_back(pos);
 	}

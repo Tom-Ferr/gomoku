@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   boardstate.hpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwillens <iwillens@student.42sp.org.br>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/07 13:49:52 by iwillens          #+#    #+#             */
-/*   Updated: 2024/08/16 16:30:42 by iwillens         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef BOARDSTATE_HPP
 # define BOARDSTATE_HPP
 
@@ -25,14 +13,19 @@ class BoardState
 
 		private:
 			bool	_maximizing;
+			bool 	_capture_move = false;
 			int		_size;
 			int 	_sqrt;
+			int 	_maxi_captures = 0;
+			int 	_mini_captures = 0;
 			BigInt	_move;
 			BigInt	_mystate;
 			BigInt	_otherstate;
 			BigInt	_inv_mystate;
 			BigInt	_inv_otherstate;
 			BigInt	_totalboard;
+			static Mask _masks;
+			const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 
 		public:
 			BoardState(int sqrt=19);
@@ -46,8 +39,11 @@ class BoardState
 
 			// getters
 			bool	const &maximizing() const;
+			bool 	const &is_capture() const;
 			int		const &size() const;
 			int		const &sqrt() const;
+			int		const &maxi_captures() const;
+			int		const &mini_captures() const;
 			BigInt 	const &move() const;
 			BigInt 	const &mystate(bool inverted=false) const;
 			BigInt 	const &otherstate(bool inverted=false) const;
@@ -55,6 +51,10 @@ class BoardState
 			BigInt 	expanded_free() const;
 			void swap_states();
 			void print();
+			void increment_captures(bool turn);
+			static void set_masks(int mask_size, int board_sqrt);
+			void check_capture(size_t pos, bool maximizing);
+		private:
 
 };
 

@@ -26,6 +26,8 @@ class Button
 		int32_t						_buttons[3];
 		Rect						_dimensions;
 		Text						_text;
+		bool						_selected;
+		bool						_hovered;
 		void _init();
 		void _init_static();
 
@@ -37,6 +39,10 @@ class Button
 		void resize(Rect const &dimensions=Rect(255, 255, 50, 300));
 		Button &operator=(Button const &other);
 		Rect const &dimensions();
+		void select(bool selected=true);
+		void hover();
+		void hide();
+		void show();
 };
 
 #endif

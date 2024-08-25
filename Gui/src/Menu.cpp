@@ -22,8 +22,19 @@ bool Menu::init()
 	mlx_image_to_window(Gui::mlx(), _play_button, 0, 0);
 	mlx_image_to_window(Gui::mlx(), _play_button_hover, 0, 0);
 
-	_button_vs_ai = Button("AI");
-	_button_vs_player = Button("Player 2");
+	//_button_vs_ai = Button("AI");
+	//_button_vs_player = Button("Player 2");
+	_bgroup_vs = ButtonGroup("Versus", Rect(0, 0, 0, 0));
+	_bgroup_vs.add("AI");
+	_bgroup_vs.add("Player 2");
+	_bgroup_starting = ButtonGroup("Starting Player", Rect(0, 0, 0, 0));
+	_bgroup_starting.add("Player 1");
+	_bgroup_starting.add("AI / Player2");
+	_bgroup_mode = ButtonGroup("Game Mode", Rect(0, 0, 0, 0));
+	_bgroup_mode.add("Standard");
+	_bgroup_mode.add("Pro");
+	_bgroup_mode.add("Swap");
+	_bgroup_mode.add("Swap2");
 	resize();
 	return (true);
 }
@@ -44,37 +55,38 @@ Menu &Menu::operator=(Menu const &other)
 
 void Menu::resize()
 {
+	float ratio;
+
 	_dimensions = Rect::subrect(Gui::dimensions(), .8);
-	float ratio = float(Gui::_logo_texture->height) / Gui::_logo_texture->width;
-	Rect _logo_dimensions = Rect::subrect(_dimensions, 1., ratio, 0);
-	Rect _pbutton_dimensions = Rect::subrect(_dimensions, .4, .15, 2);
-	Rect _button_dimensions = Rect::subrect(_dimensions, .4, .08, 1);
-	std::cout << "Logo Dimensions: " << _logo_dimensions << std::endl;
-	mlx_resize_image(_logo, _logo_dimensions.width, _logo_dimensions.height);
-	mlx_resize_image(_play_button, _pbutton_dimensions.width, _pbutton_dimensions.height);
-	mlx_resize_image(_play_button_hover, _pbutton_dimensions.width, _pbutton_dimensions.height);
+	_play_dimensions = Rect::subrect(_dimensions, .4, .15, 2);
+	ratio = float(Gui::_logo_texture->height) / Gui::_logo_texture->width;
+	Rect logo_dimensions = Rect::subrect(_dimensions, 1., ratio, 0);
+	std::cout << "Logo Dimensions: " << logo_dimensions << std::endl;
+	mlx_resize_image(_logo, logo_dimensions.width, logo_dimensions.height);
+	mlx_resize_image(_play_button, _play_dimensions.width, _play_dimensions.height);
+	mlx_resize_image(_play_button_hover, _play_dimensions.width, _play_dimensions.height);
 	Gui::apply_texture(_logo, Gui::_logo_texture);
-	_logo->instances[0].x = _logo_dimensions.x;
-	_logo->instances[0].y = _logo_dimensions.y;
-	_play_button->instances[0].x = _pbutton_dimensions.x;
-	_play_button->instances[0].y = _pbutton_dimensions.y;
-	_play_button_hover->instances[0].x = _pbutton_dimensions.x;
-	_play_button_hover->instances[0].y = _pbutton_dimensions.y+100;
+	Gui::apply_texture(_play_button, Gui::_playbutton_texture);
+	Gui::apply_texture(_play_button_hover, Gui::_playbutton_texture, Color(100, 100, 255, 150));
+	_logo->instances[0].x = logo_dimensions.x;
+	_logo->instances[0].y = logo_dimensions.y;
+	_play_button->instances[0].x = _play_dimensions.x;
+	_play_button->instances[0].y = _play_dimensions.y;
+	_play_button_hover->instances[0].x = _play_dimensions.x;
+	_play_button_hover->instances[0].y = _play_dimensions.y;
+	_play_button_hover->instances[0].enabled = false;
 	_resize_buttons();
 }
 
 void Menu::_resize_buttons()
 {
 	std::cout << "Resize buttons" << std::endl;
-	Rect button_box = Rect::subrect(Rect::subrect(Gui::dimensions(), .6), 1, .55, 2);
-	button_box.height = button_box.height * .7;
-	Rect left_button_box = Rect::subrect(button_box, 1, .5, 1);
-	left_button_box.y = button_box.y;
-	left_button_box.x = button_box.x;
-	Rect right_button_box = left_button_box;
-	right_button_box.x = button_box.x + button_box.width / 2 + (left_button_box.width * .1);
-	_button_vs_ai.resize(Rect::subrect(left_button_box, 1., .3, 0));
-	_button_vs_player.resize(Rect::subrect(left_button_box, 1., .3, 0));
+	Rect button_box = Rect::subrect(Gui::dimensions(), .9); //get a sqaure 90% of the screen
+	button_box = Rect::subrect(button_box, .3, .5, 1); //get a rectangle 50% of the square
+	button_box.y = _logo->instances[0].y + (_logo->height * 1.1);
+	_bgroup_vs.resize(Rect(button_box.x - (button_box.width) , button_box.y, button_box.width, button_box.height * .08));
+	_bgroup_starting.resize(Rect(button_box.x, button_box.y, button_box.width, button_box.height * .08));
+	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.4), button_box.y, button_box.width, button_box.height * .08));
 
 }
 
@@ -83,75 +95,59 @@ Rect const &Menu::dimensions()
 	return _dimensions;
 }
 
-/*
-bool Menu::hover()
+void Menu::hover()
 {
-	Tile				*hovered;
-	int					tile;
-	_enabled = true;
-
-	if (enabled() && Menu::dimensions().contains(Gui::_mouse.x, Gui::_mouse.y))
+	_bgroup_vs.hover();
+	_bgroup_starting.hover();
+	_bgroup_mode.hover();
+	if (_play_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
 	{
-		tile = get_hovered_tile();
-		if (tile == -1)
-		{
-			if (_hovered_tile)
-			{
-				_hovered_tile->hover(false, true);
-				_hovered_tile = nullptr;
-			}
-			return false;
-		}
-		std::cout << "Menu Hovered. Tile: " << get_hovered_tile() << "  mouse: " << Gui::_mouse << std::endl;
-		hovered = &_tiles[get_hovered_tile()];
-		if (hovered == _hovered_tile)
-			return true;
-		if (_hovered_tile)
-			_hovered_tile->hover(false, true);
-		_hovered_tile = hovered;
-		_hovered_tile->hover(true, true);
-		return true;
+		_play_button_hover->instances[0].enabled = true;
+		_play_button->instances[0].enabled = false;
 	}
-	else if (_hovered_tile)
+	else
 	{
-		_hovered_tile->hover(false, true);
-		_hovered_tile = NULL;
+		_play_button_hover->instances[0].enabled = false;
+		_play_button->instances[0].enabled = true;
+	}
+}
+
+/*
+** returns true if the game should start
+*/
+bool Menu::click()
+{
+	if (_bgroup_vs.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+		_bgroup_vs.click();
+	else if (_bgroup_starting.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+		_bgroup_starting.click();
+	else if (_bgroup_mode.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+		_bgroup_mode.click();
+	else if (_play_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
+	{
+		std::cout << "Play button clicked" << std::endl;
+		return true;
 	}
 	return false;
 }
 
-bool Menu::click()
+void Menu::hide()
 {
-	if (enabled() && _hovered_tile)
-	{
-		if (_hovered_tile->click(true))
-		{
-			disable();
-			_game.Menu().applymove(_hovered_tile->pos());
-			_hovered_tile = nullptr;
-			if (_game.step(false))
-			{
-				_tiles[_game.move()].hover(true, false);
-				_tiles[_game.move()].click(false);
-				enable();
-			}
-			std::cout << _game.move() << std::endl;
-		}
-	}
-	return true;
-}
-*/
-bool Menu::enabled()
-{
-	return _enabled;
+	_logo->instances[0].enabled = false;
+	_bgroup_vs.hide();
+	_bgroup_starting.hide();
+	_bgroup_mode.hide();
+	_play_button_hover->instances[0].enabled = false;
+	_play_button->instances[0].enabled = false;
 }
 
-void Menu::enable()
-{
-	_enabled = true;
-}
 
-void Menu::disable()
+void Menu::show()
 {
-	_enabled = false;
+	_logo->instances[0].enabled = true;
+	_bgroup_vs.show();
+	_bgroup_starting.show();
+	_bgroup_mode.show();
+	_play_button_hover->instances[0].enabled = false;
+	_play_button->instances[0].enabled = true;
 }

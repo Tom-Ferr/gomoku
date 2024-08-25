@@ -53,7 +53,6 @@ class Board
 		Board();
 		Board(Board const &other);
 		~Board();
-		bool show(size_t sqrt);
 		bool init();
 		Board &operator=(Board const &other) ;
 		void resize();
@@ -70,7 +69,7 @@ class Board
 		void enable();
 		void disable();
 		bool visible();
-		void show();
+		bool show(size_t sqrt);
 		void hide();
 		Rect get_tile_position(int pos);
 		Rect& get_tile_dimensions();

@@ -4,6 +4,7 @@
 # include <Rect.hpp>
 # include <Text.hpp>
 # include <Button.hpp>
+# include <ButtonGroup.hpp>
 # include <MLX42/MLX42.h>
 
 class Menu
@@ -12,10 +13,11 @@ class Menu
 		mlx_image_t			*_logo;
 		mlx_image_t			*_play_button;
 		mlx_image_t			*_play_button_hover;
-		Button				_button_vs_ai;
-		Button				_button_vs_player;
+		ButtonGroup			_bgroup_vs;
+		ButtonGroup			_bgroup_starting;
+		ButtonGroup			_bgroup_mode;
 		Rect				_dimensions;
-		bool				_enabled;
+		Rect				_play_dimensions;
 
 		void _resize_buttons();
 	public:
@@ -26,11 +28,10 @@ class Menu
 		void resize();
 		Menu &operator=(Menu const &other) ;
 		Rect const &dimensions();
-		//bool hover();
-		//bool click();
-		bool enabled();
-		void enable();
-		void disable();
+		void hover();
+		bool click();
+		void show();
+		void hide();
 };
 
 #endif

@@ -50,6 +50,8 @@ Gui::~Gui()
 bool Gui::_init()
 {
 	Gui::_dimensions = Rect(0, 0, WIDTH, HEIGHT);
+	Gui::_mouse = Rect(0, 0, 0, 0);
+	_gamestate = GS_MENU;
 	if (!(_mlx = mlx_init(WIDTH, HEIGHT, "Gomoku", true)))
 	{
 		std::cout << "Error: mlx_init failed. " << mlx_strerror(mlx_errno) << std::endl;
@@ -62,7 +64,6 @@ bool Gui::_init()
 	mlx_image_to_window(_mlx, _background, 0, 0);
 
 	_board.init();
-	//_board.show(19);
 	_menu.init();
 	return (true);
 }
@@ -210,46 +211,6 @@ void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const 
 }
 
 
-
-
-
-/*
-** apply a subtexture to an image.
-** size is understood to be 3 x 3.
-*/
-/*
-void Gui::apply_texture(mlx_image_t *image, mlx_texture_t *texture, size_t index)
-{
-	if (image == nullptr or texture == nullptr)
-		return;
-	uint8_t* pixelx;
-	uint8_t* pixeli;
-	uint32_t tex_x;
-	uint32_t tex_y;
-	uint32_t tex_width = texture->width / 3;
-	uint32_t tex_height = texture->height / 3;
-	uint32_t x = index % 3;
-	uint32_t y = index / 3;
-	float scalex = (float)tex_width / (float)image->width;
-	float scaley = (float)tex_height / (float)image->height;
-
-	for (uint32_t j = 0; j < image->height; j++)
-	{
-		for (uint32_t i = 0; i < image->width; i++)
-		{
-			tex_x = (uint32_t)(i * scalex) + tex_width * x;
-			tex_y = (uint32_t)(j * scaley) + tex_height * y;
-			if (tex_x >= texture->width)
-				tex_x = texture->width - 1;
-			if (tex_y >= texture->height)
-				tex_y = texture->height - 1;
-			pixelx = &texture->pixels[(tex_y * texture->width + tex_x) * texture->bytes_per_pixel];
-			pixeli = &image->pixels[(j * image->width + i) * texture->bytes_per_pixel];
-			memmove(pixeli, pixelx, texture->bytes_per_pixel);
-		}
-	}
-}
-*/
 void	Gui::_resize(int width, int height)
 {
 	Gui::_dimensions.width = width;
@@ -277,7 +238,19 @@ void	Gui::mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, v
 	(void)gui;
 	(void)mods;
 	if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_PRESS)
+	{
+	if (gui->_gamestate == GS_MENU)
+	{
+		if (gui->_menu.click())
+		{
+			gui->_gamestate = GS_BOARD;
+			gui->_board.show(19);
+			gui->_menu.hide();
+		}
+	}
+	else if (gui->_gamestate == GS_BOARD)
 		gui->_board.click();
+	}
 }
 
 void	Gui::cursor_hook(double x, double y, void *param)
@@ -285,7 +258,10 @@ void	Gui::cursor_hook(double x, double y, void *param)
 	Gui *gui = static_cast<Gui*>(param);
 
 	Gui::_mouse = Rect((int)x, (int)y, 0, 0);
-	gui->_board.hover();
+	if (gui->_gamestate == GS_MENU)
+		gui->_menu.hover();
+	else if (gui->_gamestate == GS_BOARD)
+		gui->_board.hover();
 	//std::cout << "Cursor position: " << x << ", " << y << std::endl;
 }
 
@@ -301,7 +277,19 @@ void Gui::key_hook(mlx_key_data_t keydata, void* param)
 	Gui *gui = static_cast<Gui*>(param);
 	(void)gui;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-		std::cout << "Escape key pressed" << std::endl;
+	{
+		if (gui->_gamestate == GS_BOARD)
+		{
+			gui->_gamestate = GS_MENU;
+			gui->_board.hide();
+			gui->_menu.show();
+		}
+		else if (gui->_gamestate == GS_MENU)
+		{
+			std::cout << "Escape key pressed" << std::endl;
+			mlx_close_window(Gui::mlx());
+		}
+	}
 }
 
 /*
@@ -315,4 +303,9 @@ Rect const &Gui::dimensions()
 mlx_t *Gui::mlx()
 {
 	return (Gui::_mlx);
+}
+
+Rect const &Gui::mouse()
+{
+	return (Gui::_mouse);
 }

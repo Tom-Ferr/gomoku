@@ -9,15 +9,13 @@
 #include <Color.hpp>
 #include <MLX42/MLX42.h>
 
-/*
-enum e_texturetype
+
+typedef enum e_gamestate
 {
-	TX_BG,
-	TX_TILE,
-	TX_PIECE,
-	TX_BACKGROUND
-};
-*/
+	GS_BOARD,
+	GS_ENDGAME,
+	GS_MENU,
+} t_gamestate;
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -50,6 +48,7 @@ class Gui
 		mlx_image_t					*_background;
 		Board						_board;
 		Menu						_menu;
+		t_gamestate					_gamestate;
 
 		/*
 		** input hooks
@@ -76,6 +75,7 @@ class Gui
 		*/
 		static Rect const &dimensions();
 		static mlx_t *mlx();
+		static Rect const &mouse();
 
 	public:
 		Gui();

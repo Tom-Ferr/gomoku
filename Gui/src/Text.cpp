@@ -4,10 +4,10 @@
 
 
 Text::Text()
-:_image(nullptr) {}
+:_image(nullptr), _bold(false) {}
 
-Text::Text(std::string const &str)
-:_image(nullptr)
+Text::Text(std::string const &str, bool bold)
+:_image(nullptr), _bold(bold)
 {
 	_text = str;
 	_init();
@@ -24,6 +24,7 @@ Text::~Text() {}
 Text &Text::operator=(Text const &other)
 {
 	_image = other._image;
+	_bold = other._bold;
 	_dimensions = other._dimensions;
 	_text = other._text;
 	return (*this);
@@ -43,9 +44,12 @@ Rect const &Text::dimensions()
 
 void Text::_init()
 {
-	Rect tex = Rect(0, 0, Gui::_font_regular_texture->width  / FONT_GRIDSIZE,
-					Gui::_font_regular_texture->height / FONT_GRIDSIZE);
+	mlx_texture_t *font = Gui::_font_regular_texture;
 
+	if (_bold)
+		font = Gui::_font_heavy_texture;
+	Rect tex = Rect(0, 0, font->width  / FONT_GRIDSIZE,
+					font->height / FONT_GRIDSIZE);
 	_dimensions = Rect(0, 0, tex.width * _text.size(), tex.height);
 	if (!_image)
 	{
@@ -57,7 +61,7 @@ void Text::_init()
 	resize(_dimensions.height);
 }
 
-void Text::resize(Rect &dimensions)
+void Text::resize(Rect const &dimensions)
 {
 	_dimensions.x = dimensions.x;
 	_dimensions.y = dimensions.y;
@@ -66,11 +70,15 @@ void Text::resize(Rect &dimensions)
 
 void Text::resize(size_t height)
 {
+	mlx_texture_t *font = Gui::_font_regular_texture;
+
 	if (!_image)
 		return ;
+	if (_bold)
+		font = Gui::_font_heavy_texture;
 	float ratio = static_cast<float>(
-					Gui::_font_regular_texture->width  / FONT_GRIDSIZE)
-					/ (Gui::_font_regular_texture->height / FONT_GRIDSIZE);
+					font->width  / FONT_GRIDSIZE)
+					/ (font->height / FONT_GRIDSIZE);
 	size_t tex_width = ratio * height;
 
 	_dimensions.width = tex_width * _text.size();
@@ -81,11 +89,27 @@ void Text::resize(size_t height)
 	for (size_t i = 0; i < _text.size(); i++)
 	{
 		Rect r = Rect(tex_width * i, 0, tex_width, _dimensions.height);
-		std::cout << "Char " << _text[i] << " at " << r << std::endl;
-		Gui::apply_texture(_image, Gui::_font_regular_texture,
+		Gui::apply_texture(_image, font,
 						Color::white, _text[i] - 32,
 						FONT_GRIDSIZE, r);
 	}
 	_image->instances[0].x = _dimensions.x;
 	_image->instances[0].y = _dimensions.y;
+}
+
+std::string &Text::text()
+{
+	return _text;
+}
+
+void Text::show()
+{
+	if (_image)
+		_image->instances[0].enabled = true;
+}
+
+void Text::hide()
+{
+	if (_image)
+		_image->instances[0].enabled = false;
 }

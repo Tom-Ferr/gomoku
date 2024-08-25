@@ -14,21 +14,23 @@ class Text
 		mlx_image_t		*_image;
 		Rect			_dimensions;
 		std::string		_text;
-		//Color			_color;
-		//bool			_enabled;
+		bool			_bold;
 		void _init();
 
 	public:
 		Text();
-		Text(std::string const &str);
+		Text(std::string const &str, bool bold = false);
 		Text(Text const &other);
 
 		~Text();
-		void resize(Rect &dimensions);
+		void resize(Rect const &dimensions);
 		void resize(size_t height);
 		Text &operator=(Text const &other);
 		Text &operator=(std::string const &str);
 		Rect const &dimensions();
+		std::string &text();
+		void show();
+		void hide();
 };
 
 #endif

@@ -49,7 +49,6 @@ Board::~Board()
 Board &Board::operator=(Board const &other)
 {
 	(void)other;
-//	std::cout << "Board copy assignment" << std::endl;
 //	_sqrt = other._sqrt;
 //	_size = other._size;
 //	_background = other._background;
@@ -220,7 +219,6 @@ bool Board::hover()
 			}
 			return false;
 		}
-		std::cout << "Board Hovered. Tile: " << get_hovered_tile() << "  mouse: " << Gui::_mouse << std::endl;
 		hovered = &_tiles[get_hovered_tile()];
 		if (hovered == _hovered_tile)
 			return true;
@@ -253,7 +251,6 @@ bool Board::click()
 				_tiles[_game.move()].click(false);
 				enable();
 			}
-			std::cout << _game.move() << std::endl;
 		}
 	}
 	return true;

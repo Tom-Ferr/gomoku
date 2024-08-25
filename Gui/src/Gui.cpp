@@ -228,7 +228,6 @@ void 	Gui::resize_hook(int width, int height, void* param)
 {
 	Gui *gui = static_cast<Gui*>(param);
 
-	std::cout << "Window resized to " << width << "x" << height << std::endl;
 	gui->_resize(width, height);
 }
 
@@ -262,7 +261,6 @@ void	Gui::cursor_hook(double x, double y, void *param)
 		gui->_menu.hover();
 	else if (gui->_gamestate == GS_BOARD)
 		gui->_board.hover();
-	//std::cout << "Cursor position: " << x << ", " << y << std::endl;
 }
 
 void	Gui::close_hook(void *param)

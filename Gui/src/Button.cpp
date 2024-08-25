@@ -78,9 +78,7 @@ void Button::resize(Rect const &dimensions)
 	_button_hover->instances[_buttons[BTN_HOVER]].y = dimensions.y;
 	_button_selected->instances[_buttons[BTN_SELECTED]].x = dimensions.x;
 	_button_selected->instances[_buttons[BTN_SELECTED]].y = dimensions.y;
-	std::cout << "Button Instance" << _buttons[BTN_SELECTED] << std::endl;
 	text = Rect(dimensions.x + (dimensions.height * 1.5), dimensions.y + 4, 0, dimensions.height);
-	std::cout << "Text rect" << text << std::endl;
 	_text.resize(text);
 	text.width =_text.dimensions().width;
 	_dimensions = Rect(dimensions.x, dimensions.y, text.width + (dimensions.height) * 1.5, dimensions.height);
@@ -135,7 +133,6 @@ void Button::hide()
 
 void Button::show()
 {
-	std::cout << "Button" << _text.text() << " " <<  _selected << std::endl;
 	_text.show();
 	if (_selected)
 		_button_selected->instances[_buttons[BTN_SELECTED]].enabled = true;

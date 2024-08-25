@@ -5,7 +5,6 @@ Tile::Tile() {}
 Tile::Tile(size_t pos)
 : _pos(pos), _enabled(true)
 {
-	std::cout << "INITIAL BOARD POSITION: " << Board::dimensions() << std::endl;
 	//(void)_set;(void)_hover;(void)_hint;
 
 	size_t x = pos % Board::sqrt();
@@ -89,7 +88,6 @@ bool Tile::hover(bool on, bool turn)
 	if (on)
 	{
 		_hover = true;
-		std::cout << "hover" << _pos << std::endl;
 		if (turn)
 			piece(PT_BLACKHOVER).enabled = true;
 		else
@@ -105,7 +103,6 @@ bool Tile::click(bool turn)
 {
 	if (enabled() && _hover)
 	{
-		std::cout << "click" << _pos << std::endl;
 		if (turn)
 			piece(PT_BLACK).enabled = true;
 		else

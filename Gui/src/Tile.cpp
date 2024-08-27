@@ -87,6 +87,7 @@ bool Tile::hover(bool on, bool turn)
 	piece(PT_WHITEHOVER).enabled = false;
 	if (on)
 	{
+
 		_hover = true;
 		if (turn)
 			piece(PT_BLACKHOVER).enabled = true;
@@ -111,6 +112,12 @@ bool Tile::click(bool turn)
 		return true;
 	}
 	return false;
+}
+void Tile::clear()
+{
+	for (size_t i = 0; i < 5; i++)
+		piece(i).enabled = false;
+	enable();
 }
 
 bool Tile::enabled()

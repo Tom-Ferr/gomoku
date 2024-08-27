@@ -39,6 +39,20 @@ bool Free_Three_Checker::check(int pos, char orientation)
 	return false;
 }
 
+bool Free_Three_Checker::is_free_three(int pos)
+{
+	char modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
+	int c = 0;
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		if(check(pos, modes[i]))
+			c++;
+		if(c == 2)
+			return true;
+	}
+	return false;
+}
 
 /*
 bool Free_Three_Checker::check(int pos, char orientation)

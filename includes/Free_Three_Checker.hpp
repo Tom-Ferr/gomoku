@@ -22,7 +22,7 @@ class Free_Three_Checker
 
 			bool check(int pos, char orientation);
 			bool check(int pos);
-
+			bool is_free_three(int pos);
 			static void set_masks(int mask_size, int board_sqrt);
 
 };

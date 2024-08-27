@@ -72,6 +72,7 @@ class Board
 		bool show(size_t sqrt);
 		void hide();
 		Rect get_tile_position(int pos);
+		void _remove_captures();
 		Rect& get_tile_dimensions();
 		int get_hovered_tile();
 

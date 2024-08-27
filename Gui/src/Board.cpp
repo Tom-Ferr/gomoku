@@ -219,7 +219,9 @@ bool Board::hover()
 			}
 			return false;
 		}
-		hovered = &_tiles[get_hovered_tile()];
+		if (_game.is_double_free_three(tile))
+			return false;
+		hovered = &_tiles[tile];
 		if (hovered == _hovered_tile)
 			return true;
 		if (_hovered_tile)
@@ -236,19 +238,32 @@ bool Board::hover()
 	return false;
 }
 
+void Board::_remove_captures()
+{
+	std::vector<int> &captures = _game.captures();
+	for (std::vector<int>::iterator it = captures.begin(); it != captures.end(); ++it)
+		_tiles[*it].clear();
+}
+
 bool Board::click()
 {
 	if (enabled() && _hovered_tile)
 	{
+		if (_game.is_double_free_three(_hovered_tile->pos()))
+			return false;
 		if (_hovered_tile->click(true))
 		{
 			disable();
+			_game.check_capture(_hovered_tile->pos(), false);
+			_remove_captures();
 			_game.board().applymove(_hovered_tile->pos());
 			_hovered_tile = nullptr;
+			_game.update_freechecker();
 			if (_game.step(false))
 			{
 				_tiles[_game.move()].hover(true, false);
 				_tiles[_game.move()].click(false);
+				_remove_captures();
 				enable();
 			}
 		}

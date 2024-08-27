@@ -122,26 +122,8 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 
 bool Node::is_double_free_three(const size_t &pos)
 {
-
-	//uncomment from here
-
-	// if(ftc.check(pos))
-	// 	return true;
-	// return false;
-
-	// to here to change to the other check method
 	Free_Three_Checker ftc = Free_Three_Checker(_state);
-	char modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
-	int c = 0;
-
-	for (size_t i = 0; i < 4; i++)
-	{
-		if(ftc.check(pos, modes[i]))
-			c++;
-		if(c == 2)
-			return true;
-	}
-	return false;
+	return ftc.is_free_three(pos);
 }
 
 bool Node::is_valid(const size_t &pos, BigInt &freepos)

@@ -44,6 +44,7 @@ class Tile
 		bool enabled();
 		void enable();
 		void disable();
+		void clear();
 		size_t &pos();
 		mlx_instance_t &piece(int type);
 };

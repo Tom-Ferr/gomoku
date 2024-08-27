@@ -34,19 +34,16 @@ class Board
 		std::vector<Tile>	_tiles;
 		Tile				*_hovered_tile;
 		Rect				_tile_dimensions;
-		bool				_enabled; /*wether the board is clickable*/
+		bool				_enabled;
 		bool				_visible;
 
 		bool _init();
 		void _reset();
 	public:
-		static size_t				_sqrt;
-		static size_t				_size;
-		static mlx_image_t			*_tile_images[9];
-		static mlx_image_t			*_piece_images[5];
-		//sf::RenderWindow*	_window;
-		//sf::Vector2f		_dimensions;
-		//sf::Vector2f		_position;
+		static size_t		_sqrt;
+		static size_t		_size;
+		static mlx_image_t	*_tile_images[9];
+		static mlx_image_t	*_piece_images[5];
 		Game				_game;
 
 	public:
@@ -59,10 +56,6 @@ class Board
 		static size_t size();
 		static size_t sqrt();
 		static Rect const &dimensions();
-		//void draw();
-		//sf::RenderWindow &window() const;
-		//Rect const &get_dimensions() const;
-		//sf::Vector2f const &get_position() const;
 		bool hover();
 		bool click();
 		bool enabled();
@@ -75,7 +68,6 @@ class Board
 		void _remove_captures();
 		Rect& get_tile_dimensions();
 		int get_hovered_tile();
-
 };
 
 #endif

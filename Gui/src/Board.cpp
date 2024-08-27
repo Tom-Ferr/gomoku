@@ -148,21 +148,6 @@ void Board::resize()
 	{
 		it->resize(_tile_dimensions);
 	}
-
-//	sf::Vector2u wsize = _window->getSize();
-//	_dimensions = sf::Vector2f (
-//		(std::min(wsize.x * .8, wsize.y * .8)),
-//		(std::min(wsize.x * .8, wsize.y * .8))
-//	);
-//	_position = sf::Vector2f(wsize.x / 2, wsize.y / 2);
-//	_shape.setSize(_dimensions);
-//	_shape.setOrigin(_dimensions.x / 2, _dimensions.y / 2);
-//	_shape.setPosition(_position);
-//	_tiles_dimensions = sf::Vector2f(
-//		(_dimensions.x / sqrt()), (_dimensions.y / sqrt()));
-//	for (std::vector<Tile>::iterator it = _tiles.begin();
-//			it != _tiles.end(); ++it)
-//		it->resize(_tiles_dimensions, get_tile_position(it->pos()));
 }
 
 size_t Board::size()
@@ -179,27 +164,6 @@ Rect const &Board::dimensions()
 {
 	return Board::_dimensions;
 }
-
-/*
-void Board::draw()
-{
-	_window->draw(_shape);
-	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
-		it->draw();
-}
-
-
-sf::RenderWindow &Board::window() const
-{
-	return *_window;
-}
-
-
-sf::Vector2f const &Board::get_position() const
-{
-	return _position;
-}
-*/
 
 bool Board::hover()
 {

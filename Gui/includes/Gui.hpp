@@ -13,8 +13,7 @@
 typedef enum e_gamestate
 {
 	GS_BOARD,
-	GS_ENDGAME,
-	GS_MENU,
+	GS_MENU
 } t_gamestate;
 
 #define WIDTH 1280
@@ -58,17 +57,11 @@ class Gui
 		static void	cursor_hook(double x, double y, void *param);
 		static void	close_hook(void *param);
 		static void key_hook(mlx_key_data_t keydata, void* param);
-		//static int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
-		//static void ft_randomize(void* param);
-		//static void ft_hook(void* param);
 
 		/*
 		** helpers
 		*/
-
 		static void	apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color=Color::white, size_t index=0, size_t gridsize=1, Rect dest = Rect(0, 0, 0, 0));
-		//static void apply_texture(mlx_image_t *image, mlx_texture_t *texture, size_t index);
-		//static void apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color);
 
 		/*
 		** static getters
@@ -80,9 +73,6 @@ class Gui
 	public:
 		Gui();
 		~Gui();
-		//static sf::Texture *texture(int type, int index=0);
-		//static sf::RenderWindow *window();
-		//void draw();
 };
 
 #endif

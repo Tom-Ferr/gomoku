@@ -128,45 +128,7 @@ void Gui::_run()
 	mlx_resize_hook(_mlx, resize_hook, this);
 	mlx_loop(_mlx);
 }
-/*
-void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color)
-{
-	if (image == nullptr or texture == nullptr)
-		return;
-	uint8_t* pixelx;
-	uint8_t* pixeli;
-	uint32_t tex_x;
-	uint32_t tex_y;
-	float scalex = (float)texture->width / (float)image->width;
-	float scaley = (float)texture->height / (float)image->height;
 
-	for (uint32_t y = 0; y < image->height; y++)
-	{
-		for (uint32_t x = 0; x < image->width; x++)
-		{
-			tex_x = (uint32_t)(x * scalex);
-			tex_y = (uint32_t)(y * scaley);
-			if (tex_x >= texture->width)
-				tex_x = texture->width - 1;
-			if (tex_y >= texture->height)
-				tex_y = texture->height - 1;
-			pixelx = &texture->pixels[(tex_y * texture->width + tex_x) * texture->bytes_per_pixel];
-			pixeli = &image->pixels[(y * image->width + x) * texture->bytes_per_pixel];
-			if (color != Color::white)
-			{
-				pixeli[0] = (pixelx[0] * color.r) / 255;
-				pixeli[1] = (pixelx[1] * color.g) / 255;
-				pixeli[2] = (pixelx[2] * color.b) / 255;
-				pixeli[3] = pixelx[3];
-				if (pixelx[3] == 255)
-					pixeli[3] = color.a;
-			}
-			else
-				memmove(pixeli, pixelx, texture->bytes_per_pixel);
-		}
-	}
-}
-*/
 void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color, size_t index, size_t gridsize, Rect dest)
 {
 	struct s_coord<uint8_t *> pixel;
@@ -209,7 +171,6 @@ void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const 
 		}
 	}
 }
-
 
 void	Gui::_resize(int width, int height)
 {

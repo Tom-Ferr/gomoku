@@ -9,7 +9,6 @@ Menu::Menu()
 
 bool Menu::init()
 {
-	std::cout << "LOGO TEXTURE: " << Gui::_logo_texture << std::endl;
 	_logo = mlx_new_image(Gui::mlx(), Gui::_logo_texture->height, Gui::_logo_texture->width);
 	_play_button = mlx_new_image(Gui::mlx(), Gui::_playbutton_texture->height, Gui::_playbutton_texture->width);
 	_play_button_hover = mlx_new_image(Gui::mlx(), Gui::_playbutton_texture->height, Gui::_playbutton_texture->width);
@@ -22,8 +21,6 @@ bool Menu::init()
 	mlx_image_to_window(Gui::mlx(), _play_button, 0, 0);
 	mlx_image_to_window(Gui::mlx(), _play_button_hover, 0, 0);
 
-	//_button_vs_ai = Button("AI");
-	//_button_vs_player = Button("Player 2");
 	_bgroup_vs = ButtonGroup("Versus", Rect(0, 0, 0, 0));
 	_bgroup_vs.add("AI");
 	_bgroup_vs.add("Player 2");

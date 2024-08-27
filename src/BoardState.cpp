@@ -38,7 +38,7 @@ _totalboard(other._totalboard)
 { }
 
 BoardState::BoardState(BoardState&& other) noexcept
-: _maximizing(other._maximizing), _capture_move(other._capture_move), _size(other._size), _sqrt(other._sqrt), _maxi_captures(other._maxi_captures), _mini_captures(other._mini_captures), 
+: _maximizing(other._maximizing), _capture_move(other._capture_move), _size(other._size), _sqrt(other._sqrt), _maxi_captures(other._maxi_captures), _mini_captures(other._mini_captures),
 _move(other._move), _mystate(std::move(other._mystate)),
 _otherstate(std::move(other._otherstate)),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
@@ -118,11 +118,10 @@ void BoardState::check_capture(size_t pos, bool maximizing)
 				continue ;
 			if ((*self & *edge_mask) == 0)
 				continue;
-				
+
 			(*counter)++;
 			_capture_move = true;
 			applymove(*mid_mask, maximizing);
-			return;
 		}
     }
 }

@@ -10,6 +10,7 @@ mlx_texture_t	*Gui::_button_texture = nullptr;
 mlx_texture_t	*Gui::_font_regular_texture = nullptr;
 mlx_texture_t	*Gui::_font_bold_texture = nullptr;
 mlx_texture_t	*Gui::_font_heavy_texture = nullptr;
+std::map<std::string, mlx_texture_t*> Gui::_textures;
 Rect			Gui::_dimensions;
 Rect			Gui::_mouse;
 
@@ -62,7 +63,7 @@ bool Gui::_init()
 	if (!(_load_background()))
 		return (false);
 	mlx_image_to_window(_mlx, _background, 0, 0);
-
+	mlx_set_instance_depth(&_background->instances[0], 0);
 	_board.init();
 	_menu.init();
 	return (true);
@@ -115,6 +116,10 @@ bool Gui::_load_textures()
 	if (!_load_texture(Gui::_font_bold_texture, "assets/fontbold.png"))
 		return (false);
 	if (!_load_texture(Gui::_font_heavy_texture, "assets/fontheavy.png"))
+		return (false);
+	if (!_load_texture(Gui::texture("playbuttons"), "assets/playbuttons.png"))
+		return (false);
+	if (!_load_texture(Gui::texture("selectbuttons"), "assets/selectbuttons.png"))
 		return (false);
 	return (true);
 }
@@ -178,7 +183,7 @@ void	Gui::_resize(int width, int height)
 	Gui::_dimensions.height = height;
 	mlx_resize_image(_background, width, height);
 	Gui::apply_texture(_background, _background_texture);
-//	_board.resize();
+	_board.resize();
 	_menu.resize();
 }
 
@@ -267,4 +272,9 @@ mlx_t *Gui::mlx()
 Rect const &Gui::mouse()
 {
 	return (Gui::_mouse);
+}
+
+mlx_texture_t *&Gui::texture(std::string name)
+{
+	return (Gui::_textures[name]);
 }

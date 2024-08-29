@@ -10,6 +10,7 @@ class ButtonGroup
 		std::vector<Button>	_buttons;
 		Rect				_dimensions;
 		Text				_title;
+
 	public:
 		ButtonGroup();
 		ButtonGroup(std::string const &title, Rect const &dimensions);
@@ -23,6 +24,7 @@ class ButtonGroup
 		bool click();
 		void show();
 		void hide();
+		void clear();
 };
 
 #endif

@@ -34,11 +34,13 @@ ButtonGroup &ButtonGroup::operator=(ButtonGroup const &other)
 */
 void ButtonGroup::resize(Rect const &dimensions)
 {
+	std::cout << "Button Group dimensions" << dimensions << std::endl;
 	_title.resize(dimensions);
+	_title.center(dimensions.x + (dimensions.width / 2));
 	_dimensions = Rect(0, 0, 0, 0);
 	for (size_t i = 0; i < _buttons.size(); i++)
 	{
-		_buttons[i].resize(Rect(dimensions.x, dimensions.y + dimensions.height * (i + 1) * 1.2, dimensions.width, dimensions.height));
+		_buttons[i].resize(Rect(dimensions.x, dimensions.y + dimensions.height * (i + 1) * 1.4, dimensions.width, dimensions.height));
 		_dimensions.width = std::max(_dimensions.width, _buttons[i].dimensions().width);
 		_dimensions.height =  std::max(_dimensions.height, _buttons[i].dimensions().y);
 	}
@@ -72,9 +74,12 @@ bool ButtonGroup::click()
 	for (size_t i = 0; i < _buttons.size(); i++)
 	{
 		if (_buttons[i].dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+		{
+			for (size_t j = 0; j < _buttons.size(); j++)
+				_buttons[j].select(false);
 			_buttons[i].select();
-		else
-			_buttons[i].select(false);
+			return true;
+		}
 	}
 	return false;
 }
@@ -91,4 +96,11 @@ void ButtonGroup::hide()
 	_title.hide();
 	for (size_t i = 0; i < _buttons.size(); i++)
 		_buttons[i].hide();
+}
+
+void ButtonGroup::clear()
+{
+	for (size_t i = 0; i < _buttons.size(); i++)
+		_buttons[i].hide();
+	_buttons.clear();
 }

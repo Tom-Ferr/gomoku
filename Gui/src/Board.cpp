@@ -17,6 +17,10 @@ bool Board::init()
 	Board::_dimensions = Rect::subrect(Gui::dimensions(), .9);
 	Gui::apply_texture(_background, Gui::_board_texture);
 	mlx_image_to_window(Gui::mlx(), _background, 0, 0);
+	mlx_set_instance_depth(&_background->instances[0], 1);
+	_statusbar.init();
+	_endgame.init();
+	_mode.init();
 	disable();
 	hide();
 	return (true);
@@ -31,6 +35,9 @@ bool Board::show(size_t sqrt)
 	enable();
 	_reset();
 	_init();
+	_statusbar.show();
+	//_endgame.show("AI");
+	_mode.show("Swap", false);
 	return (true);
 }
 
@@ -75,6 +82,10 @@ void Board::hide()
 	_background->enabled = false;
 	_visible=false;
 	_reset();
+	_statusbar.hide();
+	_endgame.hide();
+	_mode.hide();
+	disable();
 }
 
 /*
@@ -102,8 +113,6 @@ void Board::_reset()
 bool Board::_init()
 {
 	_game = Game(_sqrt);
-	Free_Three_Checker::set_masks(6, _sqrt);
-	Heuristics::set_masks(5, _sqrt);
 	for (size_t i = 0; i < 9; i++)
 	{
 		Board::_tile_images[i] = mlx_new_image(Gui::mlx(), TILE_SIZE, TILE_SIZE);
@@ -111,11 +120,6 @@ bool Board::_init()
 	}
 	for (size_t i = 0; i < 5; i++)
 		Board::_piece_images[i] = mlx_new_image(Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
-	Gui::apply_texture(Board::_piece_images[0], Gui::_piece_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[1], Gui::_piece_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[2], Gui::_piece_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[3], Gui::_piece_texture, Color(255, 0, 0, 255));
-	Gui::apply_texture(Board::_piece_images[4], Gui::_piece_texture, Color(255, 0, 0, 255));
 	for (size_t i = 0; i < Board::_size; i++)
 		_tiles.push_back(Tile(i));
 	resize();
@@ -148,6 +152,9 @@ void Board::resize()
 	{
 		it->resize(_tile_dimensions);
 	}
+	_statusbar.resize();
+	_endgame.resize();
+	_mode.resize();
 }
 
 size_t Board::size()
@@ -265,4 +272,9 @@ int Board::get_hovered_tile()
 	if (x >= sqrt() || y >= sqrt())
 		return -1;
     return (y * sqrt() + x);
+}
+
+mlx_image_t *Board::piece_image(t_piecetype piecetype)
+{
+	return Board::_piece_images[piecetype];
 }

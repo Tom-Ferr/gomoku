@@ -29,6 +29,7 @@ class Gui
 		bool _load_texture(mlx_texture_t *&texture, const char* path);
 		bool _load_background();
 		void _resize(int width, int height);
+		static std::map<std::string, mlx_texture_t*>	_textures;
 
 	public:
 		static mlx_t				*_mlx;
@@ -69,6 +70,7 @@ class Gui
 		static Rect const &dimensions();
 		static mlx_t *mlx();
 		static Rect const &mouse();
+		static mlx_texture_t *&texture(std::string name);
 
 	public:
 		Gui();

@@ -6,25 +6,22 @@
 # include <Game.hpp>
 //# include <Gui.hpp>
 #include <MLX42/MLX42.h>
+#include <common.hpp>
 #include <vector>
 #include <Rect.hpp>
 #include <Tile.hpp>
-
+#include <Info.hpp>
+#include <BoardStatusBar.hpp>
+# include <BoardEndGame.hpp>
+# include <BoardMode.hpp>
 
 # define TILE_SIZE 500
 # define BACKGROUND_SIZE 1024
 # define BUTTON_SIZE 200
 
-typedef enum e_piecetype
-{
-	PT_BLACK,
-	PT_WHITE,
-	PT_HINT,
-	PT_BLACKHOVER,
-	PT_WHITEHOVER
-} t_piecetype;
 
 class Tile;
+class Info;
 
 class Board
 {
@@ -39,12 +36,16 @@ class Board
 
 		bool _init();
 		void _reset();
+
 	public:
 		static size_t		_sqrt;
 		static size_t		_size;
 		static mlx_image_t	*_tile_images[9];
 		static mlx_image_t	*_piece_images[5];
 		Game				_game;
+		BoardStatusBar		_statusbar;
+		BoardEndGame		_endgame;
+		BoardMode			_mode;
 
 	public:
 		Board();
@@ -56,6 +57,7 @@ class Board
 		static size_t size();
 		static size_t sqrt();
 		static Rect const &dimensions();
+		static mlx_image_t *piece_image(t_piecetype piecetype);
 		bool hover();
 		bool click();
 		bool enabled();

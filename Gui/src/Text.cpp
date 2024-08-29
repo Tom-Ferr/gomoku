@@ -97,6 +97,15 @@ void Text::resize(size_t height)
 	_image->instances[0].y = _dimensions.y;
 }
 
+void Text::center(size_t center)
+{
+	if (!_image)
+		return ;
+	std::cout << "Centering Image: " << _image << std::endl;
+	_dimensions.x = center - (_dimensions.width / 2);
+	_image->instances[0].x = _dimensions.x;
+}
+
 std::string &Text::text()
 {
 	return _text;

@@ -27,10 +27,12 @@ Tile::Tile(size_t pos)
 	else if (y == Board::sqrt() - 1)
 		tex = 1;
 	_tile_idx = mlx_image_to_window(Gui::mlx(), Board::_tile_images[tex], 0, 0);
+	mlx_set_instance_depth(&Board::_tile_images[tex]->instances[_tile_idx], 2);
 	_tile_tex = tex;
 	for (size_t i = 0; i < 5; i++)
 	{
 		_pieces[i] = mlx_image_to_window(Gui::mlx(), Board::_piece_images[i], 0, 0);
+		mlx_set_instance_depth(&piece(i), 3);
 		piece(i).enabled = false;
 	}
 }

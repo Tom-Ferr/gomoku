@@ -27,6 +27,7 @@ bool Menu::init()
 	_bgroup_starting = ButtonGroup("Starting Player", Rect(0, 0, 0, 0));
 	_bgroup_starting.add("Player 1");
 	_bgroup_starting.add("AI / Player2");
+	_bgroup_starting.add("Random");
 	_bgroup_mode = ButtonGroup("Game Mode", Rect(0, 0, 0, 0));
 	_bgroup_mode.add("Standard");
 	_bgroup_mode.add("Pro");
@@ -63,8 +64,8 @@ void Menu::resize()
 	mlx_resize_image(_play_button, _play_dimensions.width, _play_dimensions.height);
 	mlx_resize_image(_play_button_hover, _play_dimensions.width, _play_dimensions.height);
 	Gui::apply_texture(_logo, Gui::_logo_texture);
-	Gui::apply_texture(_play_button, Gui::_playbutton_texture);
-	Gui::apply_texture(_play_button_hover, Gui::_playbutton_texture, Color(100, 100, 255, 150));
+	Gui::apply_texture(_play_button, Gui::texture("playbuttons"), Color::white, 2, 2);
+	Gui::apply_texture(_play_button_hover, Gui::texture("playbuttons"), Color::white, 0, 2);
 	_logo->instances[0].x = logo_dimensions.x;
 	_logo->instances[0].y = logo_dimensions.y;
 	_play_button->instances[0].x = _play_dimensions.x;
@@ -77,13 +78,12 @@ void Menu::resize()
 
 void Menu::_resize_buttons()
 {
-	std::cout << "Resize buttons" << std::endl;
 	Rect button_box = Rect::subrect(Gui::dimensions(), .9); //get a sqaure 90% of the screen
 	button_box = Rect::subrect(button_box, .3, .5, 1); //get a rectangle 50% of the square
 	button_box.y = _logo->instances[0].y + (_logo->height * 1.1);
-	_bgroup_vs.resize(Rect(button_box.x - (button_box.width) , button_box.y, button_box.width, button_box.height * .08));
+	_bgroup_vs.resize(Rect(button_box.x - (button_box.width * 1.1) , button_box.y, button_box.width, button_box.height * .08));
 	_bgroup_starting.resize(Rect(button_box.x, button_box.y, button_box.width, button_box.height * .08));
-	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.4), button_box.y, button_box.width, button_box.height * .08));
+	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.1), button_box.y, button_box.width, button_box.height * .08));
 
 }
 

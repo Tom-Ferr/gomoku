@@ -7,8 +7,6 @@
 # include <Text.hpp>
 # include <MLX42/MLX42.h>
 
-# define FONT_GRIDSIZE 10
-
 enum e_btn
 {
 	BTN_NORMAL,
@@ -36,7 +34,7 @@ class Button
 		Button(std::string const &str);
 		Button(Button const &other);
 		~Button();
-		void resize(Rect const &dimensions=Rect(255, 255, 50, 300));
+		void resize(Rect dimensions=Rect(255, 255, 50, 300));
 		Button &operator=(Button const &other);
 		Rect const &dimensions();
 		void select(bool selected=true);

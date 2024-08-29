@@ -25,6 +25,7 @@ class Text
 		~Text();
 		void resize(Rect const &dimensions);
 		void resize(size_t height);
+		void center(size_t center);
 		Text &operator=(Text const &other);
 		Text &operator=(std::string const &str);
 		Rect const &dimensions();

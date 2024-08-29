@@ -1,6 +1,6 @@
 FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp Game.cpp Heuristics.cpp Mask.cpp Node.cpp
 
-GUI_FILES		=	main.cpp  Gui.cpp Board.cpp Rect.cpp Tile.cpp Color.cpp Menu.cpp Text.cpp Button.cpp ButtonGroup.cpp
+GUI_FILES		=	main.cpp  Gui.cpp Board.cpp Rect.cpp Tile.cpp Color.cpp Menu.cpp Text.cpp Button.cpp ButtonGroup.cpp Info.cpp BoardStatusBar.cpp BoardEndGame.cpp BoardMode.cpp
 GUI_SRCDIR			= 	src/
 
 SRCDIR			= 	../src/
@@ -10,7 +10,7 @@ SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) $(addprefix $(GUI_SRCDIR), $(GUI_FILE
 OBJS			= 	${SRCS:.cpp=.o}
 
 HEADS			=	BigInt.hpp BoardState.hpp Free_Three_Checker.hpp Game.hpp gomoku.hpp Heuristics.hpp Mask.hpp Node.hpp
-GUI_HEADS		=	Board.hpp Gui.hpp Rect.hpp Tile.hpp Color.hpp Menu.hpp Text.hpp Button.hpp ButtonGroup.hpp
+GUI_HEADS		=	Board.hpp Gui.hpp Rect.hpp Tile.hpp Color.hpp Menu.hpp Text.hpp Button.hpp ButtonGroup.hpp Info.hpp BoardStatusBar.hpp BoardEndGame.hpp BoardMode.hpp
 
 INC				= 	../includes/
 GUI_INC			=	./includes/
@@ -30,7 +30,7 @@ GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 INCLUDE 		= 	-I${INC} -I${GUI_INC}
 
-SANITIZE 		= 	-O3#-fsanitize=address -g
+SANITIZE 		= 	-fsanitize=address -g
 
 UNAME			=	$(shell uname)
 

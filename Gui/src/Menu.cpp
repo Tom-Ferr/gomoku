@@ -78,13 +78,16 @@ void Menu::resize()
 
 void Menu::_resize_buttons()
 {
-	Rect button_box = Rect::subrect(Gui::dimensions(), .9); //get a sqaure 90% of the screen
-	button_box = Rect::subrect(button_box, .3, .5, 1); //get a rectangle 50% of the square
+	Rect button_box = Rect::subrect(Gui::dimensions(), .9);
+	button_box = Rect::subrect(button_box, .3, .5, 1);
 	button_box.y = _logo->instances[0].y + (_logo->height * 1.1);
-	_bgroup_vs.resize(Rect(button_box.x - (button_box.width * 1.1) , button_box.y, button_box.width, button_box.height * .08));
-	_bgroup_starting.resize(Rect(button_box.x, button_box.y, button_box.width, button_box.height * .08));
-	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.1), button_box.y, button_box.width, button_box.height * .08));
-
+	_bgroup_vs.resize(Rect(button_box.x - (button_box.width * 1.1) , button_box.y, button_box.width, button_box.height));
+	_bgroup_starting.resize(Rect(button_box.x, button_box.y, button_box.width, button_box.height));
+	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.1), button_box.y, button_box.width, button_box.height));
+	_bgroup_vs.depth(_logo->instances[0].z + 1);
+	_bgroup_starting.depth(_logo->instances[0].z + 1);
+	_bgroup_mode.depth(_logo->instances[0].z + 1);
+	std::cout << "_bgroup_vs: " << Rect(button_box.x + (button_box.width * 1.1), button_box.y, button_box.width, button_box.height) << std::endl;
 }
 
 Rect const &Menu::dimensions()
@@ -147,4 +150,5 @@ void Menu::show()
 	_bgroup_mode.show();
 	_play_button_hover->instances[0].enabled = false;
 	_play_button->instances[0].enabled = true;
+	resize();
 }

@@ -22,8 +22,8 @@ class Button
 		static mlx_image_t			*_button_selected;
 
 		int32_t						_buttons[3];
-		Rect						_dimensions;
 		Text						_text;
+		Rect						_dimensions;
 		bool						_selected;
 		bool						_hovered;
 		void _init();
@@ -41,6 +41,7 @@ class Button
 		void hover();
 		void hide();
 		void show();
+		void depth(size_t depth);
 };
 
 #endif

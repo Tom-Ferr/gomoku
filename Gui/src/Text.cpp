@@ -101,9 +101,15 @@ void Text::center(size_t center)
 {
 	if (!_image)
 		return ;
-	std::cout << "Centering Image: " << _image << std::endl;
 	_dimensions.x = center - (_dimensions.width / 2);
 	_image->instances[0].x = _dimensions.x;
+}
+
+void Text::depth(size_t depth)
+{
+	if (!_image)
+		return ;
+	mlx_set_instance_depth(&_image->instances[0], depth);
 }
 
 std::string &Text::text()

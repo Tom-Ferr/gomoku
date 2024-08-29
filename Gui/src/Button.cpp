@@ -59,15 +59,18 @@ void Button::_init()
 	_buttons[BTN_NORMAL] = mlx_image_to_window(Gui::mlx(), _button, 0, 0);
 	_buttons[BTN_HOVER] = mlx_image_to_window(Gui::mlx(), _button_hover, 0, 0);
 	_buttons[BTN_SELECTED] = mlx_image_to_window(Gui::mlx(), _button_selected, 0, 0);
-	mlx_set_instance_depth(&_button->instances[_buttons[BTN_NORMAL]], 1);
-	mlx_set_instance_depth(&_button_hover->instances[_buttons[BTN_HOVER]], 1);
-	mlx_set_instance_depth(&_button_selected->instances[_buttons[BTN_SELECTED]], 1);
+	mlx_set_instance_depth(&_button->instances[_buttons[BTN_NORMAL]], 20);
+	mlx_set_instance_depth(&_button_hover->instances[_buttons[BTN_HOVER]], 20);
+	mlx_set_instance_depth(&_button_selected->instances[_buttons[BTN_SELECTED]], 20);
 	_button->instances[_buttons[BTN_NORMAL]].enabled = true;
 	_button_hover->instances[_buttons[BTN_HOVER]].enabled = false;
 	_button_selected->instances[_buttons[BTN_SELECTED]].enabled = false;
 	resize(Rect(300, 350, 0, 30));
 }
 
+/*
+** Button height is defined by its width.
+*/
 void Button::resize(Rect dimensions)
 {
 	Rect text;
@@ -75,9 +78,8 @@ void Button::resize(Rect dimensions)
 	size_t center;
 
 	center = dimensions.x + (dimensions.width / 2);
-	dimensions.height = dimensions.height * 1.3;
 	ratio = static_cast<float>(Gui::texture("selectbuttons")->height) / Gui::texture("selectbuttons")->width;
-	dimensions.width = static_cast<float>(dimensions.height) / ratio;
+	dimensions.height = dimensions.width * ratio;
 	mlx_resize_image(_button, dimensions.width, dimensions.height);
 	mlx_resize_image(_button_hover, dimensions.width, dimensions.height);
 	mlx_resize_image(_button_selected, dimensions.width, dimensions.height);
@@ -95,6 +97,14 @@ void Button::resize(Rect dimensions)
 	_text.center(center);
 	text.width =_text.dimensions().width;
 	_dimensions = dimensions;
+}
+
+void Button::depth(size_t depth)
+{
+	mlx_set_instance_depth(&_button->instances[_buttons[BTN_NORMAL]], depth);
+	mlx_set_instance_depth(&_button_hover->instances[_buttons[BTN_HOVER]], depth);
+	mlx_set_instance_depth(&_button_selected->instances[_buttons[BTN_SELECTED]], depth);
+	_text.depth(depth + 1);
 }
 
 void Button::select(bool selected)

@@ -38,6 +38,7 @@ bool Board::show(size_t sqrt)
 	_statusbar.show();
 	//_endgame.show("AI");
 	_mode.show("Swap", false);
+	resize();
 	return (true);
 }
 

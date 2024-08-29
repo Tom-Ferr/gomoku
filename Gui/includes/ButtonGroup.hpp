@@ -20,6 +20,7 @@ class ButtonGroup
 		void resize(Rect const &dimensions);
 		void add(std::string const &str);
 		Rect const &dimensions();
+		void depth(size_t depth);
 		bool hover();
 		bool click();
 		void show();

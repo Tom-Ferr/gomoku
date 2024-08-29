@@ -121,6 +121,8 @@ bool Gui::_load_textures()
 		return (false);
 	if (!_load_texture(Gui::texture("selectbuttons"), "assets/selectbuttons.png"))
 		return (false);
+	if (!_load_texture(Gui::texture("box"), "assets/boxbg.png"))
+		return (false);
 	return (true);
 }
 
@@ -183,8 +185,10 @@ void	Gui::_resize(int width, int height)
 	Gui::_dimensions.height = height;
 	mlx_resize_image(_background, width, height);
 	Gui::apply_texture(_background, _background_texture);
-	_board.resize();
-	_menu.resize();
+	if (_gamestate == GS_BOARD)
+		_board.resize();
+	else
+		_menu.resize();
 }
 
 /*

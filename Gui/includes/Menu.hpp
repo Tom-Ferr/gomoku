@@ -6,7 +6,7 @@
 # include <Button.hpp>
 # include <ButtonGroup.hpp>
 # include <MLX42/MLX42.h>
-
+# include <Game.hpp>
 class Menu
 {
 	private:
@@ -32,6 +32,10 @@ class Menu
 		bool click();
 		void show();
 		void hide();
+
+		t_gamemode opt_mode();
+		t_startingplayer opt_starting();
+		t_vs opt_vs();
 };
 
 #endif

@@ -113,3 +113,13 @@ void ButtonGroup::depth(size_t depth)
 	for (size_t i = 0; i < _buttons.size(); i++)
 		_buttons[i].depth(depth + 1);
 }
+
+size_t ButtonGroup::selected()
+{
+	for (size_t i = 0; i < _buttons.size(); i++)
+	{
+		if (_buttons[i].selected())
+			return i;
+	}
+	return 0;
+}

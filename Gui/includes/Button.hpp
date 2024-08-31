@@ -42,6 +42,7 @@ class Button
 		void hide();
 		void show();
 		void depth(size_t depth);
+		bool selected();
 };
 
 #endif

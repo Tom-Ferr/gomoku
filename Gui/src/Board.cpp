@@ -31,12 +31,12 @@ bool Board::init()
 	return (true);
 }
 
-bool Board::show()
+bool Board::show(t_vs vs, t_startingplayer starting, t_gamemode mode)
 {
 	_background->enabled = true;
 	_visible=true;
 	_hovered_tile = nullptr;
-	_game = Game(_sqrt);
+	_game = Game(_sqrt, vs, starting, mode);
 	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
 	{
 		it->clear();
@@ -45,7 +45,7 @@ bool Board::show()
 	enable();
 	_statusbar.show();
 	//_endgame.show("AI");
-	_mode.show("Swap", false);
+	//_mode.show("Swap", true);
 	resize();
 	return (true);
 }

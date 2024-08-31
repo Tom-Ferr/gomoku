@@ -1,16 +1,32 @@
 #include <Game.hpp>
 
-Game::Game(int size)
-: _board(size), _ftc(_board)
+Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
+: _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(true),
+_init_game(true), _game_mode(GM_STANDARD)
 {
+	/*
+	** lets try to init those only if never initialized before...
+	*/
 	Free_Three_Checker::set_masks(6, size);
 	Heuristics::set_masks(5, size);
 	BoardState::set_masks(4, size);
+
+	_game_mode = mode;
+	if (startingplayer == SP_RANDOM)
+		_player = static_cast<bool>(rand() % 2);
+	else
+		_player = static_cast<bool>(startingplayer);
+	_vs_ai = static_cast<bool>(vs);
+	std::cout << "vs AI/P2: " << _vs_ai << std::endl;
+	std::cout << "starting Player: " << _player << std::endl;
+	std::cout << "Game Mode: " << _game_mode << std::endl;
+
 }
 
 Game::Game(const Game& other)
 :_board(other._board), _ftc(_board)
 {
+	*this = other;
 }
 
 Game &Game::operator=(const Game& other)
@@ -19,6 +35,11 @@ Game &Game::operator=(const Game& other)
 	{
 		_board = other._board;
 		_ftc = Free_Three_Checker(_board);
+		_turn = other._turn;
+		_player = other._player;
+		_vs_ai = other._vs_ai;
+		_init_game = other._init_game;
+		_game_mode = other._game_mode;
 	}
 	return *this;
 }
@@ -114,4 +135,50 @@ bool Game::is_double_free_three(const size_t &pos)
 void Game::update_freechecker()
 {
 	_ftc = Free_Three_Checker(_board);
+}
+
+/*
+** whose turn
+** false for white, true for black
+*/
+bool Game::turn()
+{
+	return _turn;
+}
+
+/*
+** player one piece.
+** false for white, true for black
+*/
+bool Game::player()
+{
+	return _player;
+}
+
+/*
+** false for AI, true for vs Player2
+*/
+bool Game::vs_ai()
+{
+	return _vs_ai;
+}
+
+bool Game::vs_p2()
+{
+	return !_vs_ai;
+}
+
+bool Game::is_player_turn()
+{
+	return (_turn == _player);
+}
+
+bool Game::is_init_game()
+{
+	return _init_game;
+}
+
+t_gamemode &Game::game_mode()
+{
+	return _game_mode;
 }

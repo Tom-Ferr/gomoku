@@ -203,7 +203,7 @@ void	Gui::mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, v
 		if (gui->_menu.click())
 		{
 			gui->_gamestate = GS_BOARD;
-			gui->_board.show();
+			gui->_board.show(gui->_menu.opt_vs(), gui->_menu.opt_starting(), gui->_menu.opt_mode());
 			gui->_menu.hide();
 		}
 	}

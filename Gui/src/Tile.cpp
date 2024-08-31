@@ -6,7 +6,6 @@ Tile::Tile(size_t pos)
 : _pos(pos), _enabled(true)
 {
 	//(void)_set;(void)_hover;(void)_hint;
-	std::cout << "Creating Tile at " << pos << std::endl;
 	size_t x = pos % Board::sqrt();
 	size_t y = pos / Board::sqrt();
 	size_t tex = 4;

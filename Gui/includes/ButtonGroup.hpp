@@ -26,6 +26,7 @@ class ButtonGroup
 		void show();
 		void hide();
 		void clear();
+		size_t selected();
 };
 
 #endif

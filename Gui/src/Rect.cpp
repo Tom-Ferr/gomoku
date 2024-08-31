@@ -93,7 +93,8 @@ Rect Rect::subrect(const Rect &parent, float wratio, float hratio, int valign)
 	return r;
 }
 
-std::ostream& operator<<(std::ostream& os, const Rect& rect) {
-	os << "Rect: " << rect.x << ", " << rect.y << ", " << rect.width << ", " << rect.height << ")";
+std::ostream& operator<<(std::ostream& os, const Rect& rect)
+{
+	os << "Rect: " << rect.x << ", " << rect.y << ", " << rect.width << ", " << rect.height;
 	return os;
 }

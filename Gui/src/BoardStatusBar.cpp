@@ -69,7 +69,6 @@ void BoardStatusBar::_resize_vertical(size_t text_height)
 {
 	float spacing = 1.1;
 
-	std::cout << "Resize Vertical" << std::endl;
 	_vs.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05, 0, text_height));
 	_player1.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * spacing, 0, text_height));
 	_player2.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 2 * spacing, 0, text_height));
@@ -77,7 +76,6 @@ void BoardStatusBar::_resize_vertical(size_t text_height)
 	_last_time.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 4 * spacing, 0, text_height));
 	_avg_time.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 5 * spacing, 0, text_height));
 	_dimensions.height = _avg_time.dimensions().y + _avg_time.dimensions().height + 5;
-	std::cout << _dimensions << std::endl;
 }
 
 void BoardStatusBar::_resize_horizontal(size_t text_height)

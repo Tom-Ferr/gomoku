@@ -201,7 +201,6 @@ void BoardMode::hover()
 */
 bool BoardMode::click()
 {
-	std::cout << "OK clicked" << std::endl;
 	if (_ok_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
 		return true;
 	if (_buttons.dimensions().contains(Gui::mouse().x, Gui::mouse().y))

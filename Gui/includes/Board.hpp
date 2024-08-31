@@ -64,7 +64,7 @@ class Board
 		void enable();
 		void disable();
 		bool visible();
-		bool show();
+		bool show(t_vs vs, t_startingplayer starting, t_gamemode mode);
 		void hide();
 		void loop();
 		Rect& get_tile_dimensions();

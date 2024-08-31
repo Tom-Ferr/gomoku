@@ -107,6 +107,11 @@ void Button::depth(size_t depth)
 	_text.depth(depth + 1);
 }
 
+bool Button::selected()
+{
+	return _selected;
+}
+
 void Button::select(bool selected)
 {
 	_hovered = false;

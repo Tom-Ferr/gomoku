@@ -18,7 +18,7 @@
 # define TILE_SIZE 500
 # define BACKGROUND_SIZE 1024
 # define BUTTON_SIZE 200
-
+# define DEFAULT_BOARD 19
 
 class Tile;
 class Info;
@@ -64,7 +64,7 @@ class Board
 		void enable();
 		void disable();
 		bool visible();
-		bool show(size_t sqrt);
+		bool show();
 		void hide();
 		Rect get_tile_position(int pos);
 		void _remove_captures();

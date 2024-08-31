@@ -4,13 +4,17 @@
 mlx_image_t			*Board::_tile_images[9] = {nullptr};
 mlx_image_t			*Board::_piece_images[5] = {nullptr};
 Rect				Board::_dimensions;
-size_t				Board::_sqrt = 0;
-size_t				Board::_size = 0;
+size_t				Board::_sqrt = DEFAULT_BOARD;
+size_t				Board::_size = DEFAULT_BOARD * DEFAULT_BOARD;
 
 Board::Board()
 : _background(nullptr)
 { }
 
+/*
+** initializes the board, tiles, status bar, endgame and mode
+** returns false if something fails, so it can gracefully exit
+*/
 bool Board::init()
 {
 	_background = mlx_new_image(Gui::mlx(), BACKGROUND_SIZE, BACKGROUND_SIZE);
@@ -18,6 +22,7 @@ bool Board::init()
 	Gui::apply_texture(_background, Gui::_board_texture);
 	mlx_image_to_window(Gui::mlx(), _background, 0, 0);
 	mlx_set_instance_depth(&_background->instances[0], 1);
+	_init();
 	_statusbar.init();
 	_endgame.init();
 	_mode.init();
@@ -26,18 +31,21 @@ bool Board::init()
 	return (true);
 }
 
-bool Board::show(size_t sqrt)
+bool Board::show()
 {
 	_background->enabled = true;
 	_visible=true;
- 	_sqrt = sqrt;
-	_size = sqrt * sqrt;
+	_hovered_tile = nullptr;
+	_game = Game(_sqrt);
+	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
+	{
+		it->clear();
+		it->show();
+	}
 	enable();
-	_reset();
-	_init();
 	_statusbar.show();
 	//_endgame.show("AI");
-	_mode.show("Swap", false);
+	//_mode.show("Swap", false);
 	resize();
 	return (true);
 }
@@ -82,38 +90,19 @@ void Board::hide()
 {
 	_background->enabled = false;
 	_visible=false;
-	_reset();
 	_statusbar.hide();
 	_endgame.hide();
 	_mode.hide();
+	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
+	{
+		it->clear();
+		it->hide();
+	}
 	disable();
-}
-
-/*
-** clears the tile_backgrounds (and all piece images)
-** to ensure that the drawing queue is empty.
-*/
-void Board::_reset()
-{
-	_tiles.clear();
-	_hovered_tile = nullptr;
-	for (size_t i = 0; i < 9; i++)
-	{
-		if (Board::_tile_images[i])
-			mlx_delete_image(Gui::mlx(), Board::_tile_images[i]);
-		Board::_tile_images[i] = nullptr;
-	}
-	for (size_t i = 0; i < 5; i++)
-	{
-		if (Board::_piece_images[i])
-			mlx_delete_image(Gui::mlx(), Board::_piece_images[i]);
-		Board::_piece_images[i] = nullptr;
-	}
 }
 
 bool Board::_init()
 {
-	_game = Game(_sqrt);
 	for (size_t i = 0; i < 9; i++)
 	{
 		Board::_tile_images[i] = mlx_new_image(Gui::mlx(), TILE_SIZE, TILE_SIZE);

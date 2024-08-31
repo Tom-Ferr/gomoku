@@ -6,7 +6,7 @@ Tile::Tile(size_t pos)
 : _pos(pos), _enabled(true)
 {
 	//(void)_set;(void)_hover;(void)_hint;
-
+	std::cout << "Creating Tile at " << pos << std::endl;
 	size_t x = pos % Board::sqrt();
 	size_t y = pos / Board::sqrt();
 	size_t tex = 4;
@@ -32,7 +32,7 @@ Tile::Tile(size_t pos)
 	for (size_t i = 0; i < 5; i++)
 	{
 		_pieces[i] = mlx_image_to_window(Gui::mlx(), Board::_piece_images[i], 0, 0);
-		mlx_set_instance_depth(&piece(i), 3);
+		//mlx_set_instance_depth(&piece(i), 3);
 		piece(i).enabled = false;
 	}
 }
@@ -120,6 +120,16 @@ void Tile::clear()
 	for (size_t i = 0; i < 5; i++)
 		piece(i).enabled = false;
 	enable();
+}
+
+void Tile::show()
+{
+	Board::_tile_images[_tile_tex]->instances[_tile_idx].enabled = true;
+}
+
+void Tile::hide()
+{
+	Board::_tile_images[_tile_tex]->instances[_tile_idx].enabled = false;
 }
 
 bool Tile::enabled()

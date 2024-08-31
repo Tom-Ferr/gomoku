@@ -33,18 +33,8 @@ class Gui
 
 	public:
 		static mlx_t				*_mlx;
-		static mlx_texture_t		*_piece_texture;
-		static mlx_texture_t		*_tile_texture;
-		static mlx_texture_t		*_board_texture;
-		static mlx_texture_t		*_logo_texture;
-		static mlx_texture_t		*_playbutton_texture;
-		static mlx_texture_t		*_button_texture;
-		static mlx_texture_t		*_font_regular_texture;
-		static mlx_texture_t		*_font_bold_texture;
-		static mlx_texture_t		*_font_heavy_texture;
 		static Rect					_dimensions;
 		static Rect					_mouse;
-		mlx_texture_t 				*_background_texture;
 		mlx_image_t					*_background;
 		Board						_board;
 		Menu						_menu;

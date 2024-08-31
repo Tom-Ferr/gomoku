@@ -102,9 +102,9 @@ void Info::resize(Rect const &dimensions)
 			&& dimensions.width != Info::_piece_images[_image]->width)
 		{
 			mlx_resize_image(Info::_piece_images[PT_BLACK], dimensions.height, dimensions.height);
-			Gui::apply_texture(Info::_piece_images[PT_BLACK], Gui::_piece_texture, Color::black);
+			Gui::apply_texture(Info::_piece_images[PT_BLACK], Gui::texture("piece"), Color::black);
 			mlx_resize_image(Info::_piece_images[PT_WHITE], dimensions.height, dimensions.height);
-			Gui::apply_texture(Info::_piece_images[PT_WHITE], Gui::_piece_texture, Color::white);
+			Gui::apply_texture(Info::_piece_images[PT_WHITE], Gui::texture("piece"), Color::white);
 		}
 		Info::_piece_images[_image]->instances[_buttons[_image]].x = _text.dimensions().x + _text.dimensions().width;
 		Info::_piece_images[_image]->instances[_buttons[_image]].y = dimensions.y;

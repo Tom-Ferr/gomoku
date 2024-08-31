@@ -1,15 +1,6 @@
 #include  <Gui.hpp>
 
 mlx_t			*Gui::_mlx = nullptr;
-mlx_texture_t	*Gui::_piece_texture = nullptr;
-mlx_texture_t	*Gui::_tile_texture = nullptr;
-mlx_texture_t	*Gui::_board_texture = nullptr;
-mlx_texture_t	*Gui::_logo_texture = nullptr;
-mlx_texture_t	*Gui::_playbutton_texture = nullptr;
-mlx_texture_t	*Gui::_button_texture = nullptr;
-mlx_texture_t	*Gui::_font_regular_texture = nullptr;
-mlx_texture_t	*Gui::_font_bold_texture = nullptr;
-mlx_texture_t	*Gui::_font_heavy_texture = nullptr;
 std::map<std::string, mlx_texture_t*> Gui::_textures;
 Rect			Gui::_dimensions;
 Rect			Gui::_mouse;
@@ -20,28 +11,16 @@ Gui::Gui()
 		_run();
 }
 
+/*
+** deletes the textures and let minilibx do its job by removing everything else
+*/
 Gui::~Gui()
 {
-	if (Gui::_logo_texture)
-		mlx_delete_texture(Gui::_logo_texture);
-	if (Gui::_piece_texture)
-		mlx_delete_texture(Gui::_piece_texture);
-	if (Gui::_tile_texture)
-		mlx_delete_texture(Gui::_tile_texture);
-	if (Gui::_board_texture)
-		mlx_delete_texture(Gui::_board_texture);
-	if (Gui::_piece_texture)
-		mlx_delete_texture(Gui::_playbutton_texture);
-	if (Gui::_button_texture)
-		mlx_delete_texture(Gui::_button_texture);
-	if (Gui::_font_regular_texture)
-		mlx_delete_texture(Gui::_font_regular_texture);
-	if (Gui::_font_bold_texture)
-		mlx_delete_texture(Gui::_font_bold_texture);
-	if (Gui::_font_heavy_texture)
-		mlx_delete_texture(Gui::_font_heavy_texture);
-	if (_background)
-		mlx_delete_texture(_background_texture);
+	for (std::map<std::string, mlx_texture_t*>::iterator it = _textures.begin(); it != _textures.end(); it++)
+	{
+		if (it->second)
+			mlx_delete_texture(it->second);
+	}
 	mlx_terminate(_mlx);
 }
 /*
@@ -78,7 +57,7 @@ bool Gui::_load_background()
 		std::cout << mlx_strerror(mlx_errno) << std::endl;
 		return (false);
 	}
-	apply_texture(_background, _background_texture);
+	apply_texture(_background, Gui::texture("background"));
 	return (true);
 }
 
@@ -97,25 +76,25 @@ bool Gui::_load_texture(mlx_texture_t	*&texture, const char* path)
 
 bool Gui::_load_textures()
 {
-	if (!_load_texture(_background_texture, "assets/background.png"))
+	if (!_load_texture(texture("background"), "assets/background.png"))
 		return (false);
-	if (!_load_texture(Gui::_piece_texture, "assets/white_piece.png"))
+	if (!_load_texture(Gui::texture("piece"), "assets/white_piece.png"))
 		return (false);
-	if (!_load_texture(Gui::_tile_texture, "assets/marble_tiles.png"))
+	if (!_load_texture(Gui::texture("tile"), "assets/marble_tiles.png"))
 		return (false);
-	if (!_load_texture(Gui::_board_texture, "assets/board.png"))
+	if (!_load_texture(Gui::texture("board"), "assets/board.png"))
 		return (false);
-	if (!_load_texture(Gui::_logo_texture, "assets/logo.png"))
+	if (!_load_texture(Gui::texture("logo"), "assets/logo.png"))
 		return (false);
-	if (!_load_texture(Gui::_playbutton_texture, "assets/playbutton.png"))
+	if (!_load_texture(Gui::texture("playbutton"), "assets/playbutton.png"))
 		return (false);
-	if (!_load_texture(Gui::_button_texture, "assets/wbutton.png"))
+	if (!_load_texture(Gui::texture("button"), "assets/wbutton.png"))
 		return (false);
-	if (!_load_texture(Gui::_font_regular_texture, "assets/fontregular.png"))
+	if (!_load_texture(Gui::texture("font_regular"), "assets/fontregular.png"))
 		return (false);
-	if (!_load_texture(Gui::_font_bold_texture, "assets/fontbold.png"))
+	if (!_load_texture(Gui::texture("font_bold"), "assets/fontbold.png"))
 		return (false);
-	if (!_load_texture(Gui::_font_heavy_texture, "assets/fontheavy.png"))
+	if (!_load_texture(Gui::texture("font_heavy"), "assets/fontheavy.png"))
 		return (false);
 	if (!_load_texture(Gui::texture("playbuttons"), "assets/playbuttons.png"))
 		return (false);
@@ -184,7 +163,7 @@ void	Gui::_resize(int width, int height)
 	Gui::_dimensions.width = width;
 	Gui::_dimensions.height = height;
 	mlx_resize_image(_background, width, height);
-	Gui::apply_texture(_background, _background_texture);
+	Gui::apply_texture(_background, Gui::texture("background"));
 	if (_gamestate == GS_BOARD)
 		_board.resize();
 	else

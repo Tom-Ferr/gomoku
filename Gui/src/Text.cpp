@@ -44,10 +44,10 @@ Rect const &Text::dimensions()
 
 void Text::_init()
 {
-	mlx_texture_t *font = Gui::_font_regular_texture;
+	mlx_texture_t *font = Gui::texture("font_regular");
 
 	if (_bold)
-		font = Gui::_font_heavy_texture;
+		font = Gui::texture("font_heavy");
 	Rect tex = Rect(0, 0, font->width  / FONT_GRIDSIZE,
 					font->height / FONT_GRIDSIZE);
 	_dimensions = Rect(0, 0, tex.width * _text.size(), tex.height);
@@ -70,12 +70,12 @@ void Text::resize(Rect const &dimensions)
 
 void Text::resize(size_t height)
 {
-	mlx_texture_t *font = Gui::_font_regular_texture;
+	mlx_texture_t *font = Gui::texture("font_regular");
 
 	if (!_image)
 		return ;
 	if (_bold)
-		font = Gui::_font_heavy_texture;
+		font = Gui::texture("font_heavy");
 	float ratio = static_cast<float>(
 					font->width  / FONT_GRIDSIZE)
 					/ (font->height / FONT_GRIDSIZE);

@@ -9,13 +9,13 @@ Menu::Menu()
 
 bool Menu::init()
 {
-	_logo = mlx_new_image(Gui::mlx(), Gui::_logo_texture->height, Gui::_logo_texture->width);
-	_play_button = mlx_new_image(Gui::mlx(), Gui::_playbutton_texture->height, Gui::_playbutton_texture->width);
-	_play_button_hover = mlx_new_image(Gui::mlx(), Gui::_playbutton_texture->height, Gui::_playbutton_texture->width);
+	_logo = mlx_new_image(Gui::mlx(), Gui::texture("logo")->height, Gui::texture("logo")->width);
+	_play_button = mlx_new_image(Gui::mlx(), Gui::texture("playbutton")->height, Gui::texture("playbutton")->width);
+	_play_button_hover = mlx_new_image(Gui::mlx(), Gui::texture("playbutton")->height, Gui::texture("playbutton")->width);
 	_dimensions = Rect::subrect(Gui::dimensions(), .8);
-	Gui::apply_texture(_logo, Gui::_logo_texture);
-	Gui::apply_texture(_play_button, Gui::_playbutton_texture);
-	Gui::apply_texture(_play_button_hover, Gui::_playbutton_texture, Color(100, 100, 255, 150));
+	Gui::apply_texture(_logo, Gui::texture("logo"));
+	Gui::apply_texture(_play_button, Gui::texture("playbutton"));
+	Gui::apply_texture(_play_button_hover, Gui::texture("playbutton"), Color(100, 100, 255, 150));
 
 	mlx_image_to_window(Gui::mlx(), _logo, 0, 0);
 	mlx_image_to_window(Gui::mlx(), _play_button, 0, 0);
@@ -57,13 +57,13 @@ void Menu::resize()
 
 	_dimensions = Rect::subrect(Gui::dimensions(), .8);
 	_play_dimensions = Rect::subrect(_dimensions, .4, .15, 2);
-	ratio = float(Gui::_logo_texture->height) / Gui::_logo_texture->width;
+	ratio = float(Gui::texture("logo")->height) / Gui::texture("logo")->width;
 	Rect logo_dimensions = Rect::subrect(_dimensions, 1., ratio, 0);
 	std::cout << "Logo Dimensions: " << logo_dimensions << std::endl;
 	mlx_resize_image(_logo, logo_dimensions.width, logo_dimensions.height);
 	mlx_resize_image(_play_button, _play_dimensions.width, _play_dimensions.height);
 	mlx_resize_image(_play_button_hover, _play_dimensions.width, _play_dimensions.height);
-	Gui::apply_texture(_logo, Gui::_logo_texture);
+	Gui::apply_texture(_logo, Gui::texture("logo"));
 	Gui::apply_texture(_play_button, Gui::texture("playbuttons"), Color::white, 2, 2);
 	Gui::apply_texture(_play_button_hover, Gui::texture("playbuttons"), Color::white, 0, 2);
 	_logo->instances[0].x = logo_dimensions.x;

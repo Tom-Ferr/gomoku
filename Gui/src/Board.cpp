@@ -19,7 +19,7 @@ bool Board::init()
 {
 	_background = mlx_new_image(Gui::mlx(), BACKGROUND_SIZE, BACKGROUND_SIZE);
 	Board::_dimensions = Rect::subrect(Gui::dimensions(), .9);
-	Gui::apply_texture(_background, Gui::_board_texture);
+	Gui::apply_texture(_background, Gui::texture("board"));
 	mlx_image_to_window(Gui::mlx(), _background, 0, 0);
 	mlx_set_instance_depth(&_background->instances[0], 1);
 	_init();
@@ -106,7 +106,7 @@ bool Board::_init()
 	for (size_t i = 0; i < 9; i++)
 	{
 		Board::_tile_images[i] = mlx_new_image(Gui::mlx(), TILE_SIZE, TILE_SIZE);
-		Gui::apply_texture(Board::_tile_images[i], Gui::_tile_texture, Color::white, i, 3);
+		Gui::apply_texture(Board::_tile_images[i], Gui::texture("tile"), Color::white, i, 3);
 	}
 	for (size_t i = 0; i < 5; i++)
 		Board::_piece_images[i] = mlx_new_image(Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
@@ -122,22 +122,22 @@ void Board::resize()
 		return;
 	_dimensions = Rect::subrect(Gui::dimensions(), .9);
 	mlx_resize_image(_background, _dimensions.width, _dimensions.height);
-	Gui::apply_texture(_background, Gui::_board_texture);
+	Gui::apply_texture(_background, Gui::texture("board"));
 	_background->instances[0].x = _dimensions.x;
 	_background->instances[0].y = _dimensions.y;
 	_tile_dimensions = Rect::subrect(_dimensions, 1.0 / sqrt());
 	for (size_t i = 0; i < 9; i++)
 	{
 		mlx_resize_image(Board::_tile_images[i], _tile_dimensions.width, _tile_dimensions.height);
-		Gui::apply_texture(Board::_tile_images[i], Gui::_tile_texture, Color::white, i, 3);
+		Gui::apply_texture(Board::_tile_images[i], Gui::texture("tile"), Color::white, i, 3);
 	}
 	for (size_t i = 0; i < 5; i++)
 		mlx_resize_image(Board::_piece_images[i], _tile_dimensions.width, _tile_dimensions.height);
-	Gui::apply_texture(Board::_piece_images[PT_BLACK], Gui::_piece_texture, Color::black);
-	Gui::apply_texture(Board::_piece_images[PT_WHITE], Gui::_piece_texture, Color::white);
-	Gui::apply_texture(Board::_piece_images[PT_HINT], Gui::_piece_texture, Color::yellow);
-	Gui::apply_texture(Board::_piece_images[PT_BLACKHOVER], Gui::_piece_texture, Color::black_alpha);
-	Gui::apply_texture(Board::_piece_images[PT_WHITEHOVER], Gui::_piece_texture, Color::white_alpha);
+	Gui::apply_texture(Board::_piece_images[PT_BLACK], Gui::texture("piece"), Color::black);
+	Gui::apply_texture(Board::_piece_images[PT_WHITE], Gui::texture("piece"), Color::white);
+	Gui::apply_texture(Board::_piece_images[PT_HINT], Gui::texture("piece"), Color::yellow);
+	Gui::apply_texture(Board::_piece_images[PT_BLACKHOVER], Gui::texture("piece"), Color::black_alpha);
+	Gui::apply_texture(Board::_piece_images[PT_WHITEHOVER], Gui::texture("piece"), Color::white_alpha);
 	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
 	{
 		it->resize(_tile_dimensions);

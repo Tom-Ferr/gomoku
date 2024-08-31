@@ -48,6 +48,7 @@ class Gui
 		static void	cursor_hook(double x, double y, void *param);
 		static void	close_hook(void *param);
 		static void key_hook(mlx_key_data_t keydata, void* param);
+		static void board_loop_hook(void *param);
 
 		/*
 		** helpers

@@ -1,5 +1,5 @@
 #include <Board.hpp>
-# include <Gui.hpp>
+#include <Gui.hpp>
 
 mlx_image_t			*Board::_tile_images[9] = {nullptr};
 mlx_image_t			*Board::_piece_images[5] = {nullptr};
@@ -45,7 +45,7 @@ bool Board::show()
 	enable();
 	_statusbar.show();
 	//_endgame.show("AI");
-	//_mode.show("Swap", false);
+	_mode.show("Swap", false);
 	resize();
 	return (true);
 }
@@ -56,29 +56,20 @@ Board::Board(Board const &other)
 }
 
 Board::~Board()
-{
-//	if (_background)
-//		mlx_delete_image(Gui::mlx(), _background);
-	_background = nullptr;
-}
+{ }
 
 Board &Board::operator=(Board const &other)
 {
-	(void)other;
-//	_sqrt = other._sqrt;
-//	_size = other._size;
-//	_background = other._background;
-//	_dimensions = other._dimensions;
-//	_tiles = other._tiles;
-	//_tiles = other._tiles;
-	//_window = other._window;
-	//_dimensions = other._dimensions;
-	//_position = other._position;
-	//_tiles = other._tiles;
-	//_tiles_dimensions = other._tiles_dimensions;
-	//_hovered_tile = other._hovered_tile;
-	//_enabled = other._enabled;
-	//_game = other._game;
+	_background = other._background;
+	_tiles = other._tiles;
+	_hovered_tile = other._hovered_tile;
+	_tile_dimensions = other._tile_dimensions;
+	_enabled = other._enabled;
+	_visible = other._visible;
+	_game = other._game;
+	_statusbar = other._statusbar;
+	_endgame = other._endgame;
+	_mode = other._mode;
 	return *this;
 }
 bool Board::visible()
@@ -167,7 +158,11 @@ bool Board::hover()
 	Tile				*hovered;
 	int					tile;
 	_enabled = true;
-
+	if (_mode.enabled())
+	{
+		_mode.hover();
+		return true;
+	}
 	if (enabled() && Board::dimensions().contains(Gui::_mouse.x, Gui::_mouse.y))
 	{
 		tile = get_hovered_tile();
@@ -208,6 +203,15 @@ void Board::_remove_captures()
 
 bool Board::click()
 {
+	if (_mode.enabled())
+	{
+		if (_mode.click())
+		{
+			_mode.hide();
+			enable();
+		}
+		return true;
+	}
 	if (enabled() && _hovered_tile)
 	{
 		if (_game.is_double_free_three(_hovered_tile->pos()))
@@ -268,3 +272,9 @@ mlx_image_t *Board::piece_image(t_piecetype piecetype)
 {
 	return Board::_piece_images[piecetype];
 }
+
+void Board::loop()
+{
+	//std::cout << "Board queue loop" << std::endl;
+}
+

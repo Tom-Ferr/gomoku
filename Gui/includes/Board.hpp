@@ -26,26 +26,26 @@ class Info;
 class Board
 {
 	private:
-		mlx_image_t			*_background;
 		static Rect			_dimensions;
+		mlx_image_t			*_background;
 		std::vector<Tile>	_tiles;
 		Tile				*_hovered_tile;
 		Rect				_tile_dimensions;
 		bool				_enabled;
 		bool				_visible;
+		Game				_game;
+		BoardStatusBar		_statusbar;
+		BoardEndGame		_endgame;
+		BoardMode			_mode;
 
-		bool _init();
-		void _reset();
+		bool				_init();
+		void				_remove_captures();
 
 	public:
 		static size_t		_sqrt;
 		static size_t		_size;
 		static mlx_image_t	*_tile_images[9];
 		static mlx_image_t	*_piece_images[5];
-		Game				_game;
-		BoardStatusBar		_statusbar;
-		BoardEndGame		_endgame;
-		BoardMode			_mode;
 
 	public:
 		Board();
@@ -66,8 +66,7 @@ class Board
 		bool visible();
 		bool show();
 		void hide();
-		Rect get_tile_position(int pos);
-		void _remove_captures();
+		void loop();
 		Rect& get_tile_dimensions();
 		int get_hovered_tile();
 };

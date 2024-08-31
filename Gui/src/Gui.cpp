@@ -23,6 +23,7 @@ Gui::~Gui()
 	}
 	mlx_terminate(_mlx);
 }
+
 /*
 ** initializes minilibx and loads textures and background
 ** if something fails, returns false
@@ -112,6 +113,7 @@ void Gui::_run()
 	mlx_mouse_hook(_mlx, mouse_hook, this);
 	mlx_close_hook(_mlx, close_hook, this);
 	mlx_resize_hook(_mlx, resize_hook, this);
+	mlx_loop_hook(_mlx, board_loop_hook, this);
 	mlx_loop(_mlx);
 }
 
@@ -173,7 +175,16 @@ void	Gui::_resize(int width, int height)
 /*
 ** input hooks
 */
-void 	Gui::resize_hook(int width, int height, void* param)
+
+void Gui::board_loop_hook(void *param)
+{
+	Gui *gui = static_cast<Gui*>(param);
+
+	if (gui->_gamestate == GS_BOARD)
+		gui->_board.loop();
+}
+
+void 	Gui::resize_hook(int32_t width, int32_t height, void* param)
 {
 	Gui *gui = static_cast<Gui*>(param);
 

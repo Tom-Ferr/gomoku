@@ -17,17 +17,6 @@ class Tile
 		size_t				_tile_tex;
 		size_t				_tile_idx;
 		size_t				_pieces[5];
-	//	size_t				_whitepiece_idx;
-	//	size_t				_hint_idx;
-	//	size_t				_blackhover_idx;
-	//	size_t				_whitehover_idx;
-
-
-		//sf::Vector2f		_dimensions;
-		//sf::Vector2f		_position;
-		//sf::RectangleShape	_square;
-		//sf::CircleShape		_piece;
-		//bool				_set;
 		bool				_hover;
 		//bool				_hint;
 

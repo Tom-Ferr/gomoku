@@ -23,6 +23,7 @@ BoardMode &BoardMode::operator=(BoardMode const &other)
 	_ok_button = other._ok_button;
 	_ok_button_hover = other._ok_button_hover;
 	_mode = other._mode;
+	_enabled = other._enabled;
 	return (*this);
 }
 
@@ -56,19 +57,28 @@ void BoardMode::resize()
 	_resize_box();
 	_resize_ok();
 	_resize_header();
+	_resize_info();
+}
+
+void BoardMode::_resize_info()
+{
+	Rect dimensions = Rect::subrect(_dimensions, 1, .07, 1);
+	_info.resize(dimensions);
+	_info.center(_dimensions.x + (_dimensions.width / 2));
 }
 
 void BoardMode::_resize_ok()
 {
-	Rect dimensions = Rect::subrect(_dimensions, .3, .1, 2);
-	mlx_resize_image(_ok_button, dimensions.width, dimensions.height);
-	mlx_resize_image(_ok_button_hover, dimensions.width, dimensions.height);
+	_ok_dimensions = Rect::subrect(_dimensions, .3, .1, 2);
+	mlx_resize_image(_ok_button, _ok_dimensions.width, _ok_dimensions.height);
+	mlx_resize_image(_ok_button_hover, _ok_dimensions.width, _ok_dimensions.height);
 	Gui::apply_texture(_ok_button, Gui::texture("playbuttons"), Color::white, 3, 2);
 	Gui::apply_texture(_ok_button_hover, Gui::texture("playbuttons"), Color::white, 1, 2);
-	_ok_button->instances[0].x = dimensions.x;
-	_ok_button->instances[0].y = dimensions.y - dimensions.height * .3;
-	_ok_button_hover->instances[0].x = dimensions.x;
-	_ok_button_hover->instances[0].y = dimensions.y - dimensions.height * .3;
+	_ok_dimensions.y = _ok_dimensions.y - _ok_dimensions.height * .3;
+	_ok_button->instances[0].x = _ok_dimensions.x;
+	_ok_button->instances[0].y = _ok_dimensions.y;
+	_ok_button_hover->instances[0].x = _ok_dimensions.x;
+	_ok_button_hover->instances[0].y = _ok_dimensions.y;
 }
 void BoardMode::_resize_box()
 {
@@ -125,7 +135,6 @@ void BoardMode::_box_texture()
 	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 2, 3, subrects["topright"]);
 	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 6, 3, subrects["bottomleft"]);
 	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 8, 3, subrects["bottomright"]);
-	std::cout << "BOX ZINDEX: " << _centerbox->instances[0].z << std::endl;
 }
 
 void BoardMode::hide()
@@ -138,12 +147,11 @@ void BoardMode::hide()
 	_info.hide();
 	_ok_button_hover->instances[0].enabled = false;
 	_ok_button->instances[0].enabled = false;
+	_enabled = false;
 }
 
 void BoardMode::show(std::string mode, bool selecting)
 {
-	selecting = true;
-
 	_background->enabled = true;
 	_centerbox->enabled = true;
 	_header->enabled = true;
@@ -164,4 +172,39 @@ void BoardMode::show(std::string mode, bool selecting)
 	_ok_button_hover->instances[0].enabled = false;
 	_ok_button->instances[0].enabled = true;
 	resize();
+	_enabled = true;
+}
+
+bool BoardMode::enabled()
+{
+	return _enabled;
+}
+
+void BoardMode::hover()
+{
+	if (_ok_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
+	{
+		_ok_button_hover->instances[0].enabled = true;
+		_ok_button->instances[0].enabled = false;
+	}
+	else
+	{
+		_ok_button_hover->instances[0].enabled = false;
+		_ok_button->instances[0].enabled = true;
+	}
+	if (_buttons.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+		_buttons.hover();
+}
+
+/*
+** Returns true if OK button has been clicked.
+*/
+bool BoardMode::click()
+{
+	std::cout << "OK clicked" << std::endl;
+	if (_ok_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
+		return true;
+	if (_buttons.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+		_buttons.click();
+	return false;
 }

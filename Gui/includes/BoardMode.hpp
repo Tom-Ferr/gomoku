@@ -19,17 +19,19 @@ class BoardMode
 		mlx_image_t						*_ok_button;
 		mlx_image_t						*_ok_button_hover;
 		Rect							_dimensions;
+		Rect							_ok_dimensions;
 		Text							_mode;
 		Text							_description;
 		Text							_info;
 		ButtonGroup						_buttons;
-
+		bool							_enabled;
 
 		void _resize_background();
 		void _resize_box();
 		void _box_texture();
 		void _resize_ok();
 		void _resize_header();
+		void _resize_info();
 
 	public:
 		BoardMode();
@@ -41,6 +43,9 @@ class BoardMode
 		Rect const &dimensions();
 		void hide();
 		void show(std::string mode, bool selecting=true);
+		bool enabled();
+		void hover();
+		bool click();
 };
 
 #endif

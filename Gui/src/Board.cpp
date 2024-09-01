@@ -170,7 +170,7 @@ bool Board::hover()
 		{
 			if (_hovered_tile)
 			{
-				_hovered_tile->hover(false, true);
+				_hovered_tile->hover(false, _game.turn());
 				_hovered_tile = nullptr;
 			}
 			return false;
@@ -181,9 +181,9 @@ bool Board::hover()
 		if (hovered == _hovered_tile)
 			return true;
 		if (_hovered_tile)
-			_hovered_tile->hover(false, true);
+			_hovered_tile->hover(false, _game.turn());
 		_hovered_tile = hovered;
-		_hovered_tile->hover(true, true);
+		_hovered_tile->hover(true, _game.turn());
 		return true;
 	}
 	else if (_hovered_tile)
@@ -216,21 +216,17 @@ bool Board::click()
 	{
 		if (_game.is_double_free_three(_hovered_tile->pos()))
 			return false;
-		if (_hovered_tile->click(true))
+		if (_hovered_tile->click(_game.turn()))
 		{
+			std::cout << "Player turn: " << _game.is_player_turn() << std::endl;
 			disable();
-			_game.check_capture(_hovered_tile->pos(), false);
+			_game.check_capture(_hovered_tile->pos(), !_game.turn());
 			_remove_captures();
-			_game.board().applymove(_hovered_tile->pos());
+			_game.board().applymove(_hovered_tile->pos(), _game.turn());
 			_hovered_tile = nullptr;
 			_game.update_freechecker();
-			if (_game.step(false))
-			{
-				_tiles[_game.move()].hover(true, false);
-				_tiles[_game.move()].click(false);
-				_remove_captures();
-				enable();
-			}
+			_game.turn() = !_game.turn();
+			std::cout << "Player turn now: " << _game.is_player_turn() << std::endl;
 		}
 	}
 	return true;
@@ -275,6 +271,28 @@ mlx_image_t *Board::piece_image(t_piecetype piecetype)
 
 void Board::loop()
 {
+	bool turn;// keep this since step might (will) change the players turn
+	//std::cout << "Is player turn? " << _game.is_player_turn() << std::endl;
+	//std::cout << "_game.vs_ai() " << _game.vs_ai() << std::endl;
+	if (_game.is_player_turn())
+		return ;
+	std::cout << "!(_game.is_player_turn()) " << !(_game.is_player_turn()) << std::endl;
+	if (_game.vs_ai() && !(_game.is_player_turn()))
+	{
+		turn = _game.turn();
+		if (_game.step(turn))
+		{
+			_tiles[_game.move()].hover(true, turn);
+			_tiles[_game.move()].click(turn);
+			_remove_captures();
+			enable();
+		}
+		else
+		{
+			// we've got a game over... (no possible move for AI)
+			// still need to determine the winner
+		}
+	}
 	//std::cout << "Board queue loop" << std::endl;
 }
 

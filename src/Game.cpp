@@ -1,5 +1,6 @@
 #include <Game.hpp>
 
+
 Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
 : _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(true),
 _init_game(true), _game_mode(GM_STANDARD)
@@ -12,15 +13,24 @@ _init_game(true), _game_mode(GM_STANDARD)
 	BoardState::set_masks(4, size);
 
 	_game_mode = mode;
+
+	/*
+	** who will play as BLACK?
+	** _player is the player that will play as BLACK?
+	** true for black, false for white
+	*/
 	if (startingplayer == SP_RANDOM)
 		_player = static_cast<bool>(rand() % 2);
 	else
-		_player = static_cast<bool>(startingplayer);
-	_vs_ai = static_cast<bool>(vs);
+		_player = !static_cast<bool>(startingplayer);
+	/*
+	** turn starts always as true (as its black to play)
+	*/
+	_turn = true;
+	_vs_ai = !static_cast<bool>(vs);
 	std::cout << "vs AI/P2: " << _vs_ai << std::endl;
 	std::cout << "starting Player: " << _player << std::endl;
 	std::cout << "Game Mode: " << _game_mode << std::endl;
-
 }
 
 Game::Game(const Game& other)
@@ -63,6 +73,7 @@ bool Game::step(bool turn)
 		_board.applymove(_move, turn);
 		_ftc = Free_Three_Checker(_board);
 		std::cout << "Move: " << _move << std::endl;
+		_turn = !_turn;
 		return true;
 	}
 
@@ -83,12 +94,14 @@ bool Game::step(bool turn)
 		_board.applymove(_move, turn);
 		std::cout << "Move: " << _move << std::endl;
 	}
+	(void)start;
 	//std::cout << _board << std::endl;
 	_board.print();
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Move: " << _move << std::endl;
 	_ftc = Free_Three_Checker(_board);
+	_turn = !_turn;
 	if (result.second == 0)
 		return false;
 	return true;
@@ -141,7 +154,7 @@ void Game::update_freechecker()
 ** whose turn
 ** false for white, true for black
 */
-bool Game::turn()
+bool &Game::turn()
 {
 	return _turn;
 }
@@ -182,3 +195,4 @@ t_gamemode &Game::game_mode()
 {
 	return _game_mode;
 }
+

@@ -20,7 +20,7 @@ typedef enum e_gamemode
 typedef enum e_startingplayer
 {
 	SP_PLAYER1,
-	SP_PLAYER2,
+	SP_PLAYER2AI,
 	SP_RANDOM
 }	t_startingplayer;
 
@@ -55,14 +55,13 @@ class Game
 		BoardState &board();
 		bool is_double_free_three(const size_t &pos);
 		void update_freechecker();
-		bool turn();
+		bool &turn();
 		bool player();
 		bool vs_ai();
 		bool vs_p2();
 		t_gamemode &game_mode();
 		bool is_player_turn();
 		bool is_init_game();
-
 };
 
 #endif

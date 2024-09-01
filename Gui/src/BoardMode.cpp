@@ -48,7 +48,6 @@ void BoardMode::init()
 	_mode = Text("Mode", true);
 	_buttons = ButtonGroup("Player 1 must choose", Rect(0, 0, 0, 0));
 	hide();
-	resize();
 }
 
 void BoardMode::resize()
@@ -69,6 +68,8 @@ void BoardMode::_resize_info()
 
 void BoardMode::_resize_ok()
 {
+	if (!_ok_button)
+		return ;
 	_ok_dimensions = Rect::subrect(_dimensions, .3, .1, 2);
 	mlx_resize_image(_ok_button, _ok_dimensions.width, _ok_dimensions.height);
 	mlx_resize_image(_ok_button_hover, _ok_dimensions.width, _ok_dimensions.height);
@@ -82,6 +83,8 @@ void BoardMode::_resize_ok()
 }
 void BoardMode::_resize_box()
 {
+	if (!_centerbox)
+		return ;
 	_dimensions = Rect::subrect(Gui::dimensions(), .6);
 	mlx_resize_image(_centerbox, _dimensions.width, _dimensions.height);
 	_centerbox->instances[0].x = _dimensions.x;
@@ -93,6 +96,8 @@ void BoardMode::_resize_box()
 
 void BoardMode::_resize_background()
 {
+	if (!_background)
+		return ;
 	mlx_resize_image(_background,  Gui::dimensions().width,  Gui::dimensions().height);
 	_background->instances[0].x = 0;
 	_background->instances[0].y = 0;
@@ -103,6 +108,8 @@ void BoardMode::_resize_header()
 	float ratio;
 	Rect header_dimensions;
 
+	if (!_header)
+		return ;
 	header_dimensions = Rect::subrect(_dimensions, 1.04);;
 	ratio = static_cast<float>(Gui::texture("selectbuttons")->height) / Gui::texture("selectbuttons")->width;
 	header_dimensions.height = header_dimensions.width * ratio;

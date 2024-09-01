@@ -48,9 +48,12 @@ void BoardEndGame::resize()
 	_dimensions = Gui::dimensions();
 	center = _dimensions.width / 2;
 	subrect = Rect::subrect(_dimensions, .6);
-	mlx_resize_image(_background, _dimensions.width, _dimensions.height);
-	_background->instances[0].x = _dimensions.x;
-	_background->instances[0].y = _dimensions.y;
+	if (_background)
+	{
+		mlx_resize_image(_background, _dimensions.width, _dimensions.height);
+		_background->instances[0].x = _dimensions.x;
+		_background->instances[0].y = _dimensions.y;
+	}
 	_player.resize(Rect::subrect(subrect, 1, .4, 0));
 	_wins.resize(Rect::subrect(subrect, 1, .3, 1));
 	_esc.resize(Rect::subrect(subrect, 1, .1, 2));

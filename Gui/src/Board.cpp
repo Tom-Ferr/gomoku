@@ -137,7 +137,7 @@ void Board::resize()
 	}
 	_statusbar.resize();
 	_endgame.resize();
-	_mode.resize();
+	//_mode.resize();
 }
 
 size_t Board::size()

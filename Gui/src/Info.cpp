@@ -5,6 +5,7 @@
 mlx_image_t			*Info::_piece_images[2] = {nullptr};
 
 Info::Info()
+: _image(PT_WHITE), _is_image(false)
 {}
 
 Info::Info(std::string const &str, std::string const &description)

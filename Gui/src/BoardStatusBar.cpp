@@ -60,9 +60,12 @@ void BoardStatusBar::resize()
 		_resize_vertical(text_height);
 	else
 		_resize_horizontal(text_height);
-	mlx_resize_image(_background, _dimensions.width, _dimensions.height);
-	_background->instances[0].x = _dimensions.x;
-	_background->instances[0].y = _dimensions.y;
+	if (_background)
+	{
+		mlx_resize_image(_background, _dimensions.width, _dimensions.height);
+		_background->instances[0].x = _dimensions.x;
+		_background->instances[0].y = _dimensions.y;
+	}
 }
 
 void BoardStatusBar::_resize_vertical(size_t text_height)

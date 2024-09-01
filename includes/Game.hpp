@@ -49,6 +49,8 @@ class Game
 		Game &operator=(const Game& other);
 		~Game();
 		bool step(bool turn=true);
+		bool human_step(size_t pos, bool turn);
+		bool dummy_step(bool turn);
 		size_t move() const;
 		void check_capture(size_t pos, bool turn);
 		std::vector<int> &captures();

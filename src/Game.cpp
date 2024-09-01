@@ -2,8 +2,8 @@
 
 
 Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
-: _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(true),
-_init_game(true), _game_mode(GM_STANDARD)
+: _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(!static_cast<bool>(vs)),
+_init_game(true), _game_mode(mode)
 {
 	/*
 	** lets try to init those only if never initialized before...
@@ -11,8 +11,6 @@ _init_game(true), _game_mode(GM_STANDARD)
 	Free_Three_Checker::set_masks(6, size);
 	Heuristics::set_masks(5, size);
 	BoardState::set_masks(4, size);
-
-	_game_mode = mode;
 
 	/*
 	** who will play as BLACK?
@@ -23,11 +21,11 @@ _init_game(true), _game_mode(GM_STANDARD)
 		_player = static_cast<bool>(rand() % 2);
 	else
 		_player = !static_cast<bool>(startingplayer);
+
 	/*
 	** turn starts always as true (as its black to play)
 	*/
 	_turn = true;
-	_vs_ai = !static_cast<bool>(vs);
 	std::cout << "vs AI/P2: " << _vs_ai << std::endl;
 	std::cout << "starting Player: " << _player << std::endl;
 	std::cout << "Game Mode: " << _game_mode << std::endl;
@@ -56,17 +54,62 @@ Game &Game::operator=(const Game& other)
 
 Game::~Game() {}
 
+bool Game::human_step(size_t pos, bool turn)
+{
+	check_capture(pos, !turn);
+	_board.applymove(pos, turn);
+	_ftc = Free_Three_Checker(_board);
+	_turn = !_turn;
+	return true;
+}
+
 /*
-** if both players are maximizing, it makes no sense to have a turn
-** in the board state (this will always be true, unless during minimax)
-** where next depth is min, then the following is max and so on...
-** So the turn will be determined by the game itself
+** asks AI for the best move but does not apply it to the board.
+** no need to check for captures.
 */
+bool Game::dummy_step(bool turn)
+{
+
+	/*
+	** create a dummy board
+	*/
+	BoardState dummy(_board);
+	std::pair<int, BigInt> result;
+
+	/*
+	** starting state, just as step.
+	** lets please move this into a function and get this code
+	** out of here.
+	*/
+	if (((~dummy.totalboard()) & BoardState::mask) == 0)
+	{
+		_move = _board.size() / 2;
+		return true;
+	}
+	if (!turn)
+		dummy.swap_states();
+	_captures.clear();
+	result = Node(3, INT_MIN, INT_MAX, _board).minimax();
+	if (result.second == 0)
+	{
+		std::cout << "No move found" << std::endl;
+		return false;
+	}
+	_move = result.second.pos();
+	return true;
+}
+
 bool Game::step(bool turn)
 {
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	std::pair<int, BigInt> result;
 
+	/*
+	** this is game init... lets create a function for it to
+	** take into account all game modes
+	** for now, it just treats the case where the board is empty
+	** and AI is to move first.
+	*/
 	if (((~_board.totalboard()) & BoardState::mask) == 0)
 	{
 		_move = _board.size() / 2;

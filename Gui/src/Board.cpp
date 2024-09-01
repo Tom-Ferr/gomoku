@@ -36,6 +36,7 @@ bool Board::show(t_vs vs, t_startingplayer starting, t_gamemode mode)
 	_background->enabled = true;
 	_visible=true;
 	_hovered_tile = nullptr;
+	_hinted_tile = nullptr;
 	_game = Game(_sqrt, vs, starting, mode);
 	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
 	{
@@ -63,6 +64,7 @@ Board &Board::operator=(Board const &other)
 	_background = other._background;
 	_tiles = other._tiles;
 	_hovered_tile = other._hovered_tile;
+	_hinted_tile = other._hinted_tile;
 	_tile_dimensions = other._tile_dimensions;
 	_enabled = other._enabled;
 	_visible = other._visible;
@@ -218,15 +220,12 @@ bool Board::click()
 			return false;
 		if (_hovered_tile->click(_game.turn()))
 		{
-			std::cout << "Player turn: " << _game.is_player_turn() << std::endl;
+			clear_hints();
 			disable();
-			_game.check_capture(_hovered_tile->pos(), !_game.turn());
+			_game.human_step(_hovered_tile->pos(), _game.turn());
 			_remove_captures();
-			_game.board().applymove(_hovered_tile->pos(), _game.turn());
+			_hovered_tile->hover(false, _game.turn());
 			_hovered_tile = nullptr;
-			_game.update_freechecker();
-			_game.turn() = !_game.turn();
-			std::cout << "Player turn now: " << _game.is_player_turn() << std::endl;
 		}
 	}
 	return true;
@@ -264,6 +263,15 @@ int Board::get_hovered_tile()
     return (y * sqrt() + x);
 }
 
+void Board::clear_hints()
+{
+	if (_hinted_tile)
+	{
+		_hinted_tile->hint(false);
+		_hinted_tile = nullptr;
+	}
+}
+
 mlx_image_t *Board::piece_image(t_piecetype piecetype)
 {
 	return Board::_piece_images[piecetype];
@@ -271,12 +279,12 @@ mlx_image_t *Board::piece_image(t_piecetype piecetype)
 
 void Board::loop()
 {
-	bool turn;// keep this since step might (will) change the players turn
-	//std::cout << "Is player turn? " << _game.is_player_turn() << std::endl;
-	//std::cout << "_game.vs_ai() " << _game.vs_ai() << std::endl;
-	if (_game.is_player_turn())
+	bool turn;
+
+	/*vs AI and waiting for player turn, do nothing*/
+	if (_game.vs_ai () && _game.is_player_turn())
 		return ;
-	std::cout << "!(_game.is_player_turn()) " << !(_game.is_player_turn()) << std::endl;
+	/*vs AI and is AI turn, do something*/
 	if (_game.vs_ai() && !(_game.is_player_turn()))
 	{
 		turn = _game.turn();
@@ -293,6 +301,14 @@ void Board::loop()
 			// still need to determine the winner
 		}
 	}
+	/*vs P2 and there is no hint set, show hint for whatever player is the turn*/
+	if (!_game.vs_ai() && !_hinted_tile)
+	{
+		_game.dummy_step(_game.turn());
+		_hinted_tile = &_tiles[_game.move()];
+		_hinted_tile->hint(true);
+	}
+
 	//std::cout << "Board queue loop" << std::endl;
 }
 

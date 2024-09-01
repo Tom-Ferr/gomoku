@@ -79,7 +79,6 @@ void Tile::resize(Rect dimensions)
 	}
 }
 
-
 bool Tile::hover(bool on, bool turn)
 {
 	if (!enabled())
@@ -99,6 +98,17 @@ bool Tile::hover(bool on, bool turn)
 	else
 		_hover = false;
 	return false;
+}
+
+
+void Tile::hint(bool on)
+{
+	piece(PT_BLACKHOVER).enabled = false;
+	piece(PT_WHITEHOVER).enabled = false;
+	if (on)
+		piece(PT_HINT).enabled = true;
+	else
+		piece(PT_HINT).enabled = false;
 }
 
 bool Tile::click(bool turn)

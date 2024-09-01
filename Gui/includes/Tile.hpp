@@ -29,6 +29,7 @@ class Tile
 		void resize(Rect dimensions);
 		//void draw();
 		bool hover(bool on, bool turn);
+		void hint(bool on);
 		bool click(bool turn);
 		bool enabled();
 		void enable();

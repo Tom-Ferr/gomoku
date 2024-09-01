@@ -37,7 +37,7 @@ class Board
 		BoardStatusBar		_statusbar;
 		BoardEndGame		_endgame;
 		BoardMode			_mode;
-
+		Tile				*_hinted_tile;
 		bool				_init();
 		void				_remove_captures();
 
@@ -69,6 +69,7 @@ class Board
 		void loop();
 		Rect& get_tile_dimensions();
 		int get_hovered_tile();
+		void clear_hints();
 };
 
 #endif

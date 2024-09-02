@@ -37,8 +37,11 @@ void BoardStatusBar::init()
 	_player1 = Info("Player1", PT_BLACK);
 	_player2 = Info("Player2", PT_WHITE);
 	_turn = Info("Turn", PT_BLACK);
-	_last_time = Info("Last Move", "0.3sec");
-	_avg_time = Info("Avg Time", "0.7sec");
+	_last_time = Info("Last Move", "0");
+	_avg_time = Info("Avg Time", "0");
+	_captures = Text("Captures");
+	_player1_captures = Info("Player1", "0");
+	_player2_captures = Info("Player2", "0");
 	hide();
 	resize();
 }
@@ -78,7 +81,10 @@ void BoardStatusBar::_resize_vertical(size_t text_height)
 	_turn.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 3 * spacing, 0, text_height));
 	_last_time.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 4 * spacing, 0, text_height));
 	_avg_time.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 5 * spacing, 0, text_height));
-	_dimensions.height = _avg_time.dimensions().y + _avg_time.dimensions().height + 5;
+	_captures.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 6 * spacing, 0, text_height));
+	_player1_captures.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 7 * spacing, 0, text_height));
+	_player2_captures.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 8 * spacing, 0, text_height));
+	_dimensions.height = _player2_captures.dimensions().y + _player2_captures.dimensions().height + 5;
 }
 
 void BoardStatusBar::_resize_horizontal(size_t text_height)
@@ -102,6 +108,9 @@ void BoardStatusBar::_resize_horizontal(size_t text_height)
 	_turn.resize(Rect(_player2.dimensions().x + _player2.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
 	_last_time.resize(Rect(_turn.dimensions().x + _turn.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
 	_avg_time.resize(Rect(_last_time.dimensions().x + _last_time.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
+	_captures.resize(Rect(_avg_time.dimensions().x + _avg_time.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
+	_player1_captures.resize(Rect(_captures.dimensions().x + _captures.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
+	_player2_captures.resize(Rect(_player1_captures.dimensions().x + _player1_captures.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
 }
 
 void BoardStatusBar::hide()
@@ -113,6 +122,10 @@ void BoardStatusBar::hide()
 	_turn.hide();
 	_last_time.hide();
 	_avg_time.hide();
+	_player1_captures.hide();
+	_player2_captures.hide();
+	_captures.hide();
+
 }
 
 void BoardStatusBar::show()
@@ -124,6 +137,10 @@ void BoardStatusBar::show()
 	_turn.show();
 	_last_time.show();
 	_avg_time.show();
+	_player1_captures.show();
+	_player2_captures.show();
+	_captures.show();
+
 }
 
 void BoardStatusBar::set_vs(bool ai)
@@ -174,10 +191,10 @@ void BoardStatusBar::set_avg_time(std::string const &avg_time)
 
 void BoardStatusBar::set_player1_captures(size_t captures)
 {
-	(void)captures;
+	_player1_captures = std::to_string(captures);
 }
 
 void BoardStatusBar::set_player2_captures(size_t captures)
 {
-	(void)captures;
+	_player2_captures = std::to_string(captures);
 }

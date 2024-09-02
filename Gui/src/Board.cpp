@@ -350,6 +350,16 @@ void Board::update_statusbar()
 	_statusbar.set_player2(!_game.player(), _game.vs_ai());
 	_statusbar.set_last_time(std::to_string(_game.last_time()));
 	_statusbar.set_avg_time(std::to_string(_game.average_time()));
+	if (_game.player())
+	{
+		_statusbar.set_player1_captures(_game.board().maxi_captures());
+		_statusbar.set_player2_captures(_game.board().mini_captures());
+	}
+	else
+	{
+		_statusbar.set_player1_captures(_game.board().mini_captures());
+		_statusbar.set_player2_captures(_game.board().maxi_captures());
+	}
 	_statusbar.resize();
 
 	endgame = _game.end_game();

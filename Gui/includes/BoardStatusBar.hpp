@@ -20,6 +20,7 @@ class BoardStatusBar
 		Info							_turn;
 		Info							_last_time;
 		Info							_avg_time;
+		Text							_captures;
 		Info							_player1_captures;
 		Info							_player2_captures;
 

@@ -25,6 +25,7 @@ class BoardState
 			BigInt	_inv_otherstate;
 			BigInt	_totalboard;
 			static Mask _masks;
+			static Mask _capturable_masks;
 			const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 
 		public:
@@ -52,8 +53,11 @@ class BoardState
 			void swap_states();
 			void print();
 			void increment_captures(bool turn);
-			static void set_masks(int mask_size, int board_sqrt);
+			void increment_captures(bool turn, size_t points);
+			static void set_masks(int mask_size, int board_sqrt, bool mirrored);
 			void check_capture(size_t pos, bool maximizing);
+			size_t check_capture(const BigInt &self, const BigInt &rival, const size_t &pos);
+			size_t check_capture(const BigInt &target, bool maximizing);
 		private:
 
 };

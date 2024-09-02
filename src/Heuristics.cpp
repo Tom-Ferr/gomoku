@@ -53,45 +53,24 @@ void Heuristics::set_masks(int mask_size, int board_sqrt)
 
 
 
-int Heuristics::check_captures(const BigInt &target, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
+size_t Heuristics::is_capturable(const size_t &pos, const Mask::inner_map &masks, bool maximizing)
 {
-    (void)target;
-	(void)other_target;
-	(void)pos;
-	(void)masks;
-    
-        // bool capture = false;
-
-        // for (size_t i = 0; i < 2; i++)
-        // {
-        //     BigInt sub_target = target & masks[SUBMASK][pos][i];
-        //     BigInt other_sub_target = other_target & masks[SUBMASK][pos][i];
-            
-        //     size_t my_bits = sub_target.bitCount();
-        //     size_t other_bits = other_sub_target.bitCount();
-
-        //     if (other_bits == 2 && my_bits == 1)
-        //     {
-        //         BigInt other_mid_target = other_sub_target & masks[MIDDLE][pos][i];
-        //         if (other_mid_target.bitCount() != 2)
-        //             continue;
-        //         BigInt other_mid_target = other_sub_target & masks[MIDDLE][pos][i+1];
-        //         if (other_mid_target.bitCount() != 2)
-        //             break;
-        //         capture = true;
-        //         break ;
-        //     }
-        // }
-        // if (capture == true)
-        //     return (1 << captures) + 1;
-        // else
-            return 0;
+    const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
+    size_t points;
+    size_t greater_points = 0;
+    for (size_t i = 1; i <= 5; i++)
+    {
+        points = _state.check_capture(vectorized[i], maximizing);
+        if(points > greater_points)
+            greater_points = points;
+    }
+    return greater_points;
 }
 
 int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
 {
     if ((masks.at(FULL)[pos][0] & other_target) != 0)
-        return check_captures(target, other_target, pos, masks);
+        return 0;
 
     size_t bits = target.bitCount();
     if (bits < 1)
@@ -136,12 +115,32 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 
     if (target == full_mask)
     {
-        _heuristic = 32;
+        int points = is_capturable(pos, masks, false);
+        if(points != 0)
+        {
+            _heuristic = 31;
+            points = (1 << (points + _state.mini_captures())) + 1;
+            if (points > _heuristic)
+                _heuristic = points * -1;
+            return true;
+        }
+        else
+            _heuristic = 32;
         return true;
     }
     if (other_target == full_mask)
     {
-        _heuristic = -32;
+        int points = is_capturable(pos, masks, true);
+        if(points != 0)
+        {
+            _heuristic = -31;
+            points = (1 << (points + _state.maxi_captures())) + 1;
+            if (points > std::abs(_heuristic))
+                _heuristic = points;
+            return true;
+        }
+        else
+            _heuristic = -32;
         return true;
     }
     if(endgame)
@@ -151,22 +150,35 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     edge = edge | (_state.mystate(true) & masks.at(EDGE)[pos][0]);
 
     int score = get_score(target, edge, other_target, pos, masks);
-    if (score == 32)
-    {
+    if (score > _max_score)
         _max_score = score;
+
+    score = _state.check_capture(_state.mystate(true), _state.otherstate(true), pos);
+    if(score != 0)
+        score = (1 << (_state.maxi_captures() + score)) +1;
+    if (score >= 32)
+    {
+        _heuristic = score;
         return true;
     }
     if (score > _max_score)
         _max_score = score;
 
     score = get_score(other_target, edge, target, pos, masks) * -1;
-    if (score == -32)
-    {
+    if (score < _min_score)
         _min_score = score;
+    
+    score = _state.check_capture(_state.otherstate(true), _state.mystate(true), pos);
+    if(score != 0)
+        score = ((1 << (_state.mini_captures() + score)) + 1)* -1;
+    if (score <= -32)
+    {
+        _heuristic = score;
         return true;
     }
     if (score < _min_score)
         _min_score = score;
+    
     return false;
 }
 

@@ -10,8 +10,8 @@ _init_game(true), _game_mode(mode), _ai_nmoves(0), _total_time(0), _last_time(0)
 	*/
 	Free_Three_Checker::set_masks(6, size);
 	Heuristics::set_masks(5, size);
-	BoardState::set_masks(4, size);
-
+	BoardState::set_masks(4, size, true);
+	BoardState::set_masks(4, size, false);
 	/*
 	** who will play as BLACK?
 	** _player is the player that will play as BLACK?
@@ -144,8 +144,7 @@ bool Game::step(bool turn)
 		_board.applymove(_move, turn);
 		std::cout << "Move: " << _move << std::endl;
 	}
-	(void)start;
-	//std::cout << _board << std::endl;
+	std::cout << _board << std::endl;
 	_board.print();
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	_last_time = duration.count();
@@ -153,6 +152,7 @@ bool Game::step(bool turn)
 	_ai_nmoves++;
 	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Move: " << _move << std::endl;
+	std::cout << "Heuristic: " << result.first << std::endl;
 	_ftc = Free_Three_Checker(_board);
 	_turn = !_turn;
 	if (result.second == 0)

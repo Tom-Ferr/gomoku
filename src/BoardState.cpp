@@ -4,6 +4,7 @@ BigInt BoardState::mask = BigInt(0);
 BigInt BoardState::leftmask = BigInt(0);
 BigInt BoardState::rightmask = BigInt(0);
 Mask BoardState::_masks = Mask();
+Mask BoardState::_capturable_masks = Mask();
 
 BoardState::BoardState(int _sqrt)
 :
@@ -80,9 +81,12 @@ void BoardState::applymove(size_t pos, bool mystate)
 
 BoardState::~BoardState() { }
 
-void BoardState::set_masks(int mask_size, int board_sqrt)
+void BoardState::set_masks(int mask_size, int board_sqrt, bool mirrored)
 {
-    BoardState::_masks = Mask(mask_size, board_sqrt, false, true);
+	if (mirrored)
+    	BoardState::_masks = Mask(mask_size, board_sqrt, false, true);
+	else
+		BoardState::_capturable_masks = Mask(mask_size, board_sqrt, false, false);
 }
 
 void BoardState::check_capture(size_t pos, bool maximizing)
@@ -126,6 +130,71 @@ void BoardState::check_capture(size_t pos, bool maximizing)
     }
 }
 
+size_t BoardState::check_capture(const BigInt &self, const BigInt &rival, const size_t &pos)
+{
+	size_t points = 0;
+
+	
+	for (size_t i = 0; i < 4; i++)
+    {
+    	const Mask::inner_map &masks = BoardState::_masks.at(_modes[i]);
+		const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
+		const Mask::variations_vector &edge_vec = masks.at(EDGE);
+		Mask::mask_vector::const_iterator mid_mask = mid_vec[pos].begin();
+		Mask::mask_vector::const_iterator end = mid_vec[pos].end();
+		Mask::mask_vector::const_iterator edge_mask = edge_vec[pos].begin();
+
+		for (; mid_mask != end; mid_mask++, edge_mask++)
+		{
+			if ((rival & *mid_mask) != *mid_mask)
+				continue ;
+			if ((self & *edge_mask) == 0)
+				continue ;
+			points++;
+		}
+    }
+	return points;
+}
+
+size_t BoardState::check_capture(const BigInt &target, bool maximizing)
+{
+	BigInt* rival;
+	BigInt* self;
+	size_t pos = target.pos();
+	size_t points = 0;
+
+	if (maximizing == true)
+	{
+		self = &_inv_mystate;
+		rival = &_inv_otherstate;
+	}
+	else
+	{
+		self = &_inv_otherstate;
+		rival = &_inv_mystate;
+	}
+	for (size_t i = 0; i < 4; i++)
+    {
+    	const Mask::inner_map &masks = BoardState::_capturable_masks.at(_modes[i]);
+		const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
+		const Mask::variations_vector &edge_vec = masks.at(EDGE);
+		Mask::mask_vector::const_iterator mid_mask = mid_vec[pos].begin();
+		Mask::mask_vector::const_iterator end = mid_vec[pos].end();
+		Mask::mask_vector::const_iterator edge_mask = edge_vec[pos].begin();
+
+		for (; mid_mask != end; mid_mask++, edge_mask++)
+		{
+			if ((*self & *mid_mask) != *mid_mask )
+				continue ;
+			if ((*rival & *edge_mask) == 0)
+				continue;
+			if ((*rival & *edge_mask) == *edge_mask)
+				continue;
+			points++;
+		}
+    }
+	return points;
+}
 BigInt const &BoardState::mystate(bool inverted) const
 {
 	if (inverted)
@@ -181,6 +250,14 @@ void BoardState::increment_captures(bool turn)
 		_maxi_captures++;
 	else
 		_mini_captures++;
+}
+
+void BoardState::increment_captures(bool turn, size_t points)
+{
+	if (turn)
+		_maxi_captures += points;
+	else
+		_mini_captures += points;
 }
 
 void BoardState::swap_states()

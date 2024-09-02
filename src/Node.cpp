@@ -68,22 +68,24 @@ std::pair<int, BigInt> Node::minimax()
 	{
 		Heuristics h = Heuristics(_state);
 		_heuristic = h.run();
-		if(_state.is_capture())
-		{
-			if(_state.maximizing())
-			{
-				int score = (1 << _state.maxi_captures()) + 1;
-				if(score > std::abs(_heuristic))
-					_heuristic = score;
-			}
-			else
-			{
-				int score = (1 << _state.mini_captures()) + 1;
-				if(score > std::abs(_heuristic))
-					_heuristic = score * -1;
-			}
-		}
-		return std::make_pair(_heuristic, _state.move());
+		//if(_state.is_capture())
+		//{
+		//	if(_state.maximizing())
+		//	{
+		//		int score = (1 << _state.maxi_captures()) + 1;
+		//		if(score > std::abs(_heuristic))
+		//			_heuristic = score;
+		//	}
+		//	else
+		//	{
+		//		int score = (1 << _state.mini_captures()) + 1;
+		//		if(score > std::abs(_heuristic))
+		//			_heuristic = score * -1;
+		//	}
+		//}
+		result = std::make_pair(_heuristic, _state.move());
+		print(result);
+		return result;
 	}
 	if (_state.maximizing())
 	{
@@ -101,23 +103,26 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 	BigInt best_child;
 	std::vector<size_t> moves;
 	BigInt *move;
+
 	if(possible_moves(moves) == false)
 		return std::make_pair(_heuristic, _state.move());
+	_heuristic = INT_MAX;
+	if (_state.maximizing())
+		_heuristic = INT_MIN;
 	for (std::vector<size_t>::iterator it = moves.begin(); it != moves.end(); it++)
 	{
 		move = &Mask::targets(*it);
 		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *move));
 		std::pair<int, BigInt> score = child.minimax();
-		_heuristic = f(x, score.first);
-		if(_heuristic == score.first && _heuristic != x)
-		{
-			x = _heuristic;
+
+		_heuristic = f(_heuristic, score.first);
+		x = f(x, score.first);
+		if(_heuristic == score.first && x == score.first)
 			best_child = *move;
-		}
-		if (_alpha >= _beta)
+		if (_alpha > _beta)
 			break;
 	}
-	return std::make_pair(x, best_child);
+	return std::make_pair(_heuristic, best_child);
 }
 
 bool Node::is_double_free_three(const size_t &pos)
@@ -141,15 +146,15 @@ bool Node::possible_moves(std::vector<size_t>& moves)
 	for (int pos = 0; pos < _state.size(); pos++)
 	{
 		_heuristic = h.endgame(pos);
-		if(_heuristic == 32 || _heuristic == -32)
+		if(_heuristic >= 32 || _heuristic <= -32)
         {
             _heuristic <<= _depth;
             return false;
         }
-		else if(_state.maxi_captures() == 5 || _state.mini_captures() == 5)
+		else if(_state.maxi_captures() >= 5 || _state.mini_captures() >= 5)
 		{
 			_heuristic = 32 << _depth;
-			if (_state.mini_captures() == 5)
+			if (_state.mini_captures() >= 5)
 				_heuristic *= -1;
 			return false;
 		}

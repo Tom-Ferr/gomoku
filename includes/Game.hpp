@@ -5,6 +5,7 @@
 # include <gomoku.hpp>
 # include <BoardState.hpp>
 # include <Free_Three_Checker.hpp>
+# include <Heuristics.hpp>
 # include <Node.hpp>
 # include <vector>
 
@@ -33,15 +34,22 @@ typedef enum e_vs
 class Game
 {
 	private:
-		BoardState			_board;
-		size_t				_move;
-		std::vector<int>	_captures;
-		Free_Three_Checker	_ftc;
-		bool				_turn;
-		bool				_player;
-		bool				_vs_ai;
-		bool				_init_game;
-		t_gamemode			_game_mode;
+		BoardState						_board;
+		size_t							_move;
+		std::vector<int>				_captures;
+		Free_Three_Checker				_ftc;
+		/*
+		** board info
+		*/
+		bool							_turn;
+		bool							_player;
+		bool							_vs_ai;
+		bool							_init_game;
+		t_gamemode						_game_mode;
+		size_t							_ai_nmoves;
+		float						 	_total_time;
+		float						 	_last_time;
+
 
 	public:
 		Game(int size=19, t_vs vs=VS_AI, t_startingplayer startingplayer=SP_PLAYER1, t_gamemode mode=GM_STANDARD);
@@ -64,6 +72,9 @@ class Game
 		t_gamemode &game_mode();
 		bool is_player_turn();
 		bool is_init_game();
+		float average_time();
+		float last_time();
+		int end_game();
 };
 
 #endif

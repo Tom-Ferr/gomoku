@@ -38,6 +38,8 @@ class Board
 		BoardEndGame		_endgame;
 		BoardMode			_mode;
 		Tile				*_hinted_tile;
+		size_t				_loop_count;
+
 		bool				_init();
 		void				_remove_captures();
 
@@ -70,6 +72,7 @@ class Board
 		Rect& get_tile_dimensions();
 		int get_hovered_tile();
 		void clear_hints();
+		void update_statusbar();
 };
 
 #endif

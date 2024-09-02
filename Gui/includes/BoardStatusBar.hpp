@@ -20,6 +20,8 @@ class BoardStatusBar
 		Info							_turn;
 		Info							_last_time;
 		Info							_avg_time;
+		Info							_player1_captures;
+		Info							_player2_captures;
 
 		void _resize_vertical(size_t text_height);
 		void _resize_horizontal(size_t text_height);
@@ -34,6 +36,19 @@ class BoardStatusBar
 		Rect const &dimensions();
 		void hide();
 		void show();
+
+		/*
+		** setters
+		*/
+		void set_vs(bool ai);
+		void set_player1(bool black);
+		void set_player2(bool black, bool ai);
+		void set_turn(bool p1_turn);
+		void set_last_time(std::string const &last_time);
+		void set_avg_time(std::string const &avg_time);
+		void set_player1_captures(size_t captures);
+		void set_player2_captures(size_t captures);
+
 };
 
 #endif

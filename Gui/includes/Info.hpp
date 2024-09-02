@@ -35,6 +35,7 @@ class Info
 		Rect const &dimensions();
 		void hide();
 		void show();
+		void set_title(std::string const &str);
 };
 
 #endif

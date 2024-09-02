@@ -125,3 +125,59 @@ void BoardStatusBar::show()
 	_last_time.show();
 	_avg_time.show();
 }
+
+void BoardStatusBar::set_vs(bool ai)
+{
+	if (ai)
+		_vs = "AI";
+	else
+		_vs = "Player 2";
+}
+
+void BoardStatusBar::set_player1(bool black)
+{
+	if (black)
+		_player1 = PT_BLACK;
+	else
+		_player1 = PT_WHITE;
+}
+
+void BoardStatusBar::set_player2(bool black, bool ai)
+{
+	if (ai)
+		_player2.set_title("AI: ");
+	else
+		_player2.set_title("Player 2: ");
+	if (black)
+		_player2 = PT_BLACK;
+	else
+		_player2 = PT_WHITE;
+}
+
+void BoardStatusBar::set_turn(bool turn)
+{
+	if (turn)
+		_turn = PT_BLACK;
+	else
+		_turn = PT_WHITE;
+}
+
+void BoardStatusBar::set_last_time(std::string const &last_time)
+{
+	_last_time = last_time;
+}
+
+void BoardStatusBar::set_avg_time(std::string const &avg_time)
+{
+	_avg_time = avg_time;
+}
+
+void BoardStatusBar::set_player1_captures(size_t captures)
+{
+	(void)captures;
+}
+
+void BoardStatusBar::set_player2_captures(size_t captures)
+{
+	(void)captures;
+}

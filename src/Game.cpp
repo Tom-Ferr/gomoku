@@ -3,7 +3,7 @@
 
 Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
 : _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(!static_cast<bool>(vs)),
-_init_game(true), _game_mode(mode)
+_init_game(true), _game_mode(mode), _ai_nmoves(0), _total_time(0), _last_time(0)
 {
 	/*
 	** lets try to init those only if never initialized before...
@@ -48,6 +48,9 @@ Game &Game::operator=(const Game& other)
 		_vs_ai = other._vs_ai;
 		_init_game = other._init_game;
 		_game_mode = other._game_mode;
+		_ai_nmoves = other._ai_nmoves;
+		_total_time = other._total_time;
+		_last_time = other._last_time;
 	}
 	return *this;
 }
@@ -69,7 +72,7 @@ bool Game::human_step(size_t pos, bool turn)
 */
 bool Game::dummy_step(bool turn)
 {
-
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	/*
 	** create a dummy board
 	*/
@@ -96,6 +99,10 @@ bool Game::dummy_step(bool turn)
 		return false;
 	}
 	_move = result.second.pos();
+	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
+	_last_time = duration.count();
+	_total_time += duration.count();
+	_ai_nmoves++;
 	return true;
 }
 
@@ -141,6 +148,9 @@ bool Game::step(bool turn)
 	//std::cout << _board << std::endl;
 	_board.print();
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
+	_last_time = duration.count();
+	_total_time += duration.count();
+	_ai_nmoves++;
 	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Move: " << _move << std::endl;
 	_ftc = Free_Three_Checker(_board);
@@ -239,3 +249,36 @@ t_gamemode &Game::game_mode()
 	return _game_mode;
 }
 
+float Game::average_time()
+{
+	if (_ai_nmoves == 0)
+		return 0.0;
+	return _total_time / _ai_nmoves;
+}
+
+float Game::last_time()
+{
+	return _last_time;
+}
+
+/*
+** 0 = false
+** 1 = black wins
+** 2 = white wins
+** 3 = draw
+*/
+int Game::end_game()
+{
+	Heuristics h(_board);
+	int value = h.run();
+
+	if (((~_board.totalboard()) & BoardState::mask) == 0)
+		return 0;
+	if (value == 32)
+		return 1;
+	else if (value == -32)
+		return 2;
+	else if (_board.totalboard() == 0)
+		return 3;
+	return 0;
+}

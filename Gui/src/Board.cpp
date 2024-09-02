@@ -33,6 +33,7 @@ bool Board::init()
 
 bool Board::show(t_vs vs, t_startingplayer starting, t_gamemode mode)
 {
+	_loop_count = 0;
 	_background->enabled = true;
 	_visible=true;
 	_hovered_tile = nullptr;
@@ -47,6 +48,7 @@ bool Board::show(t_vs vs, t_startingplayer starting, t_gamemode mode)
 	_statusbar.show();
 	//_endgame.show("AI");
 	//_mode.show("Swap", true);
+	update_statusbar();
 	resize();
 	return (true);
 }
@@ -137,7 +139,7 @@ void Board::resize()
 	}
 	_statusbar.resize();
 	_endgame.resize();
-	//_mode.resize();
+	_mode.resize();
 }
 
 size_t Board::size()
@@ -159,7 +161,7 @@ bool Board::hover()
 {
 	Tile				*hovered;
 	int					tile;
-	_enabled = true;
+
 	if (_mode.enabled())
 	{
 		_mode.hover();
@@ -226,6 +228,7 @@ bool Board::click()
 			_remove_captures();
 			_hovered_tile->hover(false, _game.turn());
 			_hovered_tile = nullptr;
+			update_statusbar();
 		}
 	}
 	return true;
@@ -281,6 +284,9 @@ void Board::loop()
 {
 	bool turn;
 
+	if (++_loop_count % 20)
+		return ;
+
 	/*vs AI and waiting for player turn, do nothing*/
 	if (_game.vs_ai () && _game.is_player_turn())
 		return ;
@@ -294,6 +300,7 @@ void Board::loop()
 			_tiles[_game.move()].click(turn);
 			_remove_captures();
 			enable();
+			update_statusbar();
 		}
 		else
 		{
@@ -308,7 +315,29 @@ void Board::loop()
 		_hinted_tile = &_tiles[_game.move()];
 		_hinted_tile->hint(true);
 	}
-
+	std::cout << "Enabled: " << enabled() << std::endl;
 	//std::cout << "Board queue loop" << std::endl;
 }
 
+void Board::update_statusbar()
+{
+	int endgame;
+	_statusbar.set_turn(_game.turn());
+	_statusbar.set_vs(_game.vs_ai());
+	_statusbar.set_player1(_game.player());
+	_statusbar.set_player2(!_game.player(), _game.vs_ai());
+	_statusbar.set_last_time(std::to_string(_game.last_time()));
+	_statusbar.set_avg_time(std::to_string(_game.average_time()));
+	_statusbar.resize();
+
+	endgame = _game.end_game();
+	if (!endgame)
+		return ;
+	else if (endgame == 1)
+		_endgame.show("Black");
+	else if (endgame == 2)
+		_endgame.show("White");
+	else
+		_endgame.show("Draw");
+	disable();
+}

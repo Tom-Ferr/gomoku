@@ -58,6 +58,9 @@ Info &Info::operator=(t_piecetype image)
 {
 	_image = image;
 	_is_image = true;
+	for (int i = 0; i < 2; i++)
+		Info::_piece_images[i]->instances[_buttons[i]].enabled = false;
+	Info::_piece_images[_image]->instances[_buttons[_image]].enabled = true;
 	return (*this);
 }
 
@@ -127,4 +130,10 @@ void Info::show()
 		Info::_piece_images[_image]->instances[_buttons[_image]].enabled = true;
 	else
 		_description.show();
+}
+
+void Info::set_title(std::string const &str)
+{
+	if (_text.text() != str)
+		_text = str;
 }

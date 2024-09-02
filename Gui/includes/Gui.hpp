@@ -2,10 +2,10 @@
 # define GUI_HPP
 #include <string.h>
 # include <chrono>
-# include <iostream>
-# include <Rect.hpp>
 # include <Board.hpp>
 # include <Menu.hpp>
+# include <iostream>
+# include <Rect.hpp>
 #include <Color.hpp>
 #include <MLX42/MLX42.h>
 
@@ -18,7 +18,6 @@ typedef enum e_gamestate
 
 #define WIDTH 1280
 #define HEIGHT 720
-
 
 class Gui
 {

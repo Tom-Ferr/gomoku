@@ -4,14 +4,13 @@
 //# include <SFML/Graphics.hpp>
 //# include <Tile.hpp>
 # include <Game.hpp>
-//# include <Gui.hpp>
-#include <MLX42/MLX42.h>
-#include <common.hpp>
-#include <vector>
-#include <Rect.hpp>
-#include <Tile.hpp>
-#include <Info.hpp>
-#include <BoardStatusBar.hpp>
+# include <MLX42/MLX42.h>
+# include <common.hpp>
+# include <vector>
+# include <Rect.hpp>
+# include <Tile.hpp>
+# include <Info.hpp>
+# include <BoardStatusBar.hpp>
 # include <BoardEndGame.hpp>
 # include <BoardMode.hpp>
 
@@ -22,12 +21,14 @@
 
 class Tile;
 class Info;
+class Gui;
 
 class Board
 {
 	private:
 		static Rect			_dimensions;
 		mlx_image_t			*_background;
+		Gui					*_gui;
 		std::vector<Tile>	_tiles;
 		Tile				*_hovered_tile;
 		Rect				_tile_dimensions;
@@ -50,7 +51,7 @@ class Board
 		static mlx_image_t	*_piece_images[5];
 
 	public:
-		Board();
+		Board(Gui *gui=nullptr);
 		Board(Board const &other);
 		~Board();
 		bool init();

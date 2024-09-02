@@ -6,27 +6,26 @@
 # include <Color.hpp>
 # include <Text.hpp>
 # include <Info.hpp>
+# include <ABoardPopup.hpp>
 # include <MLX42/MLX42.h>
 # include <common.hpp>
 
-class BoardEndGame
+class BoardEndGame : public ABoardPopup
 {
 	private:
-		mlx_image_t						*_background;
-		Rect							_dimensions;
 		Text							_player;
 		Text							_wins;
-		Text							_esc;
 
 	public:
 		BoardEndGame();
 		BoardEndGame(BoardEndGame const &other);
 		~BoardEndGame();
+		BoardEndGame &operator=(BoardEndGame const &other);
 		void init();
 		void resize();
-		BoardEndGame &operator=(BoardEndGame const &other);
-		Rect const &dimensions();
 		void hide();
+		bool click();
+		void hover();
 		void show(std::string winner);
 };
 

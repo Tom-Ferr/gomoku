@@ -7,6 +7,7 @@ Rect			Gui::_mouse;
 
 Gui::Gui()
 {
+	_board = Board(this);
 	if (_init())
 		_run();
 }

@@ -7,8 +7,8 @@ Rect				Board::_dimensions;
 size_t				Board::_sqrt = DEFAULT_BOARD;
 size_t				Board::_size = DEFAULT_BOARD * DEFAULT_BOARD;
 
-Board::Board()
-: _background(nullptr)
+Board::Board(Gui *gui)
+: _background(nullptr), _gui(gui)
 { }
 
 /*
@@ -64,6 +64,7 @@ Board::~Board()
 Board &Board::operator=(Board const &other)
 {
 	_background = other._background;
+	_gui = other._gui;
 	_tiles = other._tiles;
 	_hovered_tile = other._hovered_tile;
 	_hinted_tile = other._hinted_tile;
@@ -167,6 +168,11 @@ bool Board::hover()
 		_mode.hover();
 		return true;
 	}
+	if (_endgame.enabled())
+	{
+		_endgame.hover();
+		return true;
+	}
 	if (enabled() && Board::dimensions().contains(Gui::_mouse.x, Gui::_mouse.y))
 	{
 		tile = get_hovered_tile();
@@ -215,6 +221,21 @@ bool Board::click()
 			enable();
 		}
 		return true;
+	}
+	if (_endgame.enabled())
+	{
+		if (_endgame.click())
+		{
+			_endgame.hide();
+			/*
+			** will change this maybe
+			*/
+			mlx_key_data_t key;
+			key.action = MLX_PRESS;
+			key.key = MLX_KEY_ESCAPE;
+			Gui::key_hook(key, _gui);
+			return false;
+		}
 	}
 	if (enabled() && _hovered_tile)
 	{
@@ -314,6 +335,7 @@ void Board::loop()
 		_game.dummy_step(_game.turn());
 		_hinted_tile = &_tiles[_game.move()];
 		_hinted_tile->hint(true);
+		enable();
 	}
 	std::cout << "Enabled: " << enabled() << std::endl;
 	//std::cout << "Board queue loop" << std::endl;

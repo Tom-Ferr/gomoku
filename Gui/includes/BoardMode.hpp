@@ -6,46 +6,30 @@
 # include <Color.hpp>
 # include <Text.hpp>
 # include <Info.hpp>
-# include <MLX42/MLX42.h>
-# include <common.hpp>
+# include <ABoardPopup.hpp>
 # include <ButtonGroup.hpp>
 
-class BoardMode
+class BoardMode: public ABoardPopup
 {
 	private:
-		mlx_image_t						*_background;
-		mlx_image_t						*_centerbox;
-		mlx_image_t						*_header;
-		mlx_image_t						*_ok_button;
-		mlx_image_t						*_ok_button_hover;
-		Rect							_dimensions;
-		Rect							_ok_dimensions;
-		Text							_mode;
 		Text							_description;
 		Text							_info;
 		ButtonGroup						_buttons;
-		bool							_enabled;
 
-		void _resize_background();
-		void _resize_box();
-		void _box_texture();
-		void _resize_ok();
-		void _resize_header();
 		void _resize_info();
+		void _resize_buttons();
 
 	public:
 		BoardMode();
 		BoardMode(BoardMode const &other);
 		~BoardMode();
+		BoardMode &operator=(BoardMode const &other);
 		void init();
 		void resize();
-		BoardMode &operator=(BoardMode const &other);
-		Rect const &dimensions();
 		void hide();
-		void show(std::string mode, bool selecting=true);
-		bool enabled();
-		void hover();
 		bool click();
+		void show(std::string mode, bool selecting=true);
+		void hover();
 };
 
 #endif

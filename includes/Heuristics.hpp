@@ -3,6 +3,7 @@
 # include <gomoku.hpp>
 # include <vector>
 #include <BoardState.hpp>
+# include <map>
 
 class Heuristics
 {
@@ -19,6 +20,10 @@ private:
     const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 
     static Mask _masks;
+
+
+    std::map<std::string, int> _points;
+    void _set_points(bool my, int points);
 public:
 	Heuristics(BoardState &state);
     Heuristics(int board_sqrt, BigInt my_state, BigInt other_state);

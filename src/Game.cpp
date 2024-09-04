@@ -162,6 +162,7 @@ bool Game::step(bool turn)
 
 void Game::check_capture(size_t pos, bool turn)
 {
+	return; (void)pos;(void)turn;
 	BigInt state =  _board.totalboard();
 
 	_captures.clear();

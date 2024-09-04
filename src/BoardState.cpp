@@ -55,7 +55,8 @@ _totalboard(other._totalboard)
 {
 	_capture_move = false;
 	size_t pos = _move.pos();
-	check_capture(pos, _maximizing);
+	(void)pos;
+	//check_capture(pos, _maximizing);
 	applymove(_move, !_maximizing);
 }
 

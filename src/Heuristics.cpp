@@ -101,6 +101,41 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     }
     return score;
 }
+//ones = 2
+//closed two = 4
+//open two = 7
+//closed three = 8
+//open three = 11
+//closed four = 16
+//open four = 19
+//fives = 32
+void Heuristics::_set_points(bool my, int points)
+{
+    if (points == 0)
+        return ;
+    std::string str = "my_";
+    if (!(my))
+        str = "ot_";
+    if (points == 32)
+        str+="five";
+    else if (points == 2)
+        str+="one";
+    else if (points == 4)
+        str+="ctwo";
+    else if (points == 7)
+        str+="otwo";
+    else if (points == 8)
+        str+="cthree";
+    else if (points == 11)
+        str+="othree";
+    else if (points == 16)
+        str+="cfour";
+    else if (points == 19)
+        str+="ofour";
+    else
+        std::cout << "What is this value: " << points << std::endl;
+    _points[str]++;
+}
 
 bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 {
@@ -115,33 +150,16 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 
     if (target == full_mask)
     {
-        int points = is_capturable(pos, masks, false);
-        if(points != 0)
-        {
-            _heuristic = 31;
-            points = (1 << (points + _state.mini_captures())) + 1;
-            if (points > _heuristic)
-                _heuristic = points * -1;
+        if (endgame)
             return true;
-        }
-        else
-            _heuristic = 32;
-        return true;
+        _set_points(true, 32);
+        
     }
     if (other_target == full_mask)
     {
-        int points = is_capturable(pos, masks, true);
-        if(points != 0)
-        {
-            _heuristic = -31;
-            points = (1 << (points + _state.maxi_captures())) + 1;
-            if (points > std::abs(_heuristic))
-                _heuristic = points;
+        if (endgame)
             return true;
-        }
-        else
-            _heuristic = -32;
-        return true;
+        _set_points(false, 32);
     }
     if(endgame)
         return false;
@@ -150,35 +168,9 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     edge = edge | (_state.mystate(true) & masks.at(EDGE)[pos][0]);
 
     int score = get_score(target, edge, other_target, pos, masks);
-    if (score > _max_score)
-        _max_score = score;
-
-    // score = _state.check_capture(_state.mystate(true), _state.otherstate(true), pos);
-    // if(score != 0)
-    //     score = (1 << (_state.maxi_captures() + score)) +1;
-    // if (score >= 32)
-    // {
-    //     _heuristic = score;
-    //     return true;
-    // }
-    // if (score > _max_score)
-    //     _max_score = score;
-
-    score = get_score(other_target, edge, target, pos, masks) * -1;
-    if (score < _min_score)
-        _min_score = score;
-    
-    // score = _state.check_capture(_state.otherstate(true), _state.mystate(true), pos);
-    // if(score != 0)
-    //     score = ((1 << (_state.mini_captures() + score)) + 1)* -1;
-    // if (score <= -32)
-    // {
-    //     _heuristic = score;
-    //     return true;
-    // }
-    // if (score < _min_score)
-    //     _min_score = score;
-    
+    _set_points(true, score);
+    score = get_score(other_target, edge, target, pos, masks);
+    _set_points(false, score);
     return false;
 }
 
@@ -192,13 +184,17 @@ int Heuristics::run()
                 return _heuristic;
         }
     }
-    if (_max_score > std::abs(_min_score))
-    {
-        _heuristic = _max_score;
-        return _max_score;
-    }
-    _heuristic = _min_score;
-    return _min_score;
+    //for (std::map<std::string, int>::iterator it = _points.begin(); it != _points.end(); it++)
+    //    std::cout << it->first << ": " << it->second << std::endl;
+
+    _heuristic = 6000 * (_points["my_five"] - _points["ot_five"])
+                + 4800 * (_points["my_ofour"] - _points["ot_ofour"])
+                + 500 * (_points["my_cfour"] - _points["ot_cfour"])
+                + 500 * (_points["my_othree"] - _points["ot_othree"])
+                + 200 * (_points["my_cthree"] - _points["ot_cthree"])
+                + 50 * (_points["my_otwo"] - _points["ot_otwo"])
+                + 10 * (_points["my_ctwo"] - _points["ot_ctwo"]);
+    return _heuristic;
 }
 
 int Heuristics::endgame(size_t pos)

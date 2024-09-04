@@ -42,7 +42,6 @@ Node& Node::operator=(const Node& other)
 
 void Node::print(std::pair<int, BigInt>&result)
 {
-	return ;
 	std::cerr << "{";
 	std::cerr << "\"depth\": " << _depth << ", ";
 	std::cerr << "\"maximizing\": \"";
@@ -77,25 +76,28 @@ std::pair<int, BigInt> Node::minimax()
 	// 	{
 	// 		int score = (1 << _state.mini_captures()) + 1;
 	// 		if(score > std::abs(_heuristic))
-	// 			_heuristic = score * -1;
+	// 			_heNode::_uristic = score * -1;
 	// 	}
 	// }
 	if (_depth == 0)
 	{
 		Heuristics h = Heuristics(_state);
-		// _heuristic = h.run();
-		int heur = h.run();
-		if (heur < _heuristic)
-			_heuristic = heur;
+		 _heuristic = h.run();
+		//int heur = h.run();
+		//if (heur < _heuristic)
+		//	_heuristic = heur;
 		result = std::make_pair(_heuristic, _state.move());
+		print(result);
 		return result;
 	}
 	if (_state.maximizing())
 	{
 		result =  alpha_beta_prune(_alpha, max);
+		print(result);
 		return result;
 	}
 	result = alpha_beta_prune(_beta, min);
+	print(result);
 	return result;
 }
 

@@ -29,9 +29,13 @@ bool Free_Three_Checker::check(int pos, char orientation)
 
 	for (; full_mask != end; full_mask++, mid_mask++, edge_mask++)
 	{
-		if((BigInt::bi_and(_state.otherstate(true), *full_mask)) != 0)
+		if ((_state.maximizing() && (BigInt::bi_and(_state.otherstate(true), *full_mask)) != 0)
+				|| (!_state.maximizing() && (BigInt::bi_and(_state.mystate(true), *full_mask)) != 0))
 			continue;
-		_static_state = BigInt::bi_and(_state.mystate(false), *full_mask);
+		if (_state.maximizing())
+			_static_state = BigInt::bi_and(_state.mystate(false), *full_mask);
+		else
+			_static_state = BigInt::bi_and(_state.otherstate(false), *full_mask);
 		if((BigInt::bi_and(_static_state, *edge_mask)) == *edge_mask)
 			if ((BigInt::bi_and(*mid_mask, _static_state)).bitCount() == 2)
 				return true;

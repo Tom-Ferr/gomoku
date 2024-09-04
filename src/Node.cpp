@@ -63,27 +63,29 @@ void Node::print(std::pair<int, BigInt>&result)
 
 std::pair<int, BigInt> Node::minimax()
 {
+	_heuristic = 0;
 	std::pair<int, BigInt> result;
-	if(_state.is_capture())
-	{
-		// if(_state.maximizing() == false)
-		// {
-		// 	int score = (1 << _state.maxi_captures()) + 1;
-		// 	if(score > std::abs(_heuristic))
-		// 		_heuristic = score;
-		// }
-		// else
-		{
-			int score = (1 << _state.mini_captures()) + 1;
-			if(score > std::abs(_heuristic))
-				_heuristic = score * -1;
-		}
-	}
+	// if(_state.is_capture())
+	// {
+	// 	// if(_state.maximizing() == false)
+	// 	// {
+	// 	// 	int score = (1 << _state.maxi_captures()) + 1;
+	// 	// 	if(score > std::abs(_heuristic))
+	// 	// 		_heuristic = score;
+	// 	// }
+	// 	// else
+	// 	{
+	// 		int score = (1 << _state.mini_captures()) + 1;
+	// 		if(score > std::abs(_heuristic))
+	// 			_heuristic = score * -1;
+	// 	}
+	// }
 	if (_depth == 0)
 	{
 		Heuristics h = Heuristics(_state);
+		// _heuristic = h.run();
 		int heur = h.run();
-		if (std::abs(heur) > _heuristic)
+		if (heur < _heuristic)
 			_heuristic = heur;
 		result = std::make_pair(_heuristic, _state.move());
 		return result;
@@ -114,11 +116,14 @@ std::pair<int, BigInt> Node::alpha_beta_prune(int &x, comp_func f)
 		Node child(_depth - 1, _alpha, _beta, BoardState(_state, *move));
 		std::pair<int, BigInt> score = child.minimax();
 
-		_heuristic = f(_heuristic, score.first);
+		int eval = f(_heuristic, score.first);
 		x = f(x, score.first);
-		if(_heuristic == score.first && x == score.first)
+		if(eval == score.first && _heuristic != score.first)
+		{
+			_heuristic = eval;
 			best_child = *move;
-		if (_alpha > _beta)
+		}
+		if (_alpha >= _beta)
 			break;
 	}
 	return std::make_pair(_heuristic, best_child);

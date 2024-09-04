@@ -64,37 +64,36 @@ void Node::print(std::pair<int, BigInt>&result)
 std::pair<int, BigInt> Node::minimax()
 {
 	std::pair<int, BigInt> result;
+	if(_state.is_capture())
+	{
+		// if(_state.maximizing() == false)
+		// {
+		// 	int score = (1 << _state.maxi_captures()) + 1;
+		// 	if(score > std::abs(_heuristic))
+		// 		_heuristic = score;
+		// }
+		// else
+		{
+			int score = (1 << _state.mini_captures()) + 1;
+			if(score > std::abs(_heuristic))
+				_heuristic = score * -1;
+		}
+	}
 	if (_depth == 0)
 	{
 		Heuristics h = Heuristics(_state);
-		_heuristic = h.run();
-		//if(_state.is_capture())
-		//{
-		//	if(_state.maximizing())
-		//	{
-		//		int score = (1 << _state.maxi_captures()) + 1;
-		//		if(score > std::abs(_heuristic))
-		//			_heuristic = score;
-		//	}
-		//	else
-		//	{
-		//		int score = (1 << _state.mini_captures()) + 1;
-		//		if(score > std::abs(_heuristic))
-		//			_heuristic = score * -1;
-		//	}
-		//}
+		int heur = h.run();
+		if (std::abs(heur) > _heuristic)
+			_heuristic = heur;
 		result = std::make_pair(_heuristic, _state.move());
-		print(result);
 		return result;
 	}
 	if (_state.maximizing())
 	{
 		result =  alpha_beta_prune(_alpha, max);
-		print(result);
 		return result;
 	}
 	result = alpha_beta_prune(_beta, min);
-	print(result);
 	return result;
 }
 

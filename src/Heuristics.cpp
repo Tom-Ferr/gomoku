@@ -153,31 +153,31 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     if (score > _max_score)
         _max_score = score;
 
-    score = _state.check_capture(_state.mystate(true), _state.otherstate(true), pos);
-    if(score != 0)
-        score = (1 << (_state.maxi_captures() + score)) +1;
-    if (score >= 32)
-    {
-        _heuristic = score;
-        return true;
-    }
-    if (score > _max_score)
-        _max_score = score;
+    // score = _state.check_capture(_state.mystate(true), _state.otherstate(true), pos);
+    // if(score != 0)
+    //     score = (1 << (_state.maxi_captures() + score)) +1;
+    // if (score >= 32)
+    // {
+    //     _heuristic = score;
+    //     return true;
+    // }
+    // if (score > _max_score)
+    //     _max_score = score;
 
     score = get_score(other_target, edge, target, pos, masks) * -1;
     if (score < _min_score)
         _min_score = score;
     
-    score = _state.check_capture(_state.otherstate(true), _state.mystate(true), pos);
-    if(score != 0)
-        score = ((1 << (_state.mini_captures() + score)) + 1)* -1;
-    if (score <= -32)
-    {
-        _heuristic = score;
-        return true;
-    }
-    if (score < _min_score)
-        _min_score = score;
+    // score = _state.check_capture(_state.otherstate(true), _state.mystate(true), pos);
+    // if(score != 0)
+    //     score = ((1 << (_state.mini_captures() + score)) + 1)* -1;
+    // if (score <= -32)
+    // {
+    //     _heuristic = score;
+    //     return true;
+    // }
+    // if (score < _min_score)
+    //     _min_score = score;
     
     return false;
 }

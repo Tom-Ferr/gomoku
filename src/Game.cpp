@@ -353,10 +353,19 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 	std::cout << "MYSTATE" << _board.mystate(true) << std::endl;
 	if (_board.mystate(true) == 0) /*if no black pieces on the board*/
 	{
-		_init_game_standard(turn, dummy);
-		_init_game = true;
+		_init_game_standard(turn, dummy); /*apply the same initial move*/
+		_init_game = true;	/*since 2 moves are needed, the game is still in init state*/
 		return true;
-	}	
+	}
+	else if (dummy && _board.mystate(true).bitCount() >= 2)
+	{
+		/*
+		two or more black pieces
+		game is no longer in init mode
+		*/
+		_init_game = false;
+		return false;
+	}
 	else
 	{
 		padding = 3;
@@ -367,9 +376,9 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 		_move = black + padding;
 		if (_move == white)
 			_move = black - padding;
-		_init_game = false;
 		if (dummy)
 			return true;
+		_init_game = false;
 		_board.applymove(_move, turn);
 		_ftc = Free_Three_Checker(_board);
 		_turn = !_turn;

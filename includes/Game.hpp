@@ -47,9 +47,15 @@ class Game
 		bool							_init_game;
 		t_gamemode						_game_mode;
 		size_t							_ai_nmoves;
+		size_t							_total_nmoves;
+		size_t							_p1_moves;
+		size_t							_p2_moves;
 		float						 	_total_time;
 		float						 	_last_time;
 
+
+		bool _init_game_handler(bool turn, bool dummy=false);
+		bool _init_game_standard(bool turn, bool dummy=false);
 
 	public:
 		Game(int size=19, t_vs vs=VS_AI, t_startingplayer startingplayer=SP_PLAYER1, t_gamemode mode=GM_STANDARD);

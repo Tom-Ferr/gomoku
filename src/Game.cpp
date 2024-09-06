@@ -3,7 +3,7 @@
 
 Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
 : _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(!static_cast<bool>(vs)),
-_init_game(true), _game_mode(mode), _ai_nmoves(0), _total_time(0), _last_time(0)
+_init_game(true), _game_mode(mode), _ai_nmoves(0), _total_nmoves(0), _total_time(0), _last_time(0)
 {
 	/*
 	** lets try to init those only if never initialized before...
@@ -49,6 +49,7 @@ Game &Game::operator=(const Game& other)
 		_init_game = other._init_game;
 		_game_mode = other._game_mode;
 		_ai_nmoves = other._ai_nmoves;
+		_total_nmoves = other._total_nmoves;
 		_total_time = other._total_time;
 		_last_time = other._last_time;
 	}
@@ -84,11 +85,8 @@ bool Game::dummy_step(bool turn)
 	** lets please move this into a function and get this code
 	** out of here.
 	*/
-	if (((~dummy.totalboard()) & BoardState::mask) == 0)
-	{
-		_move = _board.size() / 2;
+	if (is_init_game() && _init_game_handler(turn, true))
 		return true;
-	}
 	if (!turn)
 		dummy.swap_states();
 	_captures.clear();
@@ -106,27 +104,53 @@ bool Game::dummy_step(bool turn)
 	return true;
 }
 
+/*
+** places the first move in the center of the board.
+*/
+bool Game::_init_game_standard(bool turn, bool dummy)
+{
+	_move = _board.size() / 2;
+	_init_game = false;
+	if (dummy)
+		return true;
+	_board.applymove(_move, turn);
+	_ftc = Free_Three_Checker(_board);
+	_turn = !_turn;
+	return true;
+}
+
+/*
+** returns true if the game was handled by the init_game_handler
+** if dummy, do not apply the move, as it means it's just a hint.
+*/
+bool Game::_init_game_handler(bool turn, bool dummy)
+{
+	if (_game_mode == GM_STANDARD)
+		return _init_game_standard(turn, dummy);
+	else if (_game_mode == GM_PRO)
+	{
+		if (_total_nmoves == 0)
+		{
+			_move = _board.size() / 2;
+			_init_game = false;
+			if (dummy)
+				return true;
+			_board.applymove(_move, turn);
+			_ftc = Free_Three_Checker(_board);
+			_turn = !_turn;
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Game::step(bool turn)
 {
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	std::pair<int, BigInt> result;
 
-	/*
-	** this is game init... lets create a function for it to
-	** take into account all game modes
-	** for now, it just treats the case where the board is empty
-	** and AI is to move first.
-	*/
-	if (((~_board.totalboard()) & BoardState::mask) == 0)
-	{
-		_move = _board.size() / 2;
-		_board.applymove(_move, turn);
-		_ftc = Free_Three_Checker(_board);
-		std::cout << "Move: " << _move << std::endl;
-		_turn = !_turn;
+	if (is_init_game() && _init_game_handler(turn))
 		return true;
-	}
-
 	if (turn)
 		result = Node(3, INT_MIN, INT_MAX, _board).minimax();
 	else

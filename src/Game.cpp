@@ -3,7 +3,7 @@
 
 Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
 : _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(!static_cast<bool>(vs)),
-_init_game(true), _game_mode(mode), _ai_nmoves(0), _total_nmoves(0), _total_time(0), _last_time(0)
+_init_game(true), _game_mode(mode), _ai_nmoves(0), _total_nmoves(0), _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 {
 	/*
 	** lets try to init those only if never initialized before...
@@ -50,6 +50,8 @@ Game &Game::operator=(const Game& other)
 		_game_mode = other._game_mode;
 		_ai_nmoves = other._ai_nmoves;
 		_total_nmoves = other._total_nmoves;
+		_p1_nmoves = other._p1_nmoves;
+		_p2_nmoves = other._p2_nmoves;
 		_total_time = other._total_time;
 		_last_time = other._last_time;
 	}
@@ -102,46 +104,6 @@ bool Game::dummy_step(bool turn)
 	_total_time += duration.count();
 	_ai_nmoves++;
 	return true;
-}
-
-/*
-** places the first move in the center of the board.
-*/
-bool Game::_init_game_standard(bool turn, bool dummy)
-{
-	_move = _board.size() / 2;
-	_init_game = false;
-	if (dummy)
-		return true;
-	_board.applymove(_move, turn);
-	_ftc = Free_Three_Checker(_board);
-	_turn = !_turn;
-	return true;
-}
-
-/*
-** returns true if the game was handled by the init_game_handler
-** if dummy, do not apply the move, as it means it's just a hint.
-*/
-bool Game::_init_game_handler(bool turn, bool dummy)
-{
-	if (_game_mode == GM_STANDARD)
-		return _init_game_standard(turn, dummy);
-	else if (_game_mode == GM_PRO)
-	{
-		if (_total_nmoves == 0)
-		{
-			_move = _board.size() / 2;
-			_init_game = false;
-			if (dummy)
-				return true;
-			_board.applymove(_move, turn);
-			_ftc = Free_Three_Checker(_board);
-			_turn = !_turn;
-			return true;
-		}
-	}
-	return false;
 }
 
 bool Game::step(bool turn)
@@ -218,8 +180,42 @@ std::vector<int> &Game::captures()
 	return _captures;
 }
 
-bool Game::is_double_free_three(const size_t &pos)
+
+/*
+** Valid moves checker exclusive for the pro/longpro game modes.
+*/
+bool Game::_is_pro_valid_move(size_t pos)
 {
+	size_t padding;
+	size_t black_piece;
+
+	if (!_turn) /*rule applies only to black pieces*/
+		return true;
+	if (_board.mystate(true) == 0) /*no black pieces on the board yet. all moves are valid*/
+		return true;
+	black_piece = _board.mystate(true).pos();
+	if (_game_mode == GM_PRO)
+		padding = 2;
+	else
+		padding = 3;
+	/* black_piece and pos is a value from 0 to 360 representing a 19x19 board
+	write a function that checks if pos is within *padding* squares of the blackpiece
+	keep in mind that its types are both size_t
+	*/
+	
+
+
+	return false;
+}
+
+
+bool Game::is_valid_move(const size_t &pos)
+{
+	if (is_init_game() && _game_mode == GM_PRO
+		|| _game_mode == GM_LONGPRO)
+	{
+		return _is_pro_valid_move(pos);
+	}
 	return _ftc.is_free_three(pos);
 }
 
@@ -307,3 +303,83 @@ int Game::end_game()
 		return 3;
 	return 0;
 }
+
+
+/*
+** initialization handler for game swap2 mode.
+*/
+bool Game::_init_game_swap2(bool turn, bool dummy)
+{
+	(void)turn;(void)dummy;
+	return true;
+}
+
+/*
+** initialization handler for game swap mode.
+*/
+bool Game::_init_game_swap(bool turn, bool dummy)
+{
+	(void)turn;(void)dummy;
+	return true;
+}
+
+
+/*
+** initialization handler for game long pro mode.
+*/
+bool Game::_init_game_longpro(bool turn, bool dummy)
+{
+	(void)turn;(void)dummy;
+	return true;
+}
+
+
+/*
+** initialization handler for game pro mode.
+*/
+bool Game::_init_game_pro(bool turn, bool dummy)
+{
+	(void)turn;(void)dummy;
+	return true;
+}
+
+/*
+** places the first move in the center of the board.
+*/
+bool Game::_init_game_standard(bool turn, bool dummy)
+{
+	_move = _board.size() / 2;
+	_init_game = false;
+	if (dummy)
+		return true;
+	_board.applymove(_move, turn);
+	_ftc = Free_Three_Checker(_board);
+	_turn = !_turn;
+	return true;
+}
+
+/*
+** returns true if the game was handled by the init_game_handler
+** if dummy, do not apply the move, as it means it's just a hint.
+*/
+bool Game::_init_game_handler(bool turn, bool dummy)
+{
+	if (_game_mode == GM_STANDARD)
+		return _init_game_standard(turn, dummy);
+	else if (_game_mode == GM_PRO)
+	{
+		if (_total_nmoves == 0)
+		{
+			_move = _board.size() / 2;
+			_init_game = false;
+			if (dummy)
+				return true;
+			_board.applymove(_move, turn);
+			_ftc = Free_Three_Checker(_board);
+			_turn = !_turn;
+			return true;
+		}
+	}
+	return false;
+}
+

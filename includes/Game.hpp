@@ -47,15 +47,23 @@ class Game
 		bool							_init_game;
 		t_gamemode						_game_mode;
 		size_t							_ai_nmoves;
+
+		/* these might not be quite necessary for game init. we'll see */
 		size_t							_total_nmoves;
-		size_t							_p1_moves;
-		size_t							_p2_moves;
+		size_t							_p1_nmoves;
+		size_t							_p2_nmoves;
+	
 		float						 	_total_time;
 		float						 	_last_time;
 
 
 		bool _init_game_handler(bool turn, bool dummy=false);
 		bool _init_game_standard(bool turn, bool dummy=false);
+		bool _init_game_swap2(bool turn, bool dummy);
+		bool _init_game_swap(bool turn, bool dummy);
+		bool _init_game_longpro(bool turn, bool dummy);
+		bool _init_game_pro(bool turn, bool dummy);
+		bool _is_pro_valid_move(size_t pos);
 
 	public:
 		Game(int size=19, t_vs vs=VS_AI, t_startingplayer startingplayer=SP_PLAYER1, t_gamemode mode=GM_STANDARD);
@@ -69,7 +77,7 @@ class Game
 		void check_capture(size_t pos, bool turn);
 		std::vector<int> &captures();
 		BoardState &board();
-		bool is_double_free_three(const size_t &pos);
+		bool is_valid_move(const size_t &pos);
 		void update_freechecker();
 		bool &turn();
 		bool player();

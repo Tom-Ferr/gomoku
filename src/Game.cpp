@@ -35,6 +35,7 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 Game::Game(const Game& other)
 :_board(other._board), _ftc(_board)
 {
+	std::cout << "Game copy constructor" << std::endl;
 	*this = other;
 }
 
@@ -201,7 +202,6 @@ bool Game::_is_pro_invalid_move(size_t pos)
 	else
 		padding = 3;
 	p = Rect(black_piece % _board.sqrt(), black_piece / _board.sqrt(), 0, 0);
-	std::cout << "Original Rect " << p << std::endl;
 	p.width = p.x;
 	p.height = p.y;
 	while (padding)
@@ -218,7 +218,6 @@ bool Game::_is_pro_invalid_move(size_t pos)
 	}
 	p.height-= p.y;
 	p.width -= p.x;
-	std::cout << p << std::endl;
 	if (p.contains(pos % _board.sqrt(), pos / _board.sqrt()))
 		return true;
 	return false;
@@ -227,8 +226,6 @@ bool Game::_is_pro_invalid_move(size_t pos)
 
 bool Game::is_invalid_move(const size_t &pos)
 {
-	std::cout << "Is invalid move: " << pos << "- init game? ";
-	std::cout <<  is_init_game() << std::endl;
 	if (is_init_game() && (_game_mode == GM_PRO
 		|| _game_mode == GM_LONGPRO))
 	{
@@ -343,23 +340,40 @@ bool Game::_init_game_swap(bool turn, bool dummy)
 
 
 /*
-** initialization handler for game long pro mode.
-*/
-bool Game::_init_game_longpro(bool turn, bool dummy)
-{
-	(void)turn;(void)dummy;
-	return true;
-}
-
-
-/*
 ** initialization handler for game pro mode.
 */
 bool Game::_init_game_pro(bool turn, bool dummy)
 {
-	(void)dummy;
+	size_t white;
+	size_t black;
+	size_t padding;
+
 	if (!turn)
 		return false;
+	std::cout << "MYSTATE" << _board.mystate(true) << std::endl;
+	if (_board.mystate(true) == 0) /*if no black pieces on the board*/
+	{
+		_init_game_standard(turn, dummy);
+		_init_game = true;
+		return true;
+	}	
+	else
+	{
+		padding = 3;
+		if (_game_mode == GM_LONGPRO)
+			padding = 4;
+		black = _board.mystate(true).pos();
+		white = _board.otherstate(true).pos();
+		_move = black + padding;
+		if (_move == white)
+			_move = black - padding;
+		_init_game = false;
+		if (dummy)
+			return true;
+		_board.applymove(_move, turn);
+		_ftc = Free_Three_Checker(_board);
+		_turn = !_turn;
+	}
 	return true;
 }
 
@@ -381,12 +395,13 @@ bool Game::_init_game_standard(bool turn, bool dummy)
 /*
 ** returns true if the game was handled by the init_game_handler
 ** if dummy, do not apply the move, as it means it's just a hint.
-*/
+*/ 
 bool Game::_init_game_handler(bool turn, bool dummy)
 {
+
 	if (_game_mode == GM_STANDARD)
 		return _init_game_standard(turn, dummy);
-	else if (_game_mode == GM_PRO)
+	else if (_game_mode == GM_PRO || _game_mode == GM_LONGPRO)
 		return _init_game_pro(turn, dummy);
 	return false;
 }

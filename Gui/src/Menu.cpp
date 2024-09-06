@@ -31,6 +31,7 @@ bool Menu::init()
 	_bgroup_mode = ButtonGroup("Game Mode", Rect(0, 0, 0, 0));
 	_bgroup_mode.add("Standard");
 	_bgroup_mode.add("Pro");
+	_bgroup_mode.add("Long Pro");
 	_bgroup_mode.add("Swap");
 	_bgroup_mode.add("Swap2");
 	resize();

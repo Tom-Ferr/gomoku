@@ -14,9 +14,9 @@ typedef enum e_gamemode
 {
 	GM_STANDARD,
 	GM_PRO,
+	GM_LONGPRO,
 	GM_SWAP,
-	GM_SWAP2,
-	GM_LONGPRO
+	GM_SWAP2
 }	t_gamemode;
 
 typedef enum e_startingplayer
@@ -62,7 +62,6 @@ class Game
 		bool _init_game_standard(bool turn, bool dummy=false);
 		bool _init_game_swap2(bool turn, bool dummy);
 		bool _init_game_swap(bool turn, bool dummy);
-		bool _init_game_longpro(bool turn, bool dummy);
 		bool _init_game_pro(bool turn, bool dummy);
 		bool _is_pro_invalid_move(size_t pos);
 

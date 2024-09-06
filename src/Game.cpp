@@ -3,7 +3,8 @@
 
 Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
 : _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(!static_cast<bool>(vs)),
-_init_game(true), _game_mode(mode), _ai_nmoves(0), _total_nmoves(0), _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
+_init_game(true), _game_mode(mode), _ai_nmoves(0), _total_nmoves(0),
+_p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 {
 	/*
 	** lets try to init those only if never initialized before...
@@ -184,37 +185,54 @@ std::vector<int> &Game::captures()
 /*
 ** Valid moves checker exclusive for the pro/longpro game modes.
 */
-bool Game::_is_pro_valid_move(size_t pos)
+bool Game::_is_pro_invalid_move(size_t pos)
 {
-	size_t padding;
+	int padding;
 	size_t black_piece;
+	Rect p;
 
 	if (!_turn) /*rule applies only to black pieces*/
-		return true;
-	if (_board.mystate(true) == 0) /*no black pieces on the board yet. all moves are valid*/
-		return true;
+		return false;
+	if (_board.mystate(false) == 0) /*no black pieces on the board yet. all moves are valid*/
+		return false;
 	black_piece = _board.mystate(true).pos();
 	if (_game_mode == GM_PRO)
 		padding = 2;
 	else
 		padding = 3;
-	/* black_piece and pos is a value from 0 to 360 representing a 19x19 board
-	write a function that checks if pos is within *padding* squares of the blackpiece
-	keep in mind that its types are both size_t
-	*/
-	
-
-
+	p = Rect(black_piece % _board.sqrt(), black_piece / _board.sqrt(), 0, 0);
+	std::cout << "Original Rect " << p << std::endl;
+	p.width = p.x;
+	p.height = p.y;
+	while (padding)
+	{
+		if (p.height < static_cast<size_t>(_board.sqrt()))
+			p.height++;
+		if (p.width < static_cast<size_t>(_board.sqrt()))
+			p.width++;
+		if (p.x)
+			p.x--;
+		if (p.y)
+			p.y--;
+		padding--;
+	}
+	p.height-= p.y;
+	p.width -= p.x;
+	std::cout << p << std::endl;
+	if (p.contains(pos % _board.sqrt(), pos / _board.sqrt()))
+		return true;
 	return false;
 }
 
 
-bool Game::is_valid_move(const size_t &pos)
+bool Game::is_invalid_move(const size_t &pos)
 {
-	if (is_init_game() && _game_mode == GM_PRO
-		|| _game_mode == GM_LONGPRO)
+	std::cout << "Is invalid move: " << pos << "- init game? ";
+	std::cout <<  is_init_game() << std::endl;
+	if (is_init_game() && (_game_mode == GM_PRO
+		|| _game_mode == GM_LONGPRO))
 	{
-		return _is_pro_valid_move(pos);
+		return _is_pro_invalid_move(pos);
 	}
 	return _ftc.is_free_three(pos);
 }
@@ -339,7 +357,9 @@ bool Game::_init_game_longpro(bool turn, bool dummy)
 */
 bool Game::_init_game_pro(bool turn, bool dummy)
 {
-	(void)turn;(void)dummy;
+	(void)dummy;
+	if (!turn)
+		return false;
 	return true;
 }
 
@@ -367,19 +387,7 @@ bool Game::_init_game_handler(bool turn, bool dummy)
 	if (_game_mode == GM_STANDARD)
 		return _init_game_standard(turn, dummy);
 	else if (_game_mode == GM_PRO)
-	{
-		if (_total_nmoves == 0)
-		{
-			_move = _board.size() / 2;
-			_init_game = false;
-			if (dummy)
-				return true;
-			_board.applymove(_move, turn);
-			_ftc = Free_Three_Checker(_board);
-			_turn = !_turn;
-			return true;
-		}
-	}
+		return _init_game_pro(turn, dummy);
 	return false;
 }
 

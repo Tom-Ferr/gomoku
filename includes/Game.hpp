@@ -7,6 +7,7 @@
 # include <Free_Three_Checker.hpp>
 # include <Heuristics.hpp>
 # include <Node.hpp>
+# include <Rect.hpp>
 # include <vector>
 
 typedef enum e_gamemode
@@ -63,7 +64,7 @@ class Game
 		bool _init_game_swap(bool turn, bool dummy);
 		bool _init_game_longpro(bool turn, bool dummy);
 		bool _init_game_pro(bool turn, bool dummy);
-		bool _is_pro_valid_move(size_t pos);
+		bool _is_pro_invalid_move(size_t pos);
 
 	public:
 		Game(int size=19, t_vs vs=VS_AI, t_startingplayer startingplayer=SP_PLAYER1, t_gamemode mode=GM_STANDARD);
@@ -77,7 +78,7 @@ class Game
 		void check_capture(size_t pos, bool turn);
 		std::vector<int> &captures();
 		BoardState &board();
-		bool is_valid_move(const size_t &pos);
+		bool is_invalid_move(const size_t &pos);
 		void update_freechecker();
 		bool &turn();
 		bool player();

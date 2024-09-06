@@ -185,7 +185,7 @@ bool Board::hover()
 			}
 			return false;
 		}
-		if (_game.is_valid_move(tile))
+		if (_game.is_invalid_move(tile))
 			return false;
 		hovered = &_tiles[tile];
 		if (hovered == _hovered_tile)
@@ -239,7 +239,7 @@ bool Board::click()
 	}
 	if (enabled() && _hovered_tile)
 	{
-		if (_game.is_valid_move(_hovered_tile->pos()))
+		if (_game.is_invalid_move(_hovered_tile->pos()))
 			return false;
 		if (_hovered_tile->click(_game.turn()))
 		{

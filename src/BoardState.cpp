@@ -5,6 +5,7 @@ BigInt BoardState::leftmask = BigInt(0);
 BigInt BoardState::rightmask = BigInt(0);
 Mask BoardState::_masks = Mask();
 Mask BoardState::_capturable_masks = Mask();
+bool BoardState::_with_captures;
 
 BoardState::BoardState(int _sqrt)
 :
@@ -55,8 +56,8 @@ _totalboard(other._totalboard)
 {
 	_capture_move = false;
 	size_t pos = _move.pos();
-	(void)pos;
-	//check_capture(pos, _maximizing);
+	if(_with_captures)
+		check_capture(pos, _maximizing);
 	applymove(_move, !_maximizing);
 }
 
@@ -123,6 +124,8 @@ void BoardState::check_capture(size_t pos, bool maximizing)
 				continue ;
 			if ((*self & *edge_mask) == 0)
 				continue;
+			if ((*self & *edge_mask) == *edge_mask)
+				continue;
 
 			(*counter)++;
 			_capture_move = true;
@@ -151,6 +154,8 @@ size_t BoardState::check_capture(const BigInt &self, const BigInt &rival, const 
 				continue ;
 			if ((self & *edge_mask) == 0)
 				continue ;
+			if ((self & *edge_mask) == *edge_mask)
+				continue;
 			points++;
 		}
     }
@@ -240,6 +245,17 @@ bool const &BoardState::is_capture() const
 	return _capture_move;
 }
 
+bool const &BoardState::with_captures() const
+{
+	return BoardState::_with_captures;
+}
+
+void BoardState::set_captures(bool on)
+{
+	_with_captures = on;
+}
+
+
 BigInt const &BoardState::move() const
 {
 	return _move;
@@ -323,7 +339,7 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_mystate = other._mystate;
 		_otherstate = other._otherstate;
 		_totalboard = other._totalboard;
-		_inv_mystate = other._mystate;
+		_inv_mystate = other._inv_mystate;
 		_inv_otherstate = other._inv_otherstate;
 		_maxi_captures = other._maxi_captures;
 		_mini_captures = other._mini_captures;

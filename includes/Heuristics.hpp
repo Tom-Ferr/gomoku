@@ -2,14 +2,13 @@
 # define HEURISTICS_HPP
 # include <gomoku.hpp>
 # include <vector>
-#include <BoardState.hpp>
+# include <BoardState.hpp>
 # include <map>
 
 class Heuristics
 {
 private:
 	BoardState &_state;
-
     // std::vector<int> _scores = std::vector<int>();
     int _max_score = 0;
     int _min_score = 0;

@@ -12,6 +12,7 @@ _init_game(true), _game_mode(mode), _ai_nmoves(0), _total_time(0), _last_time(0)
 	Heuristics::set_masks(5, size);
 	BoardState::set_masks(4, size, true);
 	BoardState::set_masks(4, size, false);
+	_board.set_captures(true);
 	/*
 	** who will play as BLACK?
 	** _player is the player that will play as BLACK?
@@ -162,7 +163,8 @@ bool Game::step(bool turn)
 
 void Game::check_capture(size_t pos, bool turn)
 {
-	return; (void)pos;(void)turn;
+	if (_board.with_captures() == false)
+		return ;
 	BigInt state =  _board.totalboard();
 
 	_captures.clear();
@@ -275,9 +277,9 @@ int Game::end_game()
 
 	if (((~_board.totalboard()) & BoardState::mask) == 0)
 		return 0;
-	if (value == 32)
+	if (value >= 60000 || _board.maxi_captures() >= 5)
 		return 1;
-	else if (value == -32)
+	else if (value <= -60000 || _board.mini_captures() >= 5)
 		return 2;
 	else if (_board.totalboard() == 0)
 		return 3;

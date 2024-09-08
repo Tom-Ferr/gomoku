@@ -151,14 +151,20 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     if (target == full_mask)
     {
         if (endgame)
+        {
+            _heuristic = 60000;
             return true;
+        }
         _set_points(true, 32);
         
     }
     if (other_target == full_mask)
     {
         if (endgame)
+        {
+            _heuristic = -60000;
             return true;
+        }
         _set_points(false, 32);
     }
     if(endgame)
@@ -168,9 +174,25 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     edge = edge | (_state.mystate(true) & masks.at(EDGE)[pos][0]);
 
     int score = get_score(target, edge, other_target, pos, masks);
-    _set_points(true, score);
+    if (score > _max_score)
+        _max_score = score;
+    if (score < _max_score)
+    {
+        _set_points(true, _max_score);
+        _max_score = 0;
+    }
+    if(_state.check_capture(_state.mystate(true), _state.otherstate(true), pos) != 0)
+        _points["my_potential_captures"]++;
     score = get_score(other_target, edge, target, pos, masks);
-    _set_points(false, score);
+    if (score > _min_score)
+        _min_score = score;
+    if (score < _min_score)
+    {
+        _set_points(false, _min_score);
+        _min_score = 0;
+    }
+    if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos) != 0)
+        _points["ot_potential_captures"]++;
     return false;
 }
 
@@ -187,13 +209,15 @@ int Heuristics::run()
     //for (std::map<std::string, int>::iterator it = _points.begin(); it != _points.end(); it++)
     //    std::cout << it->first << ": " << it->second << std::endl;
 
-    _heuristic = 6000 * (_points["my_five"] - _points["ot_five"])
+    _heuristic = 60000 * (_points["my_five"] - _points["ot_five"])
                 + 4800 * (_points["my_ofour"] - _points["ot_ofour"])
                 + 500 * (_points["my_cfour"] - _points["ot_cfour"])
                 + 500 * (_points["my_othree"] - _points["ot_othree"])
                 + 200 * (_points["my_cthree"] - _points["ot_cthree"])
                 + 50 * (_points["my_otwo"] - _points["ot_otwo"])
                 + 10 * (_points["my_ctwo"] - _points["ot_ctwo"]);
+    if (_state.with_captures())
+        _heuristic +=  500 * (_points["my_potential_captures"] * _state.maxi_captures()  - _points["ot_potential_captures"] *  _state.mini_captures());
     return _heuristic;
 }
 

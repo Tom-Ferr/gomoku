@@ -82,7 +82,7 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
         return 0;
 
     size_t bits = target.bitCount();
-    if (bits < 2 || bits > 4)
+    if (bits < 2)
         return 0;
     int score = 1 << bits;
 
@@ -190,6 +190,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
             if (endgame)
                 return false;
             _set_points(true, 31);
+            _points["my_five"]--;
         }
     }
     if (other_target == full_mask)
@@ -209,6 +210,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
             if (endgame)
                 return false;
             _set_points(false, 31);
+            _points["ot_five"]--;
         }
     }
     if(endgame)

@@ -151,10 +151,12 @@ bool Node::possible_moves(std::vector<size_t>& moves)
 	Heuristics h = Heuristics(_state);
 	for (int pos = 0; pos < _state.size(); pos++)
 	{
-		_heuristic = h.endgame(pos);
-		if(_heuristic >= 80000 || _heuristic <= -80000)
+		h.endgame(pos);
+		if(h.maxi_wins() || h.mini_wins())
         {
-            _heuristic <<= _depth;
+            _heuristic = 80000 << _depth;
+			if (h.mini_wins())
+				_heuristic *= -1;
             return false;
         }
 		else if(_state.maxi_captures() >= 5 || _state.mini_captures() >= 5)

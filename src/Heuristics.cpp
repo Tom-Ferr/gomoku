@@ -180,7 +180,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
         {
             if (endgame)
             {
-                _heuristic = 80000;
+                _points["my_five"]++;
                 return true;
             }
         }
@@ -199,7 +199,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
         {
             if (endgame)
             {
-                _heuristic = -80000;
+                _points["ot_five"]++;
                 return true;
             }
         }
@@ -237,8 +237,7 @@ int Heuristics::run()
     {
         for (size_t i = 0; i < 4; i++)
         {
-            if (board_eval(pos, _modes[i], false))
-                return _heuristic;
+            board_eval(pos, _modes[i], false);
         }
     }
 
@@ -254,14 +253,14 @@ int Heuristics::run()
     return _heuristic;
 }
 
-int Heuristics::endgame(size_t pos)
+bool Heuristics::endgame(size_t pos)
 {
     for (size_t i = 0; i < 4; i++)
     {
         if (board_eval(pos, _modes[i], true))
-            return _heuristic;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 void Heuristics::describe_heuristic() const
@@ -272,4 +271,18 @@ void Heuristics::describe_heuristic() const
         std::cout << it->first << ": " << it->second << std::endl;
     }
     
+}
+
+bool Heuristics::maxi_wins()
+{
+    if (_points["my_five"] != 0)    
+        return true;
+    return false;
+}
+
+bool Heuristics::mini_wins()
+{
+    if (_points["ot_five"] != 0)    
+        return true;
+    return false;
 }

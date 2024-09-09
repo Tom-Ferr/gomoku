@@ -278,9 +278,9 @@ int Game::end_game()
 	h.describe_heuristic();
 	if (((~_board.totalboard()) & BoardState::mask) == 0)
 		return 0;
-	if (value >= 80000 || _board.maxi_captures() >= 5)
+	if (h.maxi_wins() || _board.maxi_captures() >= 5)
 		return 1;
-	else if (value <= -80000 || _board.mini_captures() >= 5)
+	else if (h.mini_wins() || _board.mini_captures() >= 5)
 		return 2;
 	else if (_board.totalboard() == 0)
 		return 3;

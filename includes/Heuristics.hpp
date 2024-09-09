@@ -32,8 +32,10 @@ public:
     ~Heuristics();
 
     int run();
-    int endgame(size_t pos);
+    bool endgame(size_t pos);
     void describe_heuristic() const;
+    bool maxi_wins() ;
+    bool mini_wins() ;
 
     static void set_masks(int mask_size, int board_sqrt);
 private:

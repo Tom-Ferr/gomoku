@@ -29,6 +29,8 @@ void BoardMode::init()
 void BoardMode::resize()
 {
 	_resize();
+	if (_info.text().size() >= LINE_WIDTH)
+		_resize_box(true);
 	_resize_info();
 	_resize_buttons();
 }
@@ -37,7 +39,7 @@ void BoardMode::_resize_info()
 {
 	Rect dimensions = Rect::subrect(_dimensions, 1, .07, 1);
 	_info.resize(dimensions);
-	_info.center(_dimensions.x + (_dimensions.width / 2));
+	_info.center(_dimensions.x + (_dimensions.width / 2), _dimensions.y + (_dimensions.height / 2));
 }
 
 

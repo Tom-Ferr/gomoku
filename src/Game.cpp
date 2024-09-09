@@ -36,7 +36,14 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 	/*
 	** Sets up initial message
 	*/
-	_message = GameMessage(true, false, "AI chose to play as whites... This is a initial message", "Swap");
+	if (_game_mode == GM_PRO)
+		_message = GameMessage(true, false, MSG_PRO_INFO, "Pro");
+	else if (_game_mode == GM_LONGPRO)
+		_message = GameMessage(true, false, MSG_LONGPRO_INFO, "Long Pro");
+	else if (_game_mode == GM_SWAP)
+		_message = GameMessage(true, false, MSG_SWAP_INFO, "Swap");
+	else if (_game_mode == GM_SWAP2)
+		_message = GameMessage(true, false, MSG_SWAP2_INFO, "Swap2");
 }
 
 Game::Game(const Game& other)
@@ -212,10 +219,15 @@ bool Game::_is_pro_invalid_move(size_t pos)
 	size_t black_piece;
 	Rect p;
 
+	std::cout << "check if move is invalid: " << pos << std::endl;
+
 	if (!_turn) /*rule applies only to black pieces*/
 		return false;
-	if (_board.mystate(false) == 0) /*no black pieces on the board yet. all moves are valid*/
-		return false;
+	if (_board.mystate(true) == 0) /*no black pieces on the board yet. all moves are valid*/
+	{
+		std::cout << "_board.size() / 2" << _board.size() / 2 << std::endl;
+		return (pos != static_cast<size_t>(_board.size() / 2));
+	}
 	black_piece = _board.mystate(true).pos();
 	if (_game_mode == GM_PRO)
 		padding = 2;

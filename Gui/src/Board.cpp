@@ -217,6 +217,11 @@ bool Board::click()
 	{
 		if (_mode.click())
 		{
+			if (_mode.buttons().size() && _mode.buttons().selected() !=  static_cast<size_t>(_game.player()))
+			{
+				_game.set_player(!_game.player());
+				update_statusbar();
+			}
 			_mode.hide();
 			enable();
 		}
@@ -305,14 +310,28 @@ void Board::loop()
 {
 	bool turn;
 
-	if (++_loop_count % 20)
+	if (++_loop_count % 10)
 		return ;
+	if (_mode.enabled())
+		return ;
+	if (_game.message())
+	{
+		_mode.show(_game.message());
+		_game.message().clear();
+		return ;
+	}
+	if (_game.vs_ai() && (_game.is_player_turn() ^ _game.is_game_swap_special_move()))
+	{
+		enable();
+		return ;
+	}
 
-	/*vs AI and waiting for player turn, do nothing*/
-	if (_game.vs_ai () && _game.is_player_turn())
-		return ;
 	/*vs AI and is AI turn, do something*/
-	if (_game.vs_ai() && !(_game.is_player_turn()))
+	if (_game.vs_ai()
+		&& (!_game.is_player_turn() /* I wil lnot play if it is players turn*/
+		|| _game.is_game_swap_special_move() /* except if it is a special move for swap mode*/
+		)
+	)
 	{
 		turn = _game.turn();
 		if (_game.step(turn))

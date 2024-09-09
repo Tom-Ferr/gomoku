@@ -42,6 +42,7 @@ Node& Node::operator=(const Node& other)
 
 void Node::print(std::pair<int, BigInt>&result)
 {
+	return ;
 	std::cerr << "{";
 	std::cerr << "\"depth\": " << _depth << ", ";
 	std::cerr << "\"maximizing\": \"";

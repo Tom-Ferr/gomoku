@@ -114,7 +114,7 @@ void ButtonGroup::depth(size_t depth)
 		_buttons[i].depth(depth + 1);
 }
 
-size_t ButtonGroup::selected()
+size_t ButtonGroup::selected() const
 {
 	for (size_t i = 0; i < _buttons.size(); i++)
 	{
@@ -122,4 +122,9 @@ size_t ButtonGroup::selected()
 			return i;
 	}
 	return 0;
+}
+
+size_t ButtonGroup::size() const
+{
+	return _buttons.size();
 }

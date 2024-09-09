@@ -9,6 +9,8 @@
 # include <ABoardPopup.hpp>
 # include <ButtonGroup.hpp>
 
+class GameMessage;
+
 class BoardMode: public ABoardPopup
 {
 	private:
@@ -29,7 +31,9 @@ class BoardMode: public ABoardPopup
 		void hide();
 		bool click();
 		void show(std::string mode, bool selecting=true);
+		void show(GameMessage const &message);
 		void hover();
+		ButtonGroup const &buttons() const;
 };
 
 #endif

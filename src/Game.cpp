@@ -1,6 +1,8 @@
 #include <Game.hpp>
 
 
+
+
 Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
 : _board(size), _ftc(_board), _turn(true), _player(true), _vs_ai(!static_cast<bool>(vs)),
 _init_game(true), _game_mode(mode), _ai_nmoves(0), _total_nmoves(0),
@@ -30,6 +32,11 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 	std::cout << "vs AI/P2: " << _vs_ai << std::endl;
 	std::cout << "starting Player: " << _player << std::endl;
 	std::cout << "Game Mode: " << _game_mode << std::endl;
+
+	/*
+	** Sets up initial message
+	*/
+	_message = GameMessage(true, false, "AI chose to play as whites... This is a initial message", "Swap");
 }
 
 Game::Game(const Game& other)
@@ -56,6 +63,7 @@ Game &Game::operator=(const Game& other)
 		_p2_nmoves = other._p2_nmoves;
 		_total_time = other._total_time;
 		_last_time = other._last_time;
+		_message = other._message;
 	}
 	return *this;
 }
@@ -68,6 +76,17 @@ bool Game::human_step(size_t pos, bool turn)
 	_board.applymove(pos, turn);
 	_ftc = Free_Three_Checker(_board);
 	_turn = !_turn;
+	_total_nmoves++;
+	std::cout << "Total Moves: " << _total_nmoves << std::endl;
+	std::cout << "Init Game: " << _init_game << std::endl;
+	if (_total_nmoves == 3 && _init_game &&  (game_mode() == GM_SWAP2 || game_mode() == GM_SWAP))
+	{
+		if (vs_ai())
+			_message = GameMessage(false, false, "AI chose to play as whites", "Swap");
+		else
+			_message = GameMessage(false, true, "Player X must choose", "Swap");
+	}
+	std::cout << "Appying move: " << pos << std::endl;
 	return true;
 }
 
@@ -110,6 +129,7 @@ bool Game::dummy_step(bool turn)
 
 bool Game::step(bool turn)
 {
+	std::cout << "Step" << std::endl;
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	std::pair<int, BigInt> result;
 
@@ -257,6 +277,11 @@ bool Game::player()
 	return _player;
 }
 
+void Game::set_player(bool player)
+{
+	_player = player;
+}
+
 /*
 ** false for AI, true for vs Player2
 */
@@ -330,27 +355,65 @@ bool Game::_init_game_swap2(bool turn, bool dummy)
 }
 
 /*
+** A special move is needed for the swap game modes.
+** if AI is black, it should play the white move if _total_nmoves is 1 or 4
+** if P1 is black, it should play the white move if _total_nmoves is 1 or 4
+*/
+bool Game::is_game_swap_special_move()
+{
+	std::cout << "(nmoves: " << _total_nmoves << ")";
+	if (!_init_game)
+		return false;
+	if (_game_mode == GM_SWAP2 || _game_mode == GM_SWAP)
+	{
+		if (_total_nmoves == 1 || _total_nmoves == 4)
+			return true;
+	}
+	return false;
+}
+/*
 ** initialization handler for game swap mode.
 */
 bool Game::_init_game_swap(bool turn, bool dummy)
 {
-	(void)turn;(void)dummy;
-	return true;
+	if (!(_total_nmoves)) /*if no black pieces on the board*/
+	{
+		_init_game_standard(turn, dummy); /*apply the same initial move*/
+		_init_game = true;	/*since 3 moves are needed, the game is still in init state*/
+		if (!dummy)
+			_total_nmoves++;
+		return true; /*game step has been handled*/
+	}
+	else if (!_init_game)
+		return false;
+	else if (_total_nmoves < 3) /*next white and black moves*/
+	{
+		if (!dummy)
+			_total_nmoves++;
+		if (_total_nmoves == 3)
+		{
+			if (turn == !_player && vs_ai())
+				_message = GameMessage(true, true, "Select a piece to swap");
+			_init_game = false;
+		}
+		return false; /*moves are handled normally by minimax*/
+	}
+	if (!dummy)
+		_total_nmoves++;
+	_init_game = false;
+	return false;
 }
-
 
 /*
 ** initialization handler for game pro mode.
 */
 bool Game::_init_game_pro(bool turn, bool dummy)
 {
-	size_t white;
-	size_t black;
 	size_t padding;
+	BoardState tmp;
 
 	if (!turn)
 		return false;
-	std::cout << "MYSTATE" << _board.mystate(true) << std::endl;
 	if (_board.mystate(true) == 0) /*if no black pieces on the board*/
 	{
 		_init_game_standard(turn, dummy); /*apply the same initial move*/
@@ -368,14 +431,16 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 	}
 	else
 	{
+		tmp.applymove(_board.mystate(true));
 		padding = 3;
 		if (_game_mode == GM_LONGPRO)
 			padding = 4;
-		black = _board.mystate(true).pos();
-		white = _board.otherstate(true).pos();
-		_move = black + padding;
-		if (_move == white)
-			_move = black - padding;
+		while (--padding > 0)
+			tmp.applymove(tmp.expanded_free());
+		std::cout << tmp << std::endl;
+		_move = tmp.expanded_free().pos();
+		if (_move == _board.otherstate(true).pos())
+			_move = (tmp.expanded_free() ^ _board.otherstate(true)).pos();
 		if (dummy)
 			return true;
 		_init_game = false;
@@ -391,8 +456,10 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 */
 bool Game::_init_game_standard(bool turn, bool dummy)
 {
-	_move = _board.size() / 2;
 	_init_game = false;
+	if (!turn)
+		return false;
+	_move = _board.size() / 2;
 	if (dummy)
 		return true;
 	_board.applymove(_move, turn);
@@ -404,7 +471,7 @@ bool Game::_init_game_standard(bool turn, bool dummy)
 /*
 ** returns true if the game was handled by the init_game_handler
 ** if dummy, do not apply the move, as it means it's just a hint.
-*/ 
+*/
 bool Game::_init_game_handler(bool turn, bool dummy)
 {
 
@@ -412,6 +479,14 @@ bool Game::_init_game_handler(bool turn, bool dummy)
 		return _init_game_standard(turn, dummy);
 	else if (_game_mode == GM_PRO || _game_mode == GM_LONGPRO)
 		return _init_game_pro(turn, dummy);
+	else if (_game_mode == GM_SWAP || _game_mode == GM_SWAP2)
+		return _init_game_swap(turn, dummy);
 	return false;
 }
 
+
+
+GameMessage &Game::message()
+{
+	return _message;
+}

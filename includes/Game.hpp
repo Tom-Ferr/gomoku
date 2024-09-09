@@ -9,6 +9,7 @@
 # include <Node.hpp>
 # include <Rect.hpp>
 # include <vector>
+# include <GameMessage.hpp>
 
 typedef enum e_gamemode
 {
@@ -51,9 +52,11 @@ class Game
 
 		/* these might not be quite necessary for game init. we'll see */
 		size_t							_total_nmoves;
+		GameMessage						_message;
+
 		size_t							_p1_nmoves;
 		size_t							_p2_nmoves;
-	
+
 		float						 	_total_time;
 		float						 	_last_time;
 
@@ -64,7 +67,6 @@ class Game
 		bool _init_game_swap(bool turn, bool dummy);
 		bool _init_game_pro(bool turn, bool dummy);
 		bool _is_pro_invalid_move(size_t pos);
-
 	public:
 		Game(int size=19, t_vs vs=VS_AI, t_startingplayer startingplayer=SP_PLAYER1, t_gamemode mode=GM_STANDARD);
 		Game(const Game& other);
@@ -81,6 +83,7 @@ class Game
 		void update_freechecker();
 		bool &turn();
 		bool player();
+		void set_player(bool player);
 		bool vs_ai();
 		bool vs_p2();
 		t_gamemode &game_mode();
@@ -89,6 +92,8 @@ class Game
 		float average_time();
 		float last_time();
 		int end_game();
+		bool is_game_swap_special_move();
+		GameMessage &message();
 };
 
 #endif

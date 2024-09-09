@@ -75,6 +75,25 @@ void BoardMode::show(std::string mode, bool selecting)
 	resize();
 }
 
+void BoardMode::show(GameMessage const &message)
+{
+	_set_header_text(message.mode());
+	_show();
+	_buttons.clear();
+	if (message.selection())
+	{
+		_buttons.add("Play as White");
+		_buttons.add("Play as Black");
+		_buttons.show();
+	}
+	else
+	{
+		_info = message.text();
+		_info.show();
+	}
+	resize();
+}
+
 void BoardMode::hover()
 {
 	_hover();
@@ -92,4 +111,9 @@ bool BoardMode::click()
 	if (_buttons.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
 		_buttons.click();
 	return false;
+}
+
+ButtonGroup const &BoardMode::buttons() const
+{
+    return _buttons;
 }

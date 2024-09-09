@@ -126,6 +126,8 @@ void BoardState::check_capture(size_t pos, bool maximizing)
 				continue;
 			if ((*self & *edge_mask) == *edge_mask)
 				continue;
+			if ((*rival & *edge_mask) != 0)
+				continue;
 
 			(*counter)++;
 			_capture_move = true;
@@ -134,31 +136,29 @@ void BoardState::check_capture(size_t pos, bool maximizing)
     }
 }
 
-size_t BoardState::check_capture(const BigInt &self, const BigInt &rival, const size_t &pos)
+size_t BoardState::check_capture(const BigInt &self, const BigInt &rival, const size_t &pos, char orientation)
 {
 	size_t points = 0;
 
-	
-	for (size_t i = 0; i < 4; i++)
-    {
-    	const Mask::inner_map &masks = BoardState::_masks.at(_modes[i]);
-		const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
-		const Mask::variations_vector &edge_vec = masks.at(EDGE);
-		Mask::mask_vector::const_iterator mid_mask = mid_vec[pos].begin();
-		Mask::mask_vector::const_iterator end = mid_vec[pos].end();
-		Mask::mask_vector::const_iterator edge_mask = edge_vec[pos].begin();
+    const Mask::inner_map &masks = BoardState::_masks.at(orientation);
+	const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
+	const Mask::variations_vector &edge_vec = masks.at(EDGE);
+	Mask::mask_vector::const_iterator mid_mask = mid_vec[pos].begin();
+	Mask::mask_vector::const_iterator end = mid_vec[pos].end();
+	Mask::mask_vector::const_iterator edge_mask = edge_vec[pos].begin();
 
-		for (; mid_mask != end; mid_mask++, edge_mask++)
-		{
-			if ((rival & *mid_mask) != *mid_mask)
-				continue ;
-			if ((self & *edge_mask) == 0)
-				continue ;
-			if ((self & *edge_mask) == *edge_mask)
-				continue;
-			points++;
-		}
-    }
+	for (; mid_mask != end; mid_mask++, edge_mask++)
+	{
+		if ((rival & *mid_mask) != *mid_mask)
+			continue ;
+		if ((self & *edge_mask) == 0)
+			continue ;
+		if ((self & *edge_mask) == *edge_mask)
+			continue;
+		if ((rival & *edge_mask) != 0)
+			continue;
+		points++;
+	}
 	return points;
 }
 
@@ -195,6 +195,8 @@ size_t BoardState::check_capture(const BigInt &target, bool maximizing)
 			if ((*rival & *edge_mask) == 0)
 				continue;
 			if ((*rival & *edge_mask) == *edge_mask)
+				continue;
+			if ((*self & *edge_mask) != 0)
 				continue;
 			points++;
 		}

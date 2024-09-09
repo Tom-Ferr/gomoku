@@ -9,7 +9,8 @@ class Heuristics
 {
 private:
 	BoardState &_state;
-    // std::vector<int> _scores = std::vector<int>();
+    std::map<char, std::vector<int>> _my_scores ;
+    std::map<char, std::vector<int>> _other_scores ;
     int _max_score = 0;
     int _min_score = 0;
     int _heuristic = 0;
@@ -32,12 +33,14 @@ public:
 
     int run();
     int endgame(size_t pos);
+    void describe_heuristic() const;
 
     static void set_masks(int mask_size, int board_sqrt);
 private:
     size_t is_capturable(const size_t &pos, const Mask::inner_map &masks, bool maximizing);
     int get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks);
     bool board_eval(int pos, char orienation, bool endgame);
+    void to_compute(bool my, std::vector<int> &target, size_t pos, const Mask::inner_map &masks);
 };
 
 

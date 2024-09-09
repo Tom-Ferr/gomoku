@@ -5,7 +5,14 @@ Mask Heuristics::_masks = Mask();
 Heuristics::Heuristics(BoardState &state)
 : _state(state)
 {
-
+    _my_scores[HORIZONTAL] = std::vector<int>(_state.size(), 0);
+    _my_scores[VERTICAL] = std::vector<int>(_state.size(), 0);
+    _my_scores[CRESCENDO] = std::vector<int>(_state.size(), 0);
+    _my_scores[DECRESCENDO] = std::vector<int>(_state.size(), 0);
+    _other_scores[HORIZONTAL] = std::vector<int>(_state.size(), 0);
+    _other_scores[VERTICAL] = std::vector<int>(_state.size(), 0);
+    _other_scores[CRESCENDO] = std::vector<int>(_state.size(), 0);
+    _other_scores[DECRESCENDO] = std::vector<int>(_state.size(), 0);
 }
 
 /*
@@ -55,6 +62,8 @@ void Heuristics::set_masks(int mask_size, int board_sqrt)
 
 size_t Heuristics::is_capturable(const size_t &pos, const Mask::inner_map &masks, bool maximizing)
 {
+    if (_state.with_captures() == false)
+        return 0;
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
     size_t points;
     size_t greater_points = 0;
@@ -73,10 +82,8 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
         return 0;
 
     size_t bits = target.bitCount();
-    if (bits < 1)
+    if (bits < 2 || bits > 4)
         return 0;
-    if (bits == 1)
-        return 2;
     int score = 1 << bits;
 
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
@@ -118,6 +125,8 @@ void Heuristics::_set_points(bool my, int points)
         str = "ot_";
     if (points == 32)
         str+="five";
+    else if (points == 31)
+        str+="cfive";
     else if (points == 2)
         str+="one";
     else if (points == 4)
@@ -137,6 +146,22 @@ void Heuristics::_set_points(bool my, int points)
     _points[str]++;
 }
 
+void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const Mask::inner_map &masks)
+{
+    const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
+    size_t prev = vectorized[0].pos();
+    // size_t last = vectorized[5].pos();
+    // size_t edge = vectorized[6].pos();
+    int target_score = target[pos];
+    int prev_score = target[prev];
+
+    if ((target_score < prev_score && target_score == 0) /*|| last == edge*/)
+        _set_points(my, prev_score);
+    else if (target_score < prev_score)
+        target[pos] = prev_score;
+    
+}
+
 bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 {
     const Mask::inner_map &masks = _masks.at(orientation);
@@ -150,22 +175,41 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 
     if (target == full_mask)
     {
-        if (endgame)
+        int points = is_capturable(pos, masks, true);
+        if (points == 0)
         {
-            _heuristic = 60000;
-            return true;
+            if (endgame)
+            {
+                _heuristic = 80000;
+                return true;
+            }
+            _set_points(true, 32);
         }
-        _set_points(true, 32);
-        
+        else
+        {
+            if (endgame)
+                return false;
+            _set_points(true, 31);
+        }
     }
     if (other_target == full_mask)
     {
-        if (endgame)
+        int points = is_capturable(pos, masks, false);
+        if (points == 0)
         {
-            _heuristic = -60000;
-            return true;
+            if (endgame)
+            {
+                _heuristic = -80000;
+                return true;
+            }
+            _set_points(false, 32);
         }
-        _set_points(false, 32);
+        else
+        {
+            if (endgame)
+                return false;
+            _set_points(false, 31);
+        }
     }
     if(endgame)
         return false;
@@ -173,25 +217,16 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     BigInt edge = (_state.otherstate(true) & masks.at(EDGE)[pos][0]);
     edge = edge | (_state.mystate(true) & masks.at(EDGE)[pos][0]);
 
-    int score = get_score(target, edge, other_target, pos, masks);
-    if (score > _max_score)
-        _max_score = score;
-    if (score < _max_score)
-    {
-        _set_points(true, _max_score);
-        _max_score = 0;
-    }
-    if(_state.check_capture(_state.mystate(true), _state.otherstate(true), pos) != 0)
+    _my_scores[orientation][pos] = get_score(target, edge, other_target, pos, masks);
+    to_compute(true, _my_scores[orientation], pos, masks);
+
+    if(_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation) != 0)
         _points["my_potential_captures"]++;
-    score = get_score(other_target, edge, target, pos, masks);
-    if (score > _min_score)
-        _min_score = score;
-    if (score < _min_score)
-    {
-        _set_points(false, _min_score);
-        _min_score = 0;
-    }
-    if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos) != 0)
+
+    _other_scores[orientation][pos] = get_score(other_target, edge, target, pos, masks);
+    to_compute(false, _other_scores[orientation], pos, masks);
+
+    if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos, orientation) != 0)
         _points["ot_potential_captures"]++;
     return false;
 }
@@ -209,15 +244,15 @@ int Heuristics::run()
     //for (std::map<std::string, int>::iterator it = _points.begin(); it != _points.end(); it++)
     //    std::cout << it->first << ": " << it->second << std::endl;
 
-    _heuristic = 60000 * (_points["my_five"] - _points["ot_five"])
-                + 4800 * (_points["my_ofour"] - _points["ot_ofour"])
+    _heuristic = 80000 * (_points["my_five"] - _points["ot_five"])
+                + 10000 * (_points["my_ofour"] - _points["ot_ofour"])
                 + 500 * (_points["my_cfour"] - _points["ot_cfour"])
                 + 500 * (_points["my_othree"] - _points["ot_othree"])
                 + 200 * (_points["my_cthree"] - _points["ot_cthree"])
                 + 50 * (_points["my_otwo"] - _points["ot_otwo"])
                 + 10 * (_points["my_ctwo"] - _points["ot_ctwo"]);
     if (_state.with_captures())
-        _heuristic +=  500 * (_points["my_potential_captures"] * _state.maxi_captures()  - _points["ot_potential_captures"] *  _state.mini_captures());
+        _heuristic +=  40000 * (_points["my_cfive"] - _points["ot_cfive"]) + 500 * ((_points["my_potential_captures"] / 2) * _state.maxi_captures()  - (_points["ot_potential_captures"] / 2) *  _state.mini_captures());
     return _heuristic;
 }
 
@@ -229,4 +264,14 @@ int Heuristics::endgame(size_t pos)
             return _heuristic;
     }
     return 0;
+}
+
+void Heuristics::describe_heuristic() const
+{
+    std::map<std::string, int>::const_iterator it = _points.begin();
+    for (; it != _points.end(); it++)
+    {
+        std::cout << it->first << ": " << it->second << std::endl;
+    }
+    
 }

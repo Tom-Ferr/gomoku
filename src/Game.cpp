@@ -274,12 +274,13 @@ int Game::end_game()
 {
 	Heuristics h(_board);
 	int value = h.run();
-
+	std::cout << "Current Heuristic: " << value << std::endl;
+	h.describe_heuristic();
 	if (((~_board.totalboard()) & BoardState::mask) == 0)
 		return 0;
-	if (value >= 60000 || _board.maxi_captures() >= 5)
+	if (value >= 80000 || _board.maxi_captures() >= 5)
 		return 1;
-	else if (value <= -60000 || _board.mini_captures() >= 5)
+	else if (value <= -80000 || _board.mini_captures() >= 5)
 		return 2;
 	else if (_board.totalboard() == 0)
 		return 3;

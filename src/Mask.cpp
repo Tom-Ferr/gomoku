@@ -101,8 +101,8 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
     }
 
     pos = src - shift - inc;
-    bool s = (src + shift + inc) % _board_sqrt >= src % _board_sqrt;
-    bool f = pos % _board_sqrt > src % _board_sqrt;
+    bool s = (src + shift + inc) % _board_sqrt > src % _board_sqrt;
+    bool f = pos % _board_sqrt >= src % _board_sqrt;
     bool l = (pos + ((_mask_size + 1) * shift) + ((_mask_size + 1) * inc)) % _board_sqrt > src % _board_sqrt;
     for (size_t i = 0; i < _mask_size + 2; i++)
     {

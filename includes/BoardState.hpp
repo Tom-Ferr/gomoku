@@ -59,7 +59,7 @@ class BoardState
 			void increment_captures(bool turn, size_t points);
 			static void set_masks(int mask_size, int board_sqrt, bool mirrored);
 			void check_capture(size_t pos, bool maximizing);
-			size_t check_capture(const BigInt &self, const BigInt &rival, const size_t &pos);
+			size_t check_capture(const BigInt &self, const BigInt &rival, const size_t &pos, char orientation);
 			size_t check_capture(const BigInt &target, bool maximizing);
 		private:
 

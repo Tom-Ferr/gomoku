@@ -183,7 +183,6 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
                 _heuristic = 80000;
                 return true;
             }
-            _set_points(true, 32);
         }
         else
         {
@@ -203,7 +202,6 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
                 _heuristic = -80000;
                 return true;
             }
-            _set_points(false, 32);
         }
         else
         {
@@ -243,8 +241,6 @@ int Heuristics::run()
                 return _heuristic;
         }
     }
-    //for (std::map<std::string, int>::iterator it = _points.begin(); it != _points.end(); it++)
-    //    std::cout << it->first << ": " << it->second << std::endl;
 
     _heuristic = 80000 * (_points["my_five"] - _points["ot_five"])
                 + 10000 * (_points["my_ofour"] - _points["ot_ofour"])

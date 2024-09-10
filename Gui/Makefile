@@ -27,10 +27,10 @@ INCLUDE 		=	-I${INC} -I${GUI_INC}
 LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx -ldl -pthread -lm
 
 # MLX
-MLX_INC			=	-I./MLX42/include -I/opt/homebrew/Cellar/glfw/3.4/include
-MLX_LIB			=	-L./MLX42/build -L/opt/homebrew/Cellar/glfw/3.4/lib
-GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
-GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
+MLX_INC			=	-I./MLX42/include -I/usr/local/Cellar/glfw/3.4/include
+MLX_LIB			=	-L./MLX42/build -L/usr/local/Cellar/glfw/3.4/lib
+GMP_INC			=	-I/usr/local/Cellar/gmp/6.3.0/include
+GMP_LIB			=	-L/usr/local/Cellar/gmp/6.3.0/lib
 
 UNAME			=	$(shell uname)
 LINUX			= -D _LINUX

@@ -88,13 +88,7 @@ bool Gui::_load_textures()
 		return (false);
 	if (!_load_texture(Gui::texture("logo"), "assets/logo.png"))
 		return (false);
-	if (!_load_texture(Gui::texture("playbutton"), "assets/playbutton.png"))
-		return (false);
-	if (!_load_texture(Gui::texture("button"), "assets/wbutton.png"))
-		return (false);
 	if (!_load_texture(Gui::texture("font_regular"), "assets/fontregular.png"))
-		return (false);
-	if (!_load_texture(Gui::texture("font_bold"), "assets/fontbold.png"))
 		return (false);
 	if (!_load_texture(Gui::texture("font_heavy"), "assets/fontheavy.png"))
 		return (false);

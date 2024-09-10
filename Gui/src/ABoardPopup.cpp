@@ -39,7 +39,7 @@ void ABoardPopup::_init()
 	_header = mlx_new_image(Gui::mlx(), 300, 300);
 	_ok_button = mlx_new_image(Gui::mlx(), 300, 300);
 	_ok_button_hover = mlx_new_image(Gui::mlx(), 300, 300);
-	mlx_put_pixel(_background, 0, 0, 0x00000fbb);
+	mlx_put_pixel(_background, 0, 0, 0x0f0000bb);
 	mlx_image_to_window(Gui::mlx(), _background, _dimensions.x, _dimensions.y);
 	mlx_image_to_window(Gui::mlx(), _centerbox, _dimensions.x, _dimensions.y);
 	mlx_image_to_window(Gui::mlx(), _header, _dimensions.x, _dimensions.y);

@@ -10,12 +10,10 @@ Menu::Menu()
 bool Menu::init()
 {
 	_logo = mlx_new_image(Gui::mlx(), Gui::texture("logo")->height, Gui::texture("logo")->width);
-	_play_button = mlx_new_image(Gui::mlx(), Gui::texture("playbutton")->height, Gui::texture("playbutton")->width);
-	_play_button_hover = mlx_new_image(Gui::mlx(), Gui::texture("playbutton")->height, Gui::texture("playbutton")->width);
+	_play_button = mlx_new_image(Gui::mlx(), Gui::texture("playbuttons")->height / 2, Gui::texture("playbuttons")->width / 2);
+	_play_button_hover = mlx_new_image(Gui::mlx(), Gui::texture("playbuttons")->height / 2, Gui::texture("playbuttons")->width / 2);
 	_dimensions = Rect::subrect(Gui::dimensions(), .8);
 	Gui::apply_texture(_logo, Gui::texture("logo"));
-	Gui::apply_texture(_play_button, Gui::texture("playbutton"));
-	Gui::apply_texture(_play_button_hover, Gui::texture("playbutton"), Color(100, 100, 255, 150));
 
 	mlx_image_to_window(Gui::mlx(), _logo, 0, 0);
 	mlx_image_to_window(Gui::mlx(), _play_button, 0, 0);
@@ -80,7 +78,7 @@ void Menu::_resize_buttons()
 {
 	Rect button_box = Rect::subrect(Gui::dimensions(), .9);
 	button_box = Rect::subrect(button_box, .3, .5, 1);
-	button_box.y = _logo->instances[0].y + (_logo->height * 1.1);
+	button_box.y = _logo->instances[0].y + (_logo->height * 1.03);
 	_bgroup_vs.resize(Rect(button_box.x - (button_box.width * 1.1) , button_box.y, button_box.width, button_box.height));
 	_bgroup_starting.resize(Rect(button_box.x, button_box.y, button_box.width, button_box.height));
 	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.1), button_box.y, button_box.width, button_box.height));

@@ -48,11 +48,11 @@ all:		${NAME}
 $(NAME):	${OBJS}
 			${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}  ${LIBS}
 
-$(BUILD_DIR)%.o:	$(SRCDIR)%.cpp
+$(BUILD_DIR)%.o:	$(GUI_SRCDIR)%.cpp
 	@mkdir -p $(BUILD_DIR)
 	${CXX} ${CXXFLAGS} -MMD ${SANITIZE} ${INCLUDE} -c $< -o $@
 
-$(BUILD_DIR)%.o:	$(GUI_SRCDIR)%.cpp
+$(BUILD_DIR)%.o:	$(SRCDIR)%.cpp
 	@mkdir -p $(BUILD_DIR)
 	${CXX} ${CXXFLAGS} -MMD ${SANITIZE} ${INCLUDE} -c $< -o $@
 

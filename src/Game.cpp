@@ -85,8 +85,8 @@ bool Game::human_step(size_t pos, bool turn)
 	_ftc = Free_Three_Checker(_board);
 	_turn = !_turn;
 	_total_nmoves++;
-	std::cout << "Total Moves: " << _total_nmoves << std::endl;
-	std::cout << "Init Game: " << _init_game << std::endl;
+	if ((game_mode() == GM_PRO || game_mode() == GM_LONGPRO) && _total_nmoves == 2)
+		_init_game = false;
 	if ((_total_nmoves == 3 || _total_nmoves == 5) && _init_game &&  (game_mode() == GM_SWAP2 || game_mode() == GM_SWAP))
 	{
 		mode_name = MSG_SWAP;
@@ -94,9 +94,11 @@ bool Game::human_step(size_t pos, bool turn)
 			mode_name = MSG_SWAP2;
 		if (vs_ai())
 		{
-			 /* player three made the three pieces... AI just keeps going.*/
-			 _message = GameMessage(false, false, MSG_AI_CHOSE_WHITE, mode_name);
-			_player = true; /* set player to black*/
+			if (_total_nmoves == 3)
+			{
+				_message = GameMessage(false, false, MSG_AI_CHOSE_WHITE, mode_name);
+				_player = true; /* set player to black*/
+			}
 		}
 
 		else if (_total_nmoves == 3) /* player 1 is black so player two must choose. */
@@ -230,13 +232,12 @@ bool Game::_is_pro_invalid_move(size_t pos)
 	size_t black_piece;
 	Rect p;
 
-	std::cout << "check if move is invalid: " << pos << std::endl;
+	std::cout << "check if move is invalid: " << pos << " init game" << _init_game << std::endl;
 
 	if (!_turn) /*rule applies only to black pieces*/
 		return false;
 	if (_board.mystate(true) == 0) /*no black pieces on the board yet. all moves are valid*/
 	{
-		std::cout << "_board.size() / 2" << _board.size() / 2 << std::endl;
 		return (pos != static_cast<size_t>(_board.size() / 2));
 	}
 	black_piece = _board.mystate(true).pos();

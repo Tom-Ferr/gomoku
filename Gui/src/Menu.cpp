@@ -59,7 +59,7 @@ void Menu::resize()
 	_dimensions = Rect::subrect(Gui::dimensions(), .8);
 	_play_dimensions = Rect::subrect(_dimensions, .4, .15, 2);
 	ratio = float(Gui::texture("logo")->height) / Gui::texture("logo")->width;
-	Rect logo_dimensions = Rect::subrect(_dimensions, 1., ratio, 0);
+	Rect logo_dimensions = Rect::subrect(_dimensions, .7, ratio * .7, 0);
 	mlx_resize_image(_logo, logo_dimensions.width, logo_dimensions.height);
 	mlx_resize_image(_play_button, _play_dimensions.width, _play_dimensions.height);
 	mlx_resize_image(_play_button_hover, _play_dimensions.width, _play_dimensions.height);

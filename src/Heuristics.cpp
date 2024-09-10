@@ -66,14 +66,14 @@ size_t Heuristics::is_capturable(const size_t &pos, const Mask::inner_map &masks
         return 0;
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
     size_t points;
-    size_t greater_points = 0;
+    size_t capturable_points = 0;
     for (size_t i = 1; i <= 5; i++)
     {
         points = _state.check_capture(vectorized[i], maximizing);
-        if(points > greater_points)
-            greater_points = points;
+        if(points != 0)
+            capturable_points++;
     }
-    return greater_points;
+    return capturable_points;
 }
 
 int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
@@ -125,8 +125,14 @@ void Heuristics::_set_points(bool my, int points)
         str = "ot_";
     if (points == 32)
         str+="five";
-    else if (points == 31)
-        str+="cfive";
+    else if (points == 21)
+        str+="cfive1";
+    else if (points == 22)
+        str+="cfive2";
+    else if (points == 23)
+        str+="cfive3";
+    else if (points == 24 || points == 25)
+        str+="cfive4";
     else if (points == 2)
         str+="one";
     else if (points == 4)
@@ -188,7 +194,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
         {
             if (endgame)
                 return false;
-            _set_points(true, 31);
+            _set_points(true, 20 + points);
             _points["my_five"]--;
         }
     }
@@ -207,7 +213,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
         {
             if (endgame)
                 return false;
-            _set_points(false, 31);
+            _set_points(false, 20 + points);
             _points["ot_five"]--;
         }
     }
@@ -249,7 +255,10 @@ int Heuristics::run()
                 + 50 * (_points["my_otwo"] - _points["ot_otwo"])
                 + 10 * (_points["my_ctwo"] - _points["ot_ctwo"]);
     if (_state.with_captures())
-        _heuristic +=  40000 * (_points["my_cfive"] - _points["ot_cfive"]) + 500 * ((_points["my_potential_captures"] / 2) * _state.maxi_captures()  - (_points["ot_potential_captures"] / 2) *  _state.mini_captures());
+        _heuristic +=   10000 * (_points["my_cfive1"] - _points["ot_cfive1"])
+                        + 500 * (_points["my_cfive2"] - _points["ot_cfive2"])
+                        + 50  * (_points["my_cfive3"] - _points["ot_cfive3"])
+                        + 500 * ((_points["my_potential_captures"] / 2) * _state.maxi_captures()  - (_points["ot_potential_captures"] / 2) *  _state.mini_captures());
     return _heuristic;
 }
 

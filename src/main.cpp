@@ -10,11 +10,29 @@ int main (void)
     BoardState::set_masks(4, 19, false);
     Heuristics::set_masks(5, 19);
     Free_Three_Checker::set_masks(6, 19);
-    // Mask m = Mask(4, 19, false, true);
-    // m.print_mask(m[VERTICAL][EDGE]);
+    // Mask m = Mask(5, 19, true, false);
+    // m.print_mask(m[HORIZONTAL][SUBMASK]);
     // return 0;
 
-
+//   .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  X  .  .  .  .  .  X  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  0  0  X  0  .  0  X  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  0  X  .  .  0  .  X  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  0  .  0  0  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  0  0  0  .  0  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  X  X  X  X  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  0  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
+//  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 
 
 const char* me = (
 
@@ -25,39 +43,40 @@ const char* me = (
         "0000000000000000000" 
         "0000000000000000000" 
         "0000000000000000000" 
-        "0000000010000000000" 
-        "0000000010100000000" 
-        "0000000010000000000" 
-        "0000000010000000000" 
-        "0000000000010000000" 
-        "0000000010000000000" 
+        "0000001000001000000" 
+        "0000000001000100000" 
+        "0000000001010010000" 
+        "0000000000100000000" 
+        "0000000000000000000" 
+        "0000000001011000000" 
         "0000000000000000000" 
         "0000000000000000000" 
         "0000000000000000000" 
         "0000000000000000000" 
         "0000000000000000000" 
         "0000000000000000000" 
+       
     );
 const char* vs = (
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000010000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000110000000"  
-        "0000000000100000000"  
-        "0000000011100000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
-        "0000000000000000000"  
         "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000110101000000" 
+        "0000000010001000000" 
+        "0000000001011000000" 
+        "0000000010101000000" 
+        "0000000000000000000" 
+        "0000000000000100000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000" 
+        "0000000000000000000"  
 );
 
 
@@ -67,14 +86,45 @@ const char* vs = (
     Game g;
     g.board().applymove(my_state, true);
     g.board().applymove(other_state, false);
-    Heuristics h(g.board());
-    g.board().print();
-    int result = h.run();
-    std::cout << "Heuristics:" << result << std::endl;
-    h.describe_heuristic();
+    {
+        Heuristics h(g.board());
+        g.board().print();
+        int result = h.run();
+        std::cout << "Heuristics:" << result << std::endl;
+    }
+    // h.describe_heuristic();
     // g.board().increment_captures(false, 2);
     // std::cout << result << std::endl;
-    // g.step(false);
+    g.step(false);
+    // g.board().applymove(BigInt(1) << 122, false);
+    g.board().print();
+    {
+        Heuristics h(g.board());
+        g.board().print();
+        int result = h.run();
+        std::cout << "Current_Heuristics:" << result << std::endl;
+        h.describe_heuristic();
+    }
+     g.step(true);
+    // g.board().applymove(BigInt(1) << 122, false);
+    g.board().print();
+    {
+        Heuristics h(g.board());
+        g.board().print();
+        int result = h.run();
+        std::cout << "Current_Heuristics:" << result << std::endl;
+        h.describe_heuristic();
+    }
+    g.step(false);
+    // g.board().applymove(BigInt(1) << 122, false);
+    g.board().print();
+    {
+        Heuristics h(g.board());
+        g.board().print();
+        int result = h.run();
+        std::cout << "Current_Heuristics:" << result << std::endl;
+        h.describe_heuristic();
+    }
 
 
     return (0);

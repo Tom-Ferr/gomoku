@@ -49,7 +49,6 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 Game::Game(const Game& other)
 :_board(other._board), _ftc(_board)
 {
-	std::cout << "Game copy constructor" << std::endl;
 	*this = other;
 }
 
@@ -79,6 +78,8 @@ Game::~Game() {}
 
 bool Game::human_step(size_t pos, bool turn)
 {
+	std::string mode_name;
+
 	check_capture(pos, !turn);
 	_board.applymove(pos, turn);
 	_ftc = Free_Three_Checker(_board);
@@ -86,12 +87,22 @@ bool Game::human_step(size_t pos, bool turn)
 	_total_nmoves++;
 	std::cout << "Total Moves: " << _total_nmoves << std::endl;
 	std::cout << "Init Game: " << _init_game << std::endl;
-	if (_total_nmoves == 3 && _init_game &&  (game_mode() == GM_SWAP2 || game_mode() == GM_SWAP))
+	if ((_total_nmoves == 3 || _total_nmoves == 5) && _init_game &&  (game_mode() == GM_SWAP2 || game_mode() == GM_SWAP))
 	{
+		mode_name = MSG_SWAP;
+		if (game_mode() == GM_SWAP2 && _total_nmoves == 3)
+			mode_name = MSG_SWAP2;
 		if (vs_ai())
-			_message = GameMessage(false, false, "AI chose to play as whites", "Swap");
+		{
+			 /* player three made the three pieces... AI just keeps going.*/
+			 _message = GameMessage(false, false, MSG_AI_CHOSE_WHITE, mode_name);
+			_player = true; /* set player to black*/
+		}
+
+		else if (_total_nmoves == 3) /* player 1 is black so player two must choose. */
+			_message = GameMessage(player(), true, (player() ? MSG_P2_CHOOSES : MSG_P1_CHOOSES), mode_name);
 		else
-			_message = GameMessage(false, true, "Player X must choose", "Swap");
+			_message = GameMessage(player(), true, (player() ? MSG_P1_CHOOSES : MSG_P2_CHOOSES), mode_name);
 	}
 	std::cout << "Appying move: " << pos << std::endl;
 	return true;
@@ -159,8 +170,8 @@ bool Game::step(bool turn)
 		_board.applymove(_move, turn);
 		std::cout << "Move: " << _move << std::endl;
 	}
-	std::cout << _board << std::endl;
-	_board.print();
+//	std::cout << _board << std::endl;
+	//_board.print();
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	_last_time = duration.count();
 	_total_time += duration.count();
@@ -356,29 +367,31 @@ int Game::end_game()
 	return 0;
 }
 
-
-/*
-** initialization handler for game swap2 mode.
-*/
-bool Game::_init_game_swap2(bool turn, bool dummy)
-{
-	(void)turn;(void)dummy;
-	return true;
-}
-
 /*
 ** A special move is needed for the swap game modes.
-** if AI is black, it should play the white move if _total_nmoves is 1 or 4
-** if P1 is black, it should play the white move if _total_nmoves is 1 or 4
+** if AI is black, it should play the white move if _total_nmoves is 1
+** if AI would defer, it would also maks move 4 special, but
+** for now AI will always choose whites.
 */
 bool Game::is_game_swap_special_move()
 {
-	std::cout << "(nmoves: " << _total_nmoves << ")";
 	if (!_init_game)
 		return false;
 	if (_game_mode == GM_SWAP2 || _game_mode == GM_SWAP)
 	{
-		if (_total_nmoves == 1 || _total_nmoves == 4)
+		if (_total_nmoves == 1)
+			return true;
+	}
+	return false;
+}
+
+bool Game::is_game_swap_deferred_move()
+{
+	if (!_init_game)
+		return false;
+	if (_game_mode == GM_SWAP2)
+	{
+		if (_total_nmoves == 4)
 			return true;
 	}
 	return false;
@@ -388,6 +401,8 @@ bool Game::is_game_swap_special_move()
 */
 bool Game::_init_game_swap(bool turn, bool dummy)
 {
+	std::string mode;
+
 	if (!(_total_nmoves)) /*if no black pieces on the board*/
 	{
 		_init_game_standard(turn, dummy); /*apply the same initial move*/
@@ -398,21 +413,26 @@ bool Game::_init_game_swap(bool turn, bool dummy)
 	}
 	else if (!_init_game)
 		return false;
-	else if (_total_nmoves < 3) /*next white and black moves*/
+	else if (_total_nmoves <= 3) /*next white and black moves*/
 	{
 		if (!dummy)
 			_total_nmoves++;
 		if (_total_nmoves == 3)
 		{
+			mode = MSG_SWAP;
+			if (_game_mode == GM_SWAP2)
+				mode = MSG_SWAP2;
 			if (turn == !_player && vs_ai())
-				_message = GameMessage(true, true, "Select a piece to swap");
-			_init_game = false;
+				_message = GameMessage(true, true, MSG_P1_CHOOSES, mode);
+			if (_game_mode == GM_SWAP)
+				_init_game = false;
 		}
 		return false; /*moves are handled normally by minimax*/
 	}
 	if (!dummy)
 		_total_nmoves++;
-	_init_game = false;
+	if (!dummy || _total_nmoves >= 5)
+		_init_game = false;
 	return false;
 }
 
@@ -496,9 +516,25 @@ bool Game::_init_game_handler(bool turn, bool dummy)
 	return false;
 }
 
-
+bool Game::is_deferred_turn()
+{
+	if (_game_mode == GM_SWAP2)
+		return _total_nmoves == 5;
+	return false;
+}
 
 GameMessage &Game::message()
 {
 	return _message;
+}
+
+void Game::set_defer_message()
+{
+	_message = GameMessage(_turn, false, MSG_DEFFERRED, MSG_SWAP2);
+	_init_game = true;
+}
+
+void Game::clear_init_game()
+{
+	_init_game = false;
 }

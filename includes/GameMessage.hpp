@@ -7,16 +7,16 @@
 # define MSG_SWAP2 "Swap2"
 # define MSG_P1_CHOOSES "Player 1 must choose"
 # define MSG_P2_CHOOSES "Player 2 must choose"
-# define MSG_P1_CHOSE_WHITE "AI chose to play as whites"
-# define MSG_P1_CHOSE_BLACK "AI chose to play as whites"
-# define MSG_P2_CHOSE_WHITE "AI chose to play as whites"
-# define MSG_P2_CHOSE_BLACK "AI chose to play as whites"
+# define MSG_AI_CHOSE_WHITE "AI chose to play as whites"
 
-# define MSG_PRO_INFO	"The starting player (black) puts the first stone to the middle        "\
-					   	"intersection of the board, this move is compulsory. The second player "\
-					   	"can put the second move anywhere on the board. Then, on black's turn, "\
-					   	"the third move has to be outside a 5x5 square from the center of the  "\
-					   	"board.                                                                "
+# define MSG_DEFFERRED		"You deferred the choice to your opponent. Place another white and     "\
+							"another black stone on the board before your opponent's turn.         "
+
+# define MSG_PRO_INFO		"The starting player (black) puts the first stone to the middle        "\
+					   		"intersection of the board, this move is compulsory. The second player "\
+					   		"can put the second move anywhere on the board. Then, on black's turn, "\
+					   		"the third move has to be outside a 5x5 square from the center of the  "\
+					   		"board.                                                                "
 
 # define MSG_LONGPRO_INFO	"The starting player (black) puts the first stone to the middle        "\
 					   		"intersection of the board, this move is compulsory. The second player "\

@@ -50,7 +50,6 @@ class Game
 		t_gamemode						_game_mode;
 		size_t							_ai_nmoves;
 
-		/* these might not be quite necessary for game init. we'll see */
 		size_t							_total_nmoves;
 		GameMessage						_message;
 
@@ -63,7 +62,6 @@ class Game
 
 		bool _init_game_handler(bool turn, bool dummy=false);
 		bool _init_game_standard(bool turn, bool dummy=false);
-		bool _init_game_swap2(bool turn, bool dummy);
 		bool _init_game_swap(bool turn, bool dummy);
 		bool _init_game_pro(bool turn, bool dummy);
 		bool _is_pro_invalid_move(size_t pos);
@@ -93,7 +91,11 @@ class Game
 		float last_time();
 		int end_game();
 		bool is_game_swap_special_move();
+		bool is_game_swap_deferred_move();
 		GameMessage &message();
+		void set_defer_message();
+		void clear_init_game();
+		bool is_deferred_turn();
 };
 
 #endif

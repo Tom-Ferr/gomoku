@@ -84,8 +84,11 @@ void BoardMode::show(GameMessage const &message)
 	_buttons.clear();
 	if (message.selection())
 	{
+		_buttons = ButtonGroup(message.text(), Rect(0, 0, 0, 0));
 		_buttons.add("Play as White");
 		_buttons.add("Play as Black");
+		if (message.mode() == MSG_SWAP2)
+			_buttons.add("Defer Choice");
 		_buttons.show();
 	}
 	else

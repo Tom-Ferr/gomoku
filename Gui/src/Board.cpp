@@ -217,9 +217,16 @@ bool Board::click()
 	{
 		if (_mode.click())
 		{
-			if (_mode.buttons().size() && _mode.buttons().selected() !=  static_cast<size_t>(_game.player()))
+			if (_mode.buttons().size() == 3 && _mode.buttons().selected() == 2)
 			{
-				_game.set_player(!_game.player());
+				_game.set_defer_message();
+				update_statusbar();
+			}
+			else if (_mode.buttons().size())
+			{
+				if (!_game.turn() && ((_mode.buttons().selected() == 1 && !_game.is_deferred_turn())
+						|| (_mode.buttons().selected() == 0 && _game.is_deferred_turn())))
+					_game.set_player(!_game.player());
 				update_statusbar();
 			}
 			_mode.hide();
@@ -325,6 +332,11 @@ void Board::loop()
 		enable();
 		return ;
 	}
+	if (_game.vs_ai () && (!_game.is_player_turn() && _game.is_game_swap_deferred_move()))
+	{
+		enable();
+		return ;
+	}
 
 	/*vs AI and is AI turn, do something*/
 	if (_game.vs_ai()
@@ -356,7 +368,7 @@ void Board::loop()
 		_hinted_tile->hint(true);
 		enable();
 	}
-	std::cout << "Enabled: " << enabled() << std::endl;
+	//std::cout << "Enabled: " << enabled() << std::endl;
 	//std::cout << "Board queue loop" << std::endl;
 }
 

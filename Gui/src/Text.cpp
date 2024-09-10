@@ -114,9 +114,12 @@ void Text::resize(size_t height)
 	size_t tex_width = ratio * height;
 
 	_dimensions.width = tex_width * _text.size();
+	_dimensions.height = height;
 	if (_text.size() > LINE_WIDTH)
+	{
 		_dimensions.width = tex_width * LINE_WIDTH;
-	_dimensions.height = height * ((_text.size() / LINE_WIDTH) + 1);
+		_dimensions.height = height * ((_text.size() / LINE_WIDTH));
+	}
 	mlx_resize_image(_image, _dimensions.width, _dimensions.height);
 	if (!_image)
 		return ;

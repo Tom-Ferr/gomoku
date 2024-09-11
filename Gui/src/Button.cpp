@@ -107,7 +107,7 @@ void Button::depth(size_t depth)
 	_text.depth(depth + 1);
 }
 
-bool Button::selected()
+bool Button::selected() const
 {
 	return _selected;
 }

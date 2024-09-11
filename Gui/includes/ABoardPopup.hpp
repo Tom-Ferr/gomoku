@@ -20,7 +20,7 @@ class ABoardPopup
 		bool							_enabled;
 
 		void _resize_background();
-		void _resize_box();
+		void _resize_box(bool wide=false);
 		void _box_texture();
 		void _resize_ok();
 		void _resize_header();

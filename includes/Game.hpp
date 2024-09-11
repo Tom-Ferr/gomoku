@@ -7,15 +7,17 @@
 # include <Free_Three_Checker.hpp>
 # include <Heuristics.hpp>
 # include <Node.hpp>
+# include <Rect.hpp>
 # include <vector>
+# include <GameMessage.hpp>
 
 typedef enum e_gamemode
 {
 	GM_STANDARD,
 	GM_PRO,
+	GM_LONGPRO,
 	GM_SWAP,
-	GM_SWAP2,
-	GM_LONGPRO
+	GM_SWAP2
 }	t_gamemode;
 
 typedef enum e_startingplayer
@@ -47,10 +49,22 @@ class Game
 		bool							_init_game;
 		t_gamemode						_game_mode;
 		size_t							_ai_nmoves;
+
+		size_t							_total_nmoves;
+		GameMessage						_message;
+
+		size_t							_p1_nmoves;
+		size_t							_p2_nmoves;
+
 		float						 	_total_time;
 		float						 	_last_time;
 
 
+		bool _init_game_handler(bool turn, bool dummy=false);
+		bool _init_game_standard(bool turn, bool dummy=false);
+		bool _init_game_swap(bool turn, bool dummy);
+		bool _init_game_pro(bool turn, bool dummy);
+		bool _is_pro_invalid_move(size_t pos);
 	public:
 		Game(int size=19, t_vs vs=VS_AI, t_startingplayer startingplayer=SP_PLAYER1, t_gamemode mode=GM_STANDARD);
 		Game(const Game& other);
@@ -63,10 +77,11 @@ class Game
 		void check_capture(size_t pos, bool turn);
 		std::vector<int> &captures();
 		BoardState &board();
-		bool is_double_free_three(const size_t &pos);
+		bool is_invalid_move(const size_t &pos);
 		void update_freechecker();
 		bool &turn();
 		bool player();
+		void set_player(bool player);
 		bool vs_ai();
 		bool vs_p2();
 		t_gamemode &game_mode();
@@ -75,6 +90,12 @@ class Game
 		float average_time();
 		float last_time();
 		int end_game();
+		bool is_game_swap_special_move();
+		bool is_game_swap_deferred_move();
+		GameMessage &message();
+		void set_defer_message();
+		void clear_init_game();
+		bool is_deferred_turn();
 };
 
 #endif

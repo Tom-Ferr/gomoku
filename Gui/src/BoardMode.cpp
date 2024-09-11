@@ -29,6 +29,8 @@ void BoardMode::init()
 void BoardMode::resize()
 {
 	_resize();
+	if (_info.text().size() >= LINE_WIDTH)
+		_resize_box(true);
 	_resize_info();
 	_resize_buttons();
 }
@@ -37,7 +39,7 @@ void BoardMode::_resize_info()
 {
 	Rect dimensions = Rect::subrect(_dimensions, 1, .07, 1);
 	_info.resize(dimensions);
-	_info.center(_dimensions.x + (_dimensions.width / 2));
+	_info.center(_dimensions.x + (_dimensions.width / 2), _dimensions.y + (_dimensions.height / 2));
 }
 
 
@@ -75,6 +77,28 @@ void BoardMode::show(std::string mode, bool selecting)
 	resize();
 }
 
+void BoardMode::show(GameMessage const &message)
+{
+	_set_header_text(message.mode());
+	_show();
+	_buttons.clear();
+	if (message.selection())
+	{
+		_buttons = ButtonGroup(message.text(), Rect(0, 0, 0, 0));
+		_buttons.add("Play as White");
+		_buttons.add("Play as Black");
+		if (message.mode() == MSG_SWAP2)
+			_buttons.add("Defer Choice");
+		_buttons.show();
+	}
+	else
+	{
+		_info = message.text();
+		_info.show();
+	}
+	resize();
+}
+
 void BoardMode::hover()
 {
 	_hover();
@@ -92,4 +116,9 @@ bool BoardMode::click()
 	if (_buttons.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
 		_buttons.click();
 	return false;
+}
+
+ButtonGroup const &BoardMode::buttons() const
+{
+    return _buttons;
 }

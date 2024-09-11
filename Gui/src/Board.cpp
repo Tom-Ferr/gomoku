@@ -185,7 +185,7 @@ bool Board::hover()
 			}
 			return false;
 		}
-		if (_game.is_double_free_three(tile))
+		if (_game.is_invalid_move(tile))
 			return false;
 		hovered = &_tiles[tile];
 		if (hovered == _hovered_tile)
@@ -217,6 +217,19 @@ bool Board::click()
 	{
 		if (_mode.click())
 		{
+			if (_mode.buttons().size() == 3 && _mode.buttons().selected() == 2)
+			{
+				_game.set_defer_message();
+				update_statusbar();
+			}
+			else if (_mode.buttons().size())
+			{
+				if (!_game.turn() && ((_mode.buttons().selected() == 1 && !_game.is_deferred_turn())
+						|| (_mode.buttons().selected() == 0 && _game.is_deferred_turn())))
+					_game.set_player(!_game.player());
+                _game.clear_init_game();
+				update_statusbar();
+			}
 			_mode.hide();
 			enable();
 		}
@@ -239,7 +252,7 @@ bool Board::click()
 	}
 	if (enabled() && _hovered_tile)
 	{
-		if (_game.is_double_free_three(_hovered_tile->pos()))
+		if (_game.is_invalid_move(_hovered_tile->pos()))
 			return false;
 		if (_hovered_tile->click(_game.turn()))
 		{
@@ -305,14 +318,33 @@ void Board::loop()
 {
 	bool turn;
 
-	if (++_loop_count % 20)
+	if (++_loop_count % 10)
 		return ;
+	if (_mode.enabled())
+		return ;
+	if (_game.message())
+	{
+		_mode.show(_game.message());
+		_game.message().clear();
+		return ;
+	}
+	if (_game.vs_ai() && (_game.is_player_turn() ^ _game.is_game_swap_special_move()))
+	{
+		enable();
+		return ;
+	}
+	if (_game.vs_ai () && (!_game.is_player_turn() && _game.is_game_swap_deferred_move()))
+	{
+		enable();
+		return ;
+	}
 
-	/*vs AI and waiting for player turn, do nothing*/
-	if (_game.vs_ai () && _game.is_player_turn())
-		return ;
 	/*vs AI and is AI turn, do something*/
-	if (_game.vs_ai() && !(_game.is_player_turn()))
+	if (_game.vs_ai()
+		&& (!_game.is_player_turn() /* I wil lnot play if it is players turn*/
+		|| _game.is_game_swap_special_move() /* except if it is a special move for swap mode*/
+		)
+	)
 	{
 		turn = _game.turn();
 		if (_game.step(turn))
@@ -337,7 +369,7 @@ void Board::loop()
 		_hinted_tile->hint(true);
 		enable();
 	}
-	std::cout << "Enabled: " << enabled() << std::endl;
+	//std::cout << "Enabled: " << enabled() << std::endl;
 	//std::cout << "Board queue loop" << std::endl;
 }
 

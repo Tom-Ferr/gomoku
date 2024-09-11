@@ -1,7 +1,7 @@
 #include <Text.hpp>
 #include <Gui.hpp>
 
-
+#include <algorithm>
 
 Text::Text()
 :_image(nullptr), _bold(false) {}
@@ -51,6 +51,11 @@ void Text::_init()
 	Rect tex = Rect(0, 0, font->width  / FONT_GRIDSIZE,
 					font->height / FONT_GRIDSIZE);
 	_dimensions = Rect(0, 0, tex.width * _text.size(), tex.height);
+	if (_text.size() > LINE_WIDTH)
+	{
+		_dimensions.width = tex.width * LINE_WIDTH;
+		_dimensions.height = tex.height * ((_text.size() / LINE_WIDTH) + 1);
+	}
 	if (!_image)
 	{
 		_image = mlx_new_image(Gui::mlx(), _dimensions.width, _dimensions.height);
@@ -58,14 +63,41 @@ void Text::_init()
 			return ;
 		mlx_image_to_window(Gui::mlx(), _image, 0, 0);
 	}
-	resize(_dimensions.height);
 }
 
 void Text::resize(Rect const &dimensions)
 {
+	float ratio;
+	size_t max_total_height;
+
 	_dimensions.x = dimensions.x;
 	_dimensions.y = dimensions.y;
-	resize(dimensions.height);
+	/*
+	** if the text is greater or equal to LINE_WIDTH,
+	** we resize the text to fit the width, otherwise we consider the height
+	** passed in dimensions.
+	*/
+	ratio = static_cast<float>(Gui::texture("font_regular")->height / FONT_GRIDSIZE)
+			/ (Gui::texture("font_regular")->width / FONT_GRIDSIZE);
+	//if (_text.size() >= LINE_WIDTH)
+	//	resize(dimensions.width * ratio);
+	//else
+
+	if (_text.size() > LINE_WIDTH)
+	{
+
+		std::cout << "Dimensions Width: " << dimensions.width << std::endl;
+		std::cout << "Dimensions Height: " << dimensions.height << std::endl;
+		std::cout << "Ratio: " << ratio << std::endl;
+		std::cout << "New Height: " << (dimensions.width / LINE_WIDTH) * ratio << std::endl;
+
+		max_total_height = Gui::dimensions().height / 3;
+		max_total_height /= ((_text.size() / LINE_WIDTH) + 1);
+		max_total_height = std::min(max_total_height, static_cast<size_t>((dimensions.width / LINE_WIDTH) * ratio));
+		resize(max_total_height);
+	}
+	else
+		resize(dimensions.height);
 }
 
 void Text::resize(size_t height)
@@ -83,12 +115,19 @@ void Text::resize(size_t height)
 
 	_dimensions.width = tex_width * _text.size();
 	_dimensions.height = height;
+	if (_text.size() > LINE_WIDTH)
+	{
+		_dimensions.width = tex_width * LINE_WIDTH;
+		_dimensions.height = height * ((_text.size() / LINE_WIDTH));
+	}
 	mlx_resize_image(_image, _dimensions.width, _dimensions.height);
 	if (!_image)
 		return ;
 	for (size_t i = 0; i < _text.size(); i++)
 	{
-		Rect r = Rect(tex_width * i, 0, tex_width, _dimensions.height);
+		size_t x = i % LINE_WIDTH;
+		size_t y = i / LINE_WIDTH;
+		Rect r = Rect(tex_width * x, height * y, tex_width, height);
 		Gui::apply_texture(_image, font,
 						Color::white, _text[i] - 32,
 						FONT_GRIDSIZE, r);
@@ -103,6 +142,16 @@ void Text::center(size_t center)
 		return ;
 	_dimensions.x = center - (_dimensions.width / 2);
 	_image->instances[0].x = _dimensions.x;
+}
+
+void Text::center(size_t x, size_t y)
+{
+	if (!_image)
+		return ;
+	_dimensions.x = x - (_dimensions.width / 2);
+	_dimensions.y = y - (_dimensions.height / 2);
+	_image->instances[0].x = _dimensions.x;
+	_image->instances[0].y = _dimensions.y;
 }
 
 void Text::depth(size_t depth)

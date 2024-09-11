@@ -11,9 +11,23 @@ class BigInt
 		mpz_t _value;
 
 	public:
+		static const BigInt zero;
+
+		/* tempoprary value for all operations*/
 		static BigInt tmp;
 
+		/*
+		** time saving operations, reducing BigInt creation
+		*/
 		static BigInt &bi_and(const BigInt &one, const BigInt &other);
+		static bool and_equal(const BigInt &one, const BigInt &other, const BigInt &equals_to);
+		static bool and_equal_zero(const BigInt &one, const BigInt &other);
+
+		/*
+		** applies the mask to both one and other and then performs the bitwise or
+		*/
+		static BigInt &masked_bitwise_or(const BigInt &one, const BigInt &other, const BigInt &mask);
+
 
 		// Default Constructor
 		BigInt();
@@ -49,7 +63,7 @@ class BigInt
 		BigInt operator%(const BigInt& other) const;
 
 		// Bitwise Operators
-		BigInt operator&(const BigInt& other) const;
+		BigInt &operator&(const BigInt& other) const;
 
 		BigInt operator|(const BigInt& other) const;
 
@@ -90,7 +104,7 @@ class BigInt
 		BigInt operator%(size_t& other) const;
 
 		// Bitwise Operators
-		BigInt operator&(size_t& other) const;
+		BigInt &operator&(size_t& other) const;
 
 		BigInt operator|(size_t& other) const;
 

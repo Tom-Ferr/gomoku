@@ -1,10 +1,34 @@
 #include <BigInt.hpp>
 
 BigInt BigInt::tmp = BigInt();
+BigInt const BigInt::zero = 0;
+
 
 BigInt &BigInt::bi_and(const BigInt &one, const BigInt &other)
 {
 	mpz_and(tmp._value, one._value, other._value);
+	return tmp;
+}
+
+bool BigInt::and_equal(const BigInt &one, const BigInt &other, const BigInt &equals_to)
+{
+	bi_and(one, other);
+	return tmp == equals_to;
+}
+
+bool BigInt::and_equal_zero(const BigInt &one, const BigInt &other)
+{
+	return and_equal(one, other, BigInt::zero);
+}
+
+/*
+** applies the mask to both one and other and then performs the bitwise or
+*/
+BigInt &BigInt::masked_bitwise_or(const BigInt &one, const BigInt &other, const BigInt &mask)
+{
+
+	mpz_ior(tmp._value, one._value, other._value);
+	bi_and(tmp, mask);
 	return tmp;
 }
 
@@ -61,80 +85,69 @@ BigInt& BigInt::operator=(BigInt&& other) noexcept
 
 BigInt BigInt::operator+(const BigInt& other) const
 {
-	BigInt result;
-	mpz_add(result._value, _value, other._value);
-	return result;
+	mpz_add(tmp._value, _value, other._value);
+	return tmp;
 }
 
 BigInt BigInt::operator-(const BigInt& other) const
 {
-	BigInt result;
-	mpz_sub(result._value, _value, other._value);
-	return result;
+	mpz_sub(tmp._value, _value, other._value);
+	return tmp;
 }
 
 BigInt BigInt::operator*(const BigInt& other) const
 {
-	BigInt result;
-	mpz_mul(result._value, _value, other._value);
-	return result;
+	mpz_mul(tmp._value, _value, other._value);
+	return tmp;
 }
 
 BigInt BigInt::operator/(const BigInt& other) const
 {
-	BigInt result;
-	mpz_tdiv_q(result._value, _value, other._value);
-	return result;
+	mpz_tdiv_q(tmp._value, _value, other._value);
+	return tmp;
 }
 
 BigInt BigInt::operator%(const BigInt& other) const
 {
-	BigInt result;
-	mpz_tdiv_r(result._value, _value, other._value);
-	return result;
+	mpz_tdiv_r(tmp._value, _value, other._value);
+	return tmp;
 }
 
 // Bitwise Operators
-BigInt BigInt::operator&(const BigInt& other) const
+BigInt &BigInt::operator&(const BigInt& other) const
 {
-	BigInt result;
-	mpz_and(result._value, _value, other._value);
-	return result;
+	mpz_and(tmp._value, _value, other._value);
+	return tmp;
 }
 
 BigInt BigInt::operator|(const BigInt& other) const
 {
-	BigInt result;
-	mpz_ior(result._value, _value, other._value);
-	return result;
+	mpz_ior(tmp._value, _value, other._value);
+	return tmp;
 }
 
 BigInt BigInt::operator^(const BigInt& other) const
 {
-	BigInt result;
-	mpz_xor(result._value, _value, other._value);
-	return result;
+	mpz_xor(tmp._value, _value, other._value);
+	return tmp;
 }
 
 BigInt BigInt::operator~() const
 {
-	BigInt result;
-	mpz_com(result._value, _value);
-	return result;
+	mpz_com(tmp._value, _value);
+	return tmp;
 }
 
 BigInt BigInt::operator<<(unsigned int shift) const
 {
-	BigInt result;
-	mpz_mul_2exp(result._value, _value, shift);
-	return result;
+	mpz_mul_2exp(tmp._value, _value, shift);
+	return tmp;
 }
 
 BigInt BigInt::operator>>(unsigned int shift) const
 {
-	BigInt result;
-	mpz_fdiv_q_2exp(result._value, _value, shift);
-	return result;
+	mpz_fdiv_q_2exp(tmp._value, _value, shift);
+	return tmp;
 }
 
 // Comparison Operators
@@ -171,84 +184,88 @@ bool BigInt::operator>=(const BigInt& other) const
 // Arithmetic Operators
 BigInt BigInt::operator+(size_t& other) const
 {
-	BigInt result;
-	mpz_add_ui(result._value, _value, other);
-	return result;
+	mpz_add_ui(tmp._value, _value, other);
+	return tmp;
 }
 
 BigInt BigInt::operator-(size_t& other) const
 {
-	BigInt result;
-	mpz_sub(result._value, _value, BigInt(other)._value);
-	return result;
+	mpz_sub(tmp._value, _value, BigInt(other)._value);
+	return tmp;
 }
 
 BigInt BigInt::operator*(size_t& other) const
 {
-	BigInt result;
-	mpz_mul(result._value, _value, BigInt(other)._value);
-	return result;
+	mpz_mul(tmp._value, _value, BigInt(other)._value);
+	return tmp;
 }
 
 BigInt BigInt::operator/(size_t& other) const
 {
-	BigInt result;
-	mpz_tdiv_q(result._value, _value, BigInt(other)._value);
-	return result;
+	mpz_tdiv_q(tmp._value, _value, BigInt(other)._value);
+	return tmp;
 }
 
 BigInt BigInt::operator%(size_t& other) const
 {
-	BigInt result;
-	mpz_tdiv_r(result._value, _value, BigInt(other)._value);
-	return result;
+	mpz_tdiv_r(tmp._value, _value, BigInt(other)._value);
+	return tmp;
 }
 
 // Bitwise Operators
-BigInt BigInt::operator&(size_t& other) const
+BigInt &BigInt::operator&(size_t& other) const
 {
-	BigInt result;
-	mpz_and(result._value, _value, BigInt(other)._value);
-	return result;
+	mpz_and(tmp._value, _value, BigInt(other)._value);
+	return tmp;
 }
 
 BigInt BigInt::operator|(size_t& other) const
 {
-	BigInt result;
-	mpz_ior(result._value, _value, BigInt(other)._value);
-	return result;
+	mpz_ior(tmp._value, _value, BigInt(other)._value);
+	return tmp;
 }
 
 BigInt BigInt::operator^(size_t& other) const
 {
-	BigInt result;
-	mpz_xor(result._value, _value, BigInt(other)._value);
-	return result;
+	mpz_xor(tmp._value, _value, BigInt(other)._value);
+	return tmp;
 }
 
 
 // Comparison Operators
 bool BigInt::operator==(size_t& other) const {
+	if (other == 0)
+		return mpz_cmp(_value, BigInt::zero._value) == 0;
 	return mpz_cmp(_value, BigInt(other)._value) == 0;
 }
 
 bool BigInt::operator!=(size_t& other) const {
+	if (other == 0)
+		return mpz_cmp(_value, BigInt::zero._value) != 0;
 	return mpz_cmp(_value, BigInt(other)._value) != 0;
 }
 
 bool BigInt::operator<(size_t& other) const {
+	if (other == 0)
+		return mpz_cmp(_value, BigInt::zero._value) < 0;
 	return mpz_cmp(_value, BigInt(other)._value) < 0;
 }
 
 bool BigInt::operator<=(size_t& other) const {
+	if (other == 0)
+		return mpz_cmp(_value, BigInt::zero._value) <= 0;
 	return mpz_cmp(_value, BigInt(other)._value) <= 0;
 }
 
 bool BigInt::operator>(size_t& other) const {
+	if (other == 0)
+		return mpz_cmp(_value, BigInt::zero._value) > 0;
 	return mpz_cmp(_value, BigInt(other)._value) > 0;
 }
 
 bool BigInt::operator>=(size_t& other) const {
+	if (other == 0)
+		return mpz_cmp(_value, BigInt::zero._value) >= 0;
 	return mpz_cmp(_value, BigInt(other)._value) >= 0;
 }
 
@@ -261,9 +278,9 @@ BigInt& BigInt::operator++()
 
 BigInt BigInt::operator++(int)
 {
-	BigInt temp = *this;
+	tmp = *this;
 	mpz_add_ui(_value, _value, 1);
-	return temp;
+	return tmp;
 }
 
 BigInt& BigInt::operator--()
@@ -274,9 +291,9 @@ BigInt& BigInt::operator--()
 
 BigInt BigInt::operator--(int)
 {
-	BigInt temp = *this;
+	tmp = *this;
 	mpz_sub_ui(_value, _value, 1);
-	return temp;
+	return tmp;
 }
 
 void BigInt::set_bit(size_t bit)

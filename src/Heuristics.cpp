@@ -76,9 +76,9 @@ size_t Heuristics::is_capturable(const size_t &pos, const Mask::inner_map &masks
     return capturable_points;
 }
 
-int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks)
+int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks, const BigInt &fullmask)
 {
-    if ((masks.at(FULL)[pos][0] & other_target) != 0)
+    if ((fullmask & other_target) != 0)
         return 0;
 
     size_t bits = target.bitCount();
@@ -87,20 +87,19 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     int score = 1 << bits;
 
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
-
-    BigInt target_first = target & vectorized[1];
-    BigInt target_last = target & vectorized[5];
-    BigInt edge_first = edge & vectorized[0];
-    BigInt  edge_last = edge & vectorized[6];
+	const Mask::mask_vector &submask = masks.at(SUBMASK)[pos];
+    _target_first = target & vectorized[1];
+    _target_last = target & vectorized[5];
+    _edge_first = edge & vectorized[0];
+    _edge_last = edge & vectorized[6];
     for (size_t i = 0; i < 2; i++)
     {
-        BigInt sub_target = target & masks.at(SUBMASK)[pos][i];
-        size_t sub_bits = sub_target.bitCount();
+        size_t sub_bits = (target & submask[i]).bitCount();
         if (bits == sub_bits)
         {
-            if ((target_first != 0 && edge_first == 0)
-            || (target_last != 0 && edge_last == 0)
-            || ((target_first == 0 && target_last == 0) && (edge_first == 0 || edge_last == 0))
+            if ((_target_first != 0 && _edge_first == 0)
+            || (_target_last != 0 && _edge_last == 0)
+            || ((_target_first == 0 && _target_last == 0) && (_edge_first == 0 || _edge_last == 0))
             )
                 score += 3;
             break ;
@@ -167,7 +166,7 @@ void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const
         target[pos] = prev_score;
     else if(target_score == prev_score && target_score == 32)
         _set_points(my, target_score);
-    
+
 }
 
 bool Heuristics::board_eval(int pos, char orientation, bool endgame)
@@ -177,11 +176,10 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 	const BigInt &full_mask = masks.at(FULL).at(pos)[0];
     if (full_mask == 0)
         return false;
-    BigInt target = _state.mystate(true) & full_mask;
-    BigInt other_target = _state.otherstate(true) & full_mask;
+    _target = _state.mystate(true) & full_mask;
+    _other_target = _state.otherstate(true) & full_mask;
 
-
-    if (target == full_mask)
+    if (_target == full_mask)
     {
         int points = is_capturable(pos, masks, true);
         if (points == 0)
@@ -200,7 +198,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
             _points["my_five"]--;
         }
     }
-    if (other_target == full_mask)
+    if (_other_target == full_mask)
     {
         int points = is_capturable(pos, masks, false);
         if (points == 0)
@@ -222,16 +220,18 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     if(endgame)
         return false;
 
-    BigInt edge = (_state.otherstate(true) & masks.at(EDGE)[pos][0]);
-    edge = edge | (_state.mystate(true) & masks.at(EDGE)[pos][0]);
+	_edge = BigInt::masked_bitwise_or(_state.otherstate(true), _state.mystate(true), masks.at(EDGE)[pos][0]);
 
-    _my_scores[orientation][pos] = get_score(target, edge, other_target, pos, masks);
+    _my_scores[orientation][pos] = get_score(_target, _edge, _other_target, pos, masks, full_mask);
     to_compute(true, _my_scores[orientation], pos, masks);
 
     if(_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation) != 0)
         _points["my_potential_captures"]++;
 
-    _other_scores[orientation][pos] = get_score(other_target, edge, target, pos, masks);
+	if (_my_scores[orientation][pos] > 0)
+		return false;
+
+    _other_scores[orientation][pos] = get_score(_other_target, _edge, _target, pos, masks, full_mask);
     to_compute(false, _other_scores[orientation], pos, masks);
 
     if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos, orientation) != 0)
@@ -281,19 +281,19 @@ void Heuristics::describe_heuristic() const
     {
         std::cout << it->first << ": " << it->second << std::endl;
     }
-    
+
 }
 
 bool Heuristics::maxi_wins()
 {
-    if (_points["my_five"] != 0)    
+    if (_points["my_five"] != 0)
         return true;
     return false;
 }
 
 bool Heuristics::mini_wins()
 {
-    if (_points["ot_five"] != 0)    
+    if (_points["ot_five"] != 0)
         return true;
     return false;
 }

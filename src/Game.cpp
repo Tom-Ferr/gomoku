@@ -15,8 +15,13 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 	Heuristics::set_masks(5, size);
 	BoardState::set_masks(4, size, true);
 	BoardState::set_masks(4, size, false);
-	_board.set_captures(true);
-	/*
+	
+    if (_game_mode == GM_STANDARD)
+        _board.set_captures(true);
+    else
+        _board.set_captures(false);
+    
+    /*
 	** who will play as BLACK?
 	** _player is the player that will play as BLACK?
 	** true for black, false for white
@@ -34,7 +39,7 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 	std::cout << "starting Player: " << _player << std::endl;
 	std::cout << "Game Mode: " << _game_mode << std::endl;
 
-	/*
+    /*
 	** Sets up initial message
 	*/
 	if (_game_mode == GM_PRO)
@@ -87,7 +92,7 @@ bool Game::human_step(size_t pos, bool turn)
 	_turn = !_turn;
 	_total_nmoves++;
 	if ((game_mode() == GM_PRO || game_mode() == GM_LONGPRO) && _total_nmoves == 2)
-		_init_game = false;
+		set_init_game(false);
 	if ((_total_nmoves == 3 || _total_nmoves == 5) && _init_game &&  (game_mode() == GM_SWAP2 || game_mode() == GM_SWAP))
 	{
 		mode_name = MSG_SWAP;
@@ -155,7 +160,10 @@ bool Game::step(bool turn)
 	std::pair<int, BigInt> result;
 
 	if (is_init_game() && _init_game_handler(turn))
+    {
+        update_freechecker();
 		return true;
+    }
 	if (turn)
 		result = Node(3, INT_MIN, INT_MAX, _board).minimax();
 	else
@@ -234,8 +242,6 @@ bool Game::_is_pro_invalid_move(size_t pos)
 	size_t black_piece;
 	Rect p;
 
-	std::cout << "check if move is invalid: " << pos << " init game" << _init_game << std::endl;
-
 	if (!_turn) /*rule applies only to black pieces*/
 		return false;
 	if (_board.mystate(true) == 0) /*no black pieces on the board yet. all moves are valid*/
@@ -277,7 +283,7 @@ bool Game::is_invalid_move(const size_t &pos)
 	{
 		return _is_pro_invalid_move(pos);
 	}
-	return _ftc.is_free_three(pos);
+	return _ftc.is_free_three(pos, _turn);
 }
 
 void Game::update_freechecker()
@@ -410,7 +416,7 @@ bool Game::_init_game_swap(bool turn, bool dummy)
 	if (!(_total_nmoves)) /*if no black pieces on the board*/
 	{
 		_init_game_standard(turn, dummy); /*apply the same initial move*/
-		_init_game = true;	/*since 3 moves are needed, the game is still in init state*/
+		set_init_game(true);	/*since 3 moves are needed, the game is still in init state*/
 		if (!dummy)
 			_total_nmoves++;
 		return true; /*game step has been handled*/
@@ -429,14 +435,14 @@ bool Game::_init_game_swap(bool turn, bool dummy)
 			if (turn == !_player && vs_ai())
 				_message = GameMessage(true, true, MSG_P1_CHOOSES, mode);
 			if (_game_mode == GM_SWAP)
-				_init_game = false;
+				set_init_game(false);
 		}
 		return false; /*moves are handled normally by minimax*/
 	}
 	if (!dummy)
 		_total_nmoves++;
 	if (!dummy || _total_nmoves >= 5)
-		_init_game = false;
+		set_init_game(false);
 	return false;
 }
 
@@ -453,7 +459,7 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 	if (_board.mystate(true) == 0) /*if no black pieces on the board*/
 	{
 		_init_game_standard(turn, dummy); /*apply the same initial move*/
-		_init_game = true;	/*since 2 moves are needed, the game is still in init state*/
+		set_init_game(true);	/*since 2 moves are needed, the game is still in init state*/
 		return true;
 	}
 	else if (dummy && _board.mystate(true).bitCount() >= 2)
@@ -462,7 +468,7 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 		two or more black pieces
 		game is no longer in init mode
 		*/
-		_init_game = false;
+		set_init_game(false);
 		return false;
 	}
 	else
@@ -479,7 +485,7 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 			_move = (tmp.expanded_free() ^ _board.otherstate(true)).pos();
 		if (dummy)
 			return true;
-		_init_game = false;
+		set_init_game(false);
 		_board.applymove(_move, turn);
 		_ftc = Free_Three_Checker(_board);
 		_turn = !_turn;
@@ -492,7 +498,7 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 */
 bool Game::_init_game_standard(bool turn, bool dummy)
 {
-	_init_game = false;
+	set_init_game(false);
 	if (!turn)
 		return false;
 	_move = _board.size() / 2;
@@ -535,10 +541,19 @@ GameMessage &Game::message()
 void Game::set_defer_message()
 {
 	_message = GameMessage(_turn, false, MSG_DEFFERRED, MSG_SWAP2);
-	_init_game = true;
+	set_init_game(true);
 }
 
-void Game::clear_init_game()
+void Game::set_init_game(bool on)
 {
-	_init_game = false;
+    if (on)
+    {
+        _init_game = true;
+        _board.set_captures(false);
+    }
+    else
+    {
+        _init_game = false;
+        _board.set_captures(true);
+    }
 }

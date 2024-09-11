@@ -227,7 +227,7 @@ bool Board::click()
 				if (!_game.turn() && ((_mode.buttons().selected() == 1 && !_game.is_deferred_turn())
 						|| (_mode.buttons().selected() == 0 && _game.is_deferred_turn())))
 					_game.set_player(!_game.player());
-                _game.clear_init_game();
+                _game.set_init_game(false);
 				update_statusbar();
 			}
 			_mode.hide();

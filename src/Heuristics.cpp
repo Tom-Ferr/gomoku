@@ -165,6 +165,8 @@ void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const
         _set_points(my, prev_score);
     else if (target_score < prev_score)
         target[pos] = prev_score;
+    else if(target_score == prev_score && target_score == 32)
+        _set_points(my, target_score);
     
 }
 

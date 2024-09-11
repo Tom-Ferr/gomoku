@@ -20,11 +20,9 @@ class Free_Three_Checker
 			Free_Three_Checker &operator=(const Free_Three_Checker& other);
 			~Free_Three_Checker();
 
-			bool check(int pos, char orientation);
-			bool check(int pos);
-			bool is_free_three(int pos);
+			bool check(int pos, char orientation, bool turn=true);
+			bool is_free_three(int pos, bool turn=true);
 			static void set_masks(int mask_size, int board_sqrt);
-
 };
 
 #endif

@@ -94,7 +94,7 @@ class Game
 		bool is_game_swap_deferred_move();
 		GameMessage &message();
 		void set_defer_message();
-		void clear_init_game();
+		void set_init_game(bool on);
 		bool is_deferred_turn();
 };
 

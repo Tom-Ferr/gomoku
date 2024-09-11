@@ -18,7 +18,7 @@ Free_Three_Checker &Free_Three_Checker::operator=(const Free_Three_Checker& othe
 
 Free_Three_Checker::~Free_Three_Checker(){};
 
-bool Free_Three_Checker::check(int pos, char orientation)
+bool Free_Three_Checker::check(int pos, char orientation, bool turn)
 {
 	const Mask::inner_map &masks = Free_Three_Checker::_masks.at(orientation);
 	const Mask::variations_vector &full_vec = masks.at(FULL);
@@ -29,10 +29,11 @@ bool Free_Three_Checker::check(int pos, char orientation)
 
 	for (; full_mask != end; full_mask++, mid_mask++, edge_mask++)
 	{
-		if ((_state.maximizing() && (BigInt::bi_and(_state.otherstate(true), *full_mask)) != 0)
-				|| (!_state.maximizing() && (BigInt::bi_and(_state.mystate(true), *full_mask)) != 0))
+		if (((_state.maximizing() && turn) && (BigInt::bi_and(_state.otherstate(true), *full_mask)) != 0)
+				|| ((!_state.maximizing() || !turn) && (BigInt::bi_and(_state.mystate(true), *full_mask)) != 0))
 			continue;
-		if (_state.maximizing())
+
+		if (_state.maximizing() && turn)
 			_static_state = BigInt::bi_and(_state.mystate(false), *full_mask);
 		else
 			_static_state = BigInt::bi_and(_state.otherstate(false), *full_mask);
@@ -43,14 +44,14 @@ bool Free_Three_Checker::check(int pos, char orientation)
 	return false;
 }
 
-bool Free_Three_Checker::is_free_three(int pos)
+bool Free_Three_Checker::is_free_three(int pos, bool turn)
 {
 	char modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
 	int c = 0;
 
 	for (size_t i = 0; i < 4; i++)
 	{
-		if(check(pos, modes[i]))
+		if(check(pos, modes[i], turn))
 			c++;
 		if(c == 2)
 			return true;

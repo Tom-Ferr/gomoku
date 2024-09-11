@@ -94,7 +94,7 @@ bool Game::human_step(size_t pos, bool turn)
 			mode_name = MSG_SWAP2;
 		if (vs_ai())
 		{
-			if (_total_nmoves == 3)
+			if (_total_nmoves == 3 || (_total_nmoves == 5 && game_mode() == GM_SWAP2))
 			{
 				_message = GameMessage(false, false, MSG_AI_CHOSE_WHITE, mode_name);
 				_player = true; /* set player to black*/

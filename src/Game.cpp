@@ -112,7 +112,7 @@ bool Game::human_step(size_t pos, bool turn)
 		else
 			_message = GameMessage(player(), true, (player() ? MSG_P1_CHOOSES : MSG_P2_CHOOSES), mode_name);
 	}
-	Logger::log_move(_total_nmoves, "human", pos, turn);
+	Logger::log_move(_total_nmoves, "Human", pos, _turn, _board);
 	std::cout << "Appying move: " << pos << std::endl;
 	return true;
 }
@@ -150,6 +150,7 @@ bool Game::dummy_step(bool turn)
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	_last_time = duration.count();
 	_total_time += duration.count();
+	Logger::log_move(_total_nmoves, "Dummy", _move, turn);
 	_ai_nmoves++;
 	Logger::log_move(_total_nmoves, "dummy", _move, _turn);
 	return true;
@@ -183,7 +184,7 @@ bool Game::step(bool turn)
 		_board.applymove(_move, turn);
 		std::cout << "Move: " << _move << std::endl;
 	}
-//	std::cout << _board << std::endl;
+	//std::cout << _board << std::endl;
 	//_board.print();
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	_last_time = duration.count();
@@ -192,7 +193,7 @@ bool Game::step(bool turn)
 	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Move: " << _move << std::endl;
 	std::cout << "Heuristic: " << result.first << std::endl;
-	Logger::log_move(_total_nmoves, "AI", _move, _turn);
+	Logger::log_move(_total_nmoves, "AI", _move, _turn, _board);
 	_ftc = Free_Three_Checker(_board);
 	_turn = !_turn;
 	if (result.second == 0)

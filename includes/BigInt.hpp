@@ -14,7 +14,7 @@ class BigInt
 		static const BigInt zero;
 
 		/* tempoprary value for all operations*/
-		static BigInt tmp;
+		static BigInt _tmp;
 
 		/*
 		** time saving operations, reducing BigInt creation
@@ -93,34 +93,34 @@ class BigInt
 
 		// Size_t Operators
 		// Arithmetic Operators
-		BigInt operator+(size_t& other) const;
+		BigInt operator+(size_t other) const;
 
-		BigInt operator-(size_t& other) const;
+		BigInt operator-(size_t other) const;
 
-		BigInt operator*(size_t& other) const;
+		BigInt operator*(size_t other) const;
 
-		BigInt operator/(size_t& other) const;
+		BigInt operator/(size_t other) const;
 
-		BigInt operator%(size_t& other) const;
+		BigInt operator%(size_t other) const;
 
 		// Bitwise Operators
-		BigInt &operator&(size_t& other) const;
+		BigInt &operator&(size_t other) const;
 
-		BigInt operator|(size_t& other) const;
+		BigInt operator|(size_t other) const;
 
-		BigInt operator^(size_t& other) const;
+		BigInt operator^(size_t other) const;
 
 
 		// Comparison Operators
-		bool operator==(size_t& other) const;
+		bool operator==(size_t other) const;
 
-		bool operator!=(size_t& other) const;
+		bool operator!=(size_t other) const;
 
-		bool operator<(size_t& other) const;
+		bool operator<(size_t other) const;
 
-		bool operator<=(size_t& other) const;
-		bool operator>(size_t& other) const;
-		bool operator>=(size_t& other) const;
+		bool operator<=(size_t other) const;
+		bool operator>(size_t other) const;
+		bool operator>=(size_t other) const;
 
 
 		// Increment and Decrement

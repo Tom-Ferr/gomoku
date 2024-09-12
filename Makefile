@@ -7,7 +7,7 @@ GUI_INC			=	./includes/
 
 # Files
 FILES			=	main.cpp BigInt.cpp BoardState.cpp Free_Three_Checker.cpp \
-					Game.cpp Heuristics.cpp Mask.cpp Node.cpp GameMessage.cpp
+					Game.cpp Heuristics.cpp Mask.cpp Node.cpp GameMessage.cpp Logger.cpp
 
 GUI_FILES		=	Rect.cpp
 
@@ -20,7 +20,7 @@ DEPS 			=	$(patsubst %.o, %.d, $(OBJS))
 NAME			=	gomoku
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
-SANITIZE 		=	-g -O3
+SANITIZE 		=	-g
 INCLUDE 		=	-I${INC} -I${GUI_INC}
 LIBS 			=	-lgmp -lgmpxx -ldl
 

@@ -72,8 +72,8 @@ size_t Heuristics::is_capturable(const size_t &pos, const Mask::inner_map &masks
 
 int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks, const BigInt &fullmask)
 {
-    if ((fullmask & other_target) != 0)
-        return 0;
+	if (!BigInt::and_equal_zero(other_target, fullmask))
+		return 0;
 
     size_t bits = target.bitCount();
     if (bits < 2)

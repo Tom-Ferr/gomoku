@@ -7,7 +7,7 @@
 #include <Heuristics.hpp>
 #include <Free_Three_Checker.hpp>
 #include <Gui.hpp>
-
+#include <Logger.hpp>
 
 //static mlx_image_t* image;
 
@@ -16,6 +16,8 @@
 
 int main()
 {
+	Logger::set_active(true);
 	Gui gui;
+	Logger::close_fds();
 	return (EXIT_SUCCESS);
 }

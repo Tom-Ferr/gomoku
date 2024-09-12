@@ -1,5 +1,5 @@
 #include <Game.hpp>
-
+#include <Logger.hpp>
 
 
 
@@ -15,12 +15,12 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 	Heuristics::set_masks(5, size);
 	BoardState::set_masks(4, size, true);
 	BoardState::set_masks(4, size, false);
-	
+
     if (_game_mode == GM_STANDARD)
         _board.set_captures(true);
     else
         _board.set_captures(false);
-    
+
     /*
 	** who will play as BLACK?
 	** _player is the player that will play as BLACK?
@@ -112,6 +112,7 @@ bool Game::human_step(size_t pos, bool turn)
 		else
 			_message = GameMessage(player(), true, (player() ? MSG_P1_CHOOSES : MSG_P2_CHOOSES), mode_name);
 	}
+	Logger::log_move(_total_nmoves, "human", pos, turn);
 	std::cout << "Appying move: " << pos << std::endl;
 	return true;
 }
@@ -150,6 +151,7 @@ bool Game::dummy_step(bool turn)
 	_last_time = duration.count();
 	_total_time += duration.count();
 	_ai_nmoves++;
+	Logger::log_move(_total_nmoves, "dummy", _move, _turn);
 	return true;
 }
 
@@ -190,6 +192,7 @@ bool Game::step(bool turn)
 	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Move: " << _move << std::endl;
 	std::cout << "Heuristic: " << result.first << std::endl;
+	Logger::log_move(_total_nmoves, "AI", _move, _turn);
 	_ftc = Free_Three_Checker(_board);
 	_turn = !_turn;
 	if (result.second == 0)

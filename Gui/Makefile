@@ -11,7 +11,7 @@ FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp \
 
 GUI_FILES		=	main.cpp  Gui.cpp Board.cpp Rect.cpp Tile.cpp Color.cpp Menu.cpp \
 					Text.cpp Button.cpp ButtonGroup.cpp Info.cpp BoardStatusBar.cpp \
-					BoardEndGame.cpp BoardMode.cpp ABoardPopup.cpp
+					BoardEndGame.cpp BoardMode.cpp ABoardPopup.cpp Logger.cpp
 
 # Full Paths
 SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) $(addprefix $(GUI_SRCDIR), $(GUI_FILES))

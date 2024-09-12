@@ -11,7 +11,7 @@ FILES			=	BigInt.cpp BoardState.cpp Free_Three_Checker.cpp \
 
 GUI_FILES		=	main.cpp  Gui.cpp Board.cpp Rect.cpp Tile.cpp Color.cpp Menu.cpp \
 					Text.cpp Button.cpp ButtonGroup.cpp Info.cpp BoardStatusBar.cpp \
-					BoardEndGame.cpp BoardMode.cpp ABoardPopup.cpp
+					BoardEndGame.cpp BoardMode.cpp ABoardPopup.cpp Logger.cpp
 
 # Full Paths
 SRCS			= 	$(addprefix $(SRCDIR), $(FILES)) $(addprefix $(GUI_SRCDIR), $(GUI_FILES))
@@ -22,15 +22,15 @@ DEPS 			=	$(patsubst %.o, %.d, $(OBJS))
 NAME			=	gui
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
-SANITIZE 		=	-O3 #-fsanitize=address -g
+SANITIZE 		=	-g
 INCLUDE 		=	-I${INC} -I${GUI_INC}
 LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx -ldl -pthread -lm
 
 # MLX
-MLX_INC			=	-I./MLX42/include -I/usr/local/Cellar/glfw/3.4/include
-MLX_LIB			=	-L./MLX42/build -L/usr/local/Cellar/glfw/3.4/lib
-GMP_INC			=	-I/usr/local/Cellar/gmp/6.3.0/include
-GMP_LIB			=	-L/usr/local/Cellar/gmp/6.3.0/lib
+MLX_INC			=	-I./MLX42/include -I/opt/homebrew/Cellar/glfw/3.4/include
+MLX_LIB			=	-L./MLX42/build -L/opt/homebrew/Cellar/glfw/3.4/lib
+GMP_INC			=	-I/opt/homebrew/Cellar/gmp/6.3.0/include
+GMP_LIB			=	-L/opt/homebrew/Cellar/gmp/6.3.0/lib
 
 UNAME			=	$(shell uname)
 LINUX			= -D _LINUX

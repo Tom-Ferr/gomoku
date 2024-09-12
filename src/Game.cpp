@@ -112,7 +112,7 @@ bool Game::human_step(size_t pos, bool turn)
 		else
 			_message = GameMessage(player(), true, (player() ? MSG_P1_CHOOSES : MSG_P2_CHOOSES), mode_name);
 	}
-	Logger::log_move(_total_nmoves, "Human", pos, _turn);
+	Logger::log_move(_total_nmoves, "Human", pos, _turn, _board);
 	std::cout << "Appying move: " << pos << std::endl;
 	return true;
 }

@@ -20,7 +20,7 @@ DEPS 			=	$(patsubst %.o, %.d, $(OBJS))
 NAME			=	gomoku
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
-SANITIZE 		=	-g
+SANITIZE 		=	-g -O3
 INCLUDE 		=	-I${INC} -I${GUI_INC}
 LIBS 			=	-lgmp -lgmpxx -ldl
 

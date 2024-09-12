@@ -9,8 +9,8 @@ class Heuristics
 {
 private:
 	BoardState &_state;
-    std::map<char, std::vector<int>> _my_scores ;
-    std::map<char, std::vector<int>> _other_scores ;
+    std::vector<std::vector<int> > _my_scores ;
+    std::vector<std::vector<int> > _other_scores ;
     int _max_score = 0;
     int _min_score = 0;
     int _heuristic = 0;

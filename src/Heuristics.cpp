@@ -5,14 +5,8 @@ Mask Heuristics::_masks = Mask();
 Heuristics::Heuristics(BoardState &state)
 : _state(state)
 {
-    _my_scores[HORIZONTAL] = std::vector<int>(_state.size(), 0);
-    _my_scores[VERTICAL] = std::vector<int>(_state.size(), 0);
-    _my_scores[CRESCENDO] = std::vector<int>(_state.size(), 0);
-    _my_scores[DECRESCENDO] = std::vector<int>(_state.size(), 0);
-    _other_scores[HORIZONTAL] = std::vector<int>(_state.size(), 0);
-    _other_scores[VERTICAL] = std::vector<int>(_state.size(), 0);
-    _other_scores[CRESCENDO] = std::vector<int>(_state.size(), 0);
-    _other_scores[DECRESCENDO] = std::vector<int>(_state.size(), 0);
+	_my_scores = std::vector<std::vector<int> >(4, std::vector<int>(_state.size(), 0));
+	_other_scores = std::vector<std::vector<int> >(4, std::vector<int>(_state.size(), 0));
 }
 
 /*
@@ -172,6 +166,10 @@ void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const
 bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 {
     const Mask::inner_map &masks = _masks.at(orientation);
+	std::vector<int> &my_scores = _my_scores[orientation];
+	std::vector<int> &other_scores = _other_scores[orientation];
+	int &my_score = my_scores[pos];
+	int &other_score = other_scores[pos];
 
 	const BigInt &full_mask = masks.at(FULL).at(pos)[0];
     if (full_mask == 0)
@@ -222,17 +220,14 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 
 	_edge = BigInt::masked_bitwise_or(_state.otherstate(true), _state.mystate(true), masks.at(EDGE)[pos][0]);
 
-    _my_scores[orientation][pos] = get_score(_target, _edge, _other_target, pos, masks, full_mask);
-    to_compute(true, _my_scores[orientation], pos, masks);
+   my_score = get_score(_target, _edge, _other_target, pos, masks, full_mask);
+    to_compute(true, my_scores, pos, masks);
 
     if(_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation) != 0)
         _points["my_potential_captures"]++;
 
-	if (_my_scores[orientation][pos] > 0)
-		return false;
-
-    _other_scores[orientation][pos] = get_score(_other_target, _edge, _target, pos, masks, full_mask);
-    to_compute(false, _other_scores[orientation], pos, masks);
+    other_score = get_score(_other_target, _edge, _target, pos, masks, full_mask);
+    to_compute(false, other_scores, pos, masks);
 
     if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos, orientation) != 0)
         _points["ot_potential_captures"]++;

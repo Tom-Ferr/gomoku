@@ -143,19 +143,19 @@ size_t BoardState::check_capture(const BigInt &self, const BigInt &rival, const 
     const Mask::inner_map &masks = BoardState::_masks.at(orientation);
 	const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
 	const Mask::variations_vector &edge_vec = masks.at(EDGE);
-	Mask::mask_vector::const_iterator mid_mask = mid_vec[pos].begin();
-	Mask::mask_vector::const_iterator end = mid_vec[pos].end();
-	Mask::mask_vector::const_iterator edge_mask = edge_vec[pos].begin();
+	const Mask::mask_vector &mid_vec_pos = mid_vec[pos];
+	const Mask::mask_vector &edge_vec_pos = edge_vec[pos];
 
-	for (; mid_mask != end; mid_mask++, edge_mask++)
+	for (size_t i = 0; i < mid_vec_pos.size(); i++)
 	{
-		if ((rival & *mid_mask) != *mid_mask)
+		BigInt const &mid_vec_val = mid_vec_pos[i];
+		if ((rival & mid_vec_val) != mid_vec_val)
 			continue ;
-		if ((self & *edge_mask) == 0)
-			continue ;
-		if ((self & *edge_mask) == *edge_mask)
+		if ((self & edge_vec_pos[i]) == 0)
 			continue;
-		if ((rival & *edge_mask) != 0)
+		if ((self & edge_vec_pos[i]) == edge_vec_pos[i])
+			continue;
+		if ((rival & edge_vec_pos[i]) != 0)
 			continue;
 		points++;
 	}

@@ -156,18 +156,18 @@ void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const
 {
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
     size_t prev = vectorized[0].pos();
-    // size_t last = vectorized[5].pos();
-    // size_t edge = vectorized[6].pos();
+    size_t last = vectorized[5].pos();
+    size_t edge = vectorized[6].pos();
     int target_score = target[pos];
     int prev_score = target[prev];
 
-    if ((target_score < prev_score && target_score == 0) /*|| last == edge*/)
+    if (target_score < prev_score && target_score == 0)
         _set_points(my, prev_score);
     else if (target_score < prev_score)
         target[pos] = prev_score;
-    else if(target_score == prev_score && target_score == 32)
+    else if((target_score == prev_score && target_score == 32) || last == edge )
         _set_points(my, target_score);
-    
+
 }
 
 bool Heuristics::board_eval(int pos, char orientation, bool endgame)

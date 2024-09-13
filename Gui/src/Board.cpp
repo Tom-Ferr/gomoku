@@ -8,7 +8,7 @@ size_t				Board::_sqrt = DEFAULT_BOARD;
 size_t				Board::_size = DEFAULT_BOARD * DEFAULT_BOARD;
 
 Board::Board(Gui *gui)
-: _background(nullptr), _gui(gui)
+: _background(nullptr), _gui(gui), _hovered_tile(nullptr), _enabled(false), _gameover(false), _hinted_tile(nullptr)
 { }
 
 /*
@@ -33,6 +33,7 @@ bool Board::init()
 
 bool Board::show(t_vs vs, t_startingplayer starting, t_gamemode mode)
 {
+	_gameover = false;
 	_loop_count = 0;
 	_background->enabled = true;
 	_visible=true;
@@ -75,6 +76,7 @@ Board &Board::operator=(Board const &other)
 	_statusbar = other._statusbar;
 	_endgame = other._endgame;
 	_mode = other._mode;
+	_gameover = other._gameover;
 	return *this;
 }
 bool Board::visible()
@@ -163,6 +165,8 @@ bool Board::hover()
 	Tile				*hovered;
 	int					tile;
 
+	if (_gameover)
+		return false;
 	if (_mode.enabled())
 	{
 		_mode.hover();
@@ -213,6 +217,8 @@ void Board::_remove_captures()
 
 bool Board::click()
 {
+	if (_gameover)
+		return false;
 	if (_mode.enabled())
 	{
 		if (_mode.click())
@@ -240,13 +246,8 @@ bool Board::click()
 		if (_endgame.click())
 		{
 			_endgame.hide();
-			/*
-			** will change this maybe
-			*/
-			mlx_key_data_t key;
-			key.action = MLX_PRESS;
-			key.key = MLX_KEY_ESCAPE;
-			Gui::key_hook(key, _gui);
+			_gameover = true;
+			disable();
 			return false;
 		}
 	}
@@ -318,6 +319,8 @@ void Board::loop()
 {
 	bool turn;
 
+	if (_gameover)
+		return ;
 	if (++_loop_count % 10)
 		return ;
 	if (_mode.enabled())

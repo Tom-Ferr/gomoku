@@ -38,6 +38,7 @@ class Board
 		BoardStatusBar		_statusbar;
 		BoardEndGame		_endgame;
 		BoardMode			_mode;
+		bool				_gameover;
 		Tile				*_hinted_tile;
 		size_t				_loop_count;
 

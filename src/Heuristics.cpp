@@ -245,7 +245,7 @@ int Heuristics::run()
     }
 
     _heuristic = 80000 * (_points["my_five"] - _points["ot_five"])
-                + 10000 * (_points["my_ofour"] - _points["ot_ofour"])
+                + 15000 * (_points["my_ofour"] - _points["ot_ofour"])
                 + 500 * (_points["my_cfour"] - _points["ot_cfour"])
                 + 500 * (_points["my_othree"] - _points["ot_othree"])
                 + 200 * (_points["my_cthree"] - _points["ot_cthree"])
@@ -254,8 +254,8 @@ int Heuristics::run()
     if (_state.with_captures())
         _heuristic +=   10000 * (_points["my_cfive1"] - _points["ot_cfive1"])
                         + 500 * (_points["my_cfive2"] - _points["ot_cfive2"])
-                        + 50  * (_points["my_cfive3"] - _points["ot_cfive3"])
-                        + 500 * ((_points["my_potential_captures"] / 2) * _state.maxi_captures()  - (_points["ot_potential_captures"] / 2) *  _state.mini_captures());
+                        + 50  * (_points["my_cfive3"] - _points["ot_cfive3"]);
+                        //+ 500 * ((_points["my_potential_captures"] / 2) * _state.maxi_captures()  - (_points["ot_potential_captures"] / 2) *  _state.mini_captures());
     return _heuristic;
 }
 

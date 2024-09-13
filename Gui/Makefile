@@ -22,7 +22,7 @@ DEPS 			=	$(patsubst %.o, %.d, $(OBJS))
 NAME			=	gui
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
-SANITIZE 		=	-g
+SANITIZE 		=	-O3
 INCLUDE 		=	-I${INC} -I${GUI_INC}
 LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx -ldl -pthread -lm
 

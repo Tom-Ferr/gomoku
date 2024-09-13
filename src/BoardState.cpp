@@ -136,29 +136,27 @@ void BoardState::check_capture(size_t pos, bool maximizing)
     }
 }
 
-size_t BoardState::check_capture(const BigInt &self, const BigInt &rival, const size_t &pos, char orientation)
+int BoardState::check_capture(const BigInt &self, const BigInt &rival, const size_t &pos, char orientation)
 {
-	size_t points = 0;
+	int points = 0;
 
     const Mask::inner_map &masks = BoardState::_masks.at(orientation);
 	const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
 	const Mask::variations_vector &edge_vec = masks.at(EDGE);
-	Mask::mask_vector::const_iterator mid_mask = mid_vec[pos].begin();
-	Mask::mask_vector::const_iterator end = mid_vec[pos].end();
-	Mask::mask_vector::const_iterator edge_mask = edge_vec[pos].begin();
+	const BigInt& mid_mask = mid_vec[pos][0];
+	const BigInt& edge_mask = edge_vec[pos][0];
 
-	for (; mid_mask != end; mid_mask++, edge_mask++)
+	if (BigInt::and_equal(rival, mid_mask, mid_mask) == true)
 	{
-		if (BigInt::and_equal(rival, *mid_mask, *mid_mask) == false)
-				continue ;
-		if ((self & *edge_mask) == 0)
-			continue ;
-		if ((self & *edge_mask) == *edge_mask)
-			continue;
-		if ((rival & *edge_mask) != 0)
-			continue;
-		points++;
+		if (((self & edge_mask) != 0) && ((self & edge_mask) != edge_mask) && ((rival & edge_mask) == 0))
+			points++;
 	}
+	else if(BigInt::and_equal(self, mid_mask, mid_mask) == true)
+	{
+		if (((rival & edge_mask) != 0) && ((rival & edge_mask) != edge_mask) && ((self & edge_mask) == 0))
+			points--;
+	}
+	
 	return points;
 }
 

@@ -218,19 +218,22 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     if(endgame)
         return false;
 
-	_edge = BigInt::masked_bitwise_or(_state.otherstate(true), _state.mystate(true), masks.at(EDGE)[pos][0]);
+    _edge = BigInt::masked_bitwise_or(_state.otherstate(true), _state.mystate(true), masks.at(EDGE)[pos][0]);
 
-   my_score = get_score(_target, _edge, _other_target, pos, masks, full_mask);
+    my_score = get_score(_target, _edge, _other_target, pos, masks, full_mask);
     to_compute(true, my_scores, pos, masks);
-
-    if(_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation) != 0)
-        _points["my_potential_captures"]++;
 
     other_score = get_score(_other_target, _edge, _target, pos, masks, full_mask);
     to_compute(false, other_scores, pos, masks);
 
-    if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos, orientation) != 0)
+    int caps =_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation);
+    if (caps > 0)
+        _points["my_potential_captures"]++;
+    else if (caps < 0)
         _points["ot_potential_captures"]++;
+
+    // if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos, orientation) != 0)
+    //     _points["ot_potential_captures"]++;
     return false;
 }
 
@@ -255,7 +258,7 @@ int Heuristics::run()
         _heuristic +=   10000 * (_points["my_cfive1"] - _points["ot_cfive1"])
                         + 500 * (_points["my_cfive2"] - _points["ot_cfive2"])
                         + 50  * (_points["my_cfive3"] - _points["ot_cfive3"])
-                        + 500 * ((_points["my_potential_captures"] / 2) * _state.maxi_captures()  - (_points["ot_potential_captures"] / 2) *  _state.mini_captures());
+                        + 500 * ((_points["my_potential_captures"]) * _state.maxi_captures()  - (_points["ot_potential_captures"]) *  _state.mini_captures());
     return _heuristic;
 }
 

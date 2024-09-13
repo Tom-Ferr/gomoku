@@ -16,10 +16,10 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 	BoardState::set_masks(4, size, true);
 	BoardState::set_masks(4, size, false);
 
-    if (_game_mode == GM_STANDARD)
-        _board.set_captures(true);
-    else
-        _board.set_captures(false);
+	if (_game_mode == GM_STANDARD)
+		_board.set_captures(true);
+	else
+		_board.set_captures(false);
 
     /*
 	** who will play as BLACK?

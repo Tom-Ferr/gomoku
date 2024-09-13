@@ -107,16 +107,21 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
     for (size_t i = 0; i < _mask_size + 2; i++)
     {
         BigInt t;
+        size_t t_pos = pos;
         if(s == f && i == 0)
-            t = targets(pos + shift + inc);
+            t_pos = (pos + shift + inc);
         else if(s != l && i == _mask_size + 1)
-            t = targets(pos - shift - inc);
+            t_pos = (pos - shift - inc);
         else if (pos < 0 )
-            t = targets(pos + shift + inc);
+            t_pos = (pos + shift + inc);
         else if (pos >= (int)_board_size)
-            t = targets(pos - shift - inc);
-        else
-            t = targets(pos);
+            t_pos = (pos - shift - inc);
+        // else
+        //     t_pos = (pos);
+
+        t = targets(t_pos);
+        t.set_maskpos(t_pos);
+
         dest.push_back(t);
         pos = pos + shift + inc;
     }

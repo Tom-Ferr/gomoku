@@ -53,12 +53,14 @@ BigInt::BigInt(const BigInt& other)
 {
 	mpz_init2(_value, 361);
 	mpz_set(_value, other._value);
+	set_maskpos(other.get_maskpos());
 }
 
 BigInt::BigInt(BigInt&& other) noexcept
 {
 	mpz_init2(_value, 361);
 	mpz_swap(_value, other._value);
+	set_maskpos(other.get_maskpos());
 	// mpz_clear(other._value);
 }
 
@@ -69,7 +71,11 @@ BigInt::~BigInt() {
 BigInt& BigInt::operator=(const BigInt& other)
 {
 	if (this != &other)
+	{
 		mpz_set(_value, other._value);
+		set_maskpos(other.get_maskpos());
+
+	}
 	return *this;
 }
 
@@ -78,6 +84,7 @@ BigInt& BigInt::operator=(BigInt&& other) noexcept
 	if (this != &other)
 	{
 		mpz_swap(_value, other._value);
+		set_maskpos(other.get_maskpos());
 		//mpz_clear(other._value);
 	}
 	return *this;
@@ -338,4 +345,14 @@ std::istream& operator>>(std::istream& is, BigInt& big_int) {
 size_t BigInt::pos() const
 {
 	return mpz_scan1(_value, 0);
+}
+
+void BigInt::set_maskpos(size_t pos)
+{
+	_mask_pos = pos;
+}
+
+size_t BigInt::get_maskpos() const
+{
+	return _mask_pos;
 }

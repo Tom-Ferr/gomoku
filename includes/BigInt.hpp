@@ -15,6 +15,7 @@ class BigInt
 
 		/* tempoprary value for all operations*/
 		static BigInt _tmp;
+		size_t _mask_pos = 0;
 
 		/*
 		** time saving operations, reducing BigInt creation
@@ -139,6 +140,9 @@ class BigInt
 
 		size_t size() const;
 		size_t pos() const;
+
+		void set_maskpos(size_t pos);
+		size_t get_maskpos() const;
 
 		// Output Stream
 		friend std::ostream& operator<<(std::ostream& os, const BigInt& big_int);

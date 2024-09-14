@@ -1,6 +1,7 @@
 #include <Heuristics.hpp>
 
 Mask Heuristics::_masks = Mask();
+std::unordered_map<std::string, int> Heuristics::_hashes;
 
 Heuristics::Heuristics(BoardState &state)
 : _state(state)
@@ -237,8 +238,18 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     return false;
 }
 
-int Heuristics::run()
+int Heuristics::run(bool endgame)
 {
+
+	std::string hash = _state.hash();
+
+	if (!endgame)
+	{
+		std::unordered_map<std::string, int>::const_iterator it = _hashes.find(hash);
+		if (it != _hashes.end())
+			return it->second;
+	}
+
     for (int pos = 0; pos < _state.size(); pos++)
     {
         for (size_t i = 0; i < 4; i++)
@@ -259,7 +270,10 @@ int Heuristics::run()
                         + 500 * (_points["my_cfive2"] - _points["ot_cfive2"])
                         + 50  * (_points["my_cfive3"] - _points["ot_cfive3"])
                         + 500 * ((_points["my_potential_captures"]) * _state.maxi_captures()  - (_points["ot_potential_captures"]) *  _state.mini_captures());
-    return _heuristic;
+    _hashes[hash] = _heuristic;
+	std::cout << "Hash:" << hash << std::endl;
+
+	return _heuristic;
 }
 
 bool Heuristics::endgame(size_t pos)

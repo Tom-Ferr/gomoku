@@ -29,6 +29,7 @@ BoardState::BoardState(int _sqrt)
 	_inv_mystate = BigInt(0);
 	_inv_otherstate = BigInt(0);
 	_totalboard = BoardState::mask;
+	_create_hash();
 }
 
 BoardState::BoardState(const BoardState& other)
@@ -36,7 +37,7 @@ BoardState::BoardState(const BoardState& other)
 _move(other._move),
 _mystate(other._mystate), _otherstate(other._otherstate),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
-_totalboard(other._totalboard)
+_totalboard(other._totalboard), _hash(other._hash)
 { }
 
 BoardState::BoardState(BoardState&& other) noexcept
@@ -44,8 +45,8 @@ BoardState::BoardState(BoardState&& other) noexcept
 _move(other._move), _mystate(std::move(other._mystate)),
 _otherstate(std::move(other._otherstate)),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
-_totalboard(other._totalboard)
-{ }
+_totalboard(other._totalboard), _hash(std::move(other._hash))
+{}
 
 BoardState::BoardState(const BoardState& other, BigInt move)
 : _maximizing(!other._maximizing), _capture_move(other._capture_move), _size(other._size), _sqrt(other._sqrt), _maxi_captures(other._maxi_captures), _mini_captures(other._mini_captures),
@@ -74,6 +75,7 @@ void BoardState::applymove(BigInt move, bool mystate)
 		_inv_otherstate = (~_otherstate) & BoardState::mask;
 	}
 	_totalboard = _totalboard ^ move;
+	_create_hash();
 }
 
 void BoardState::applymove(size_t pos, bool mystate)
@@ -156,7 +158,7 @@ int BoardState::check_capture(const BigInt &self, const BigInt &rival, const siz
 		if (((rival & edge_mask) != 0) && ((rival & edge_mask) != edge_mask) && ((self & edge_mask) == 0))
 			points--;
 	}
-	
+
 	return points;
 }
 
@@ -290,6 +292,7 @@ void BoardState::swap_states()
 	int tmp = _maxi_captures;
 	_maxi_captures = _mini_captures;
 	_mini_captures = tmp;
+	_create_hash();
 }
 
 BigInt BoardState::expanded_free() const
@@ -344,6 +347,7 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_maxi_captures = other._maxi_captures;
 		_mini_captures = other._mini_captures;
 		_capture_move = other._capture_move;
+		_hash = other._hash;
 	}
 	return *this;
 }
@@ -374,4 +378,14 @@ std::ostream &operator<<(std::ostream &os, const BoardState &bs)
 	}
 	std::cout  << std::endl;
 	return os;
+}
+
+void BoardState::_create_hash()
+{
+	_hash = _mystate.hash() + "_" + _otherstate.hash() + "_" + std::to_string(_maxi_captures) + "_" + std::to_string(_mini_captures);
+}
+
+std::string const &BoardState::hash() const
+{
+	return _hash;
 }

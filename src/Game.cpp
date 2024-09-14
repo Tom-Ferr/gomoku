@@ -158,6 +158,7 @@ bool Game::dummy_step(bool turn)
 
 bool Game::step(bool turn)
 {
+	Node::node_count = 0;
 	std::cout << "Step" << std::endl;
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	std::pair<int, BigInt> result;
@@ -168,12 +169,12 @@ bool Game::step(bool turn)
 		return true;
     }
 	if (turn)
-		result = Node(2, INT_MIN, INT_MAX, _board).minimax();
+		result = Node(3, INT_MIN, INT_MAX, _board).minimax();
 	else
 	{
 		BoardState other(_board);
 		other.swap_states();
-		result = Node(2, INT_MIN, INT_MAX, other).minimax();
+		result = Node(3, INT_MIN, INT_MAX, other).minimax();
 	}
 	if (result.second == 0)
 		std::cout << "No move found" << std::endl;
@@ -193,6 +194,7 @@ bool Game::step(bool turn)
 	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
 	std::cout << "Move: " << _move << std::endl;
 	std::cout << "Heuristic: " << result.first << std::endl;
+	std::cout << "Node Count: " << Node::node_count << std::endl;
 	Logger::log_move(_total_nmoves, "AI", _move, _turn, _board);
 	_ftc = Free_Three_Checker(_board);
 	_turn = !_turn;
@@ -367,7 +369,7 @@ float Game::last_time()
 int Game::end_game()
 {
 	Heuristics h(_board);
-	int value = h.run();
+	int value = h.run(true);
 	std::cout << "Current Heuristic: " << value << std::endl;
 	h.describe_heuristic();
 	if (((~_board.totalboard()) & BoardState::mask) == 0)

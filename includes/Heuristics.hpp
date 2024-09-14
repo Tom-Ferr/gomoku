@@ -7,6 +7,8 @@
 
 class Heuristics
 {
+	static std::unordered_map<std::string, int> _hashes;
+
 private:
 	BoardState &_state;
     std::vector<std::vector<int> > _my_scores ;
@@ -20,8 +22,8 @@ private:
     const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
     static Mask _masks;
 
-
     std::map<std::string, int> _points;
+
     void _set_points(bool my, int points);
 
 	/*
@@ -43,7 +45,7 @@ public:
     Heuristics& operator=(const Heuristics& other);
     ~Heuristics();
 
-    int run();
+    int run(bool endgame=false);
     bool endgame(size_t pos);
     void describe_heuristic() const;
     bool maxi_wins() ;

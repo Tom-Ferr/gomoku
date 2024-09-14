@@ -28,6 +28,7 @@ class BoardState
 			static Mask _capturable_masks;
 			static bool _with_captures;
 			const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
+			std::string _hash;
 
 		public:
 			BoardState(int sqrt=19);
@@ -61,7 +62,9 @@ class BoardState
 			void check_capture(size_t pos, bool maximizing);
 			int check_capture(const BigInt &self, const BigInt &rival, const size_t &pos, char orientation);
 			size_t check_capture(const BigInt &target, bool maximizing);
-		private:
+
+			std::string const &hash() const;
+			void _create_hash();
 
 };
 

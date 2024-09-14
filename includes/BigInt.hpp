@@ -149,6 +149,9 @@ class BigInt
 
 		// Input Stream
 		friend std::istream& operator>>(std::istream& is, BigInt& big_int);
+
+		std::string hash() const;
+
 };
 
 

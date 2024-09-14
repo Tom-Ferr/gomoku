@@ -356,3 +356,10 @@ size_t BigInt::get_maskpos() const
 {
 	return _mask_pos;
 }
+
+std::string BigInt::hash() const
+{
+	char str[362]; // this can be much lower
+
+	return std::string(mpz_get_str(str, 62, _value));
+}

@@ -168,12 +168,12 @@ bool Game::step(bool turn)
 		return true;
     }
 	if (turn)
-		result = Node(3, INT_MIN, INT_MAX, _board).minimax();
+		result = Node(2, INT_MIN, INT_MAX, _board).minimax();
 	else
 	{
 		BoardState other(_board);
 		other.swap_states();
-		result = Node(3, INT_MIN, INT_MAX, other).minimax();
+		result = Node(2, INT_MIN, INT_MAX, other).minimax();
 	}
 	if (result.second == 0)
 		std::cout << "No move found" << std::endl;

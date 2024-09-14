@@ -148,9 +148,9 @@ void Heuristics::_set_points(bool my, int points)
 void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const Mask::inner_map &masks)
 {
     const Mask::mask_vector &vectorized = masks.at(VECTOR)[pos];
-    size_t prev = vectorized[0].pos();
-    size_t last = vectorized[5].pos();
-    size_t edge = vectorized[6].pos();
+    size_t prev = vectorized[0].get_maskpos();
+    size_t last = vectorized[5].get_maskpos();
+    size_t edge = vectorized[6].get_maskpos();
     int target_score = target[pos];
     int prev_score = target[prev];
 

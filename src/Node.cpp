@@ -169,6 +169,7 @@ bool Node::possible_moves(std::vector<size_t>& moves)
 		}
 		if (is_valid(pos, _freepos))
 			moves.push_back(pos);
+		std::shuffle(moves.begin(), moves.end(), std::mt19937());
 	}
 	return true;
 }

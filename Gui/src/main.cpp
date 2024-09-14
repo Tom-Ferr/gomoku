@@ -16,7 +16,7 @@
 
 int main()
 {
-	Logger::set_active(true);
+	Logger::set_active(false);
 	Gui gui;
 	Logger::close_fds();
 	return (EXIT_SUCCESS);

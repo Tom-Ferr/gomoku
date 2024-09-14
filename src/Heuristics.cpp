@@ -241,21 +241,28 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 int Heuristics::run(bool endgame)
 {
 
-	std::string hash = _state.hash();
+	//std::string hash = _state.hash();
+	(void)endgame;
+	//if (!endgame)
+	//{
+	//	std::unordered_map<std::string, int>::const_iterator it = _hashes.find(hash);
+	//	if (it != _hashes.end())
+	//		return it->second;
+	//}
 
-	if (!endgame)
-	{
-		std::unordered_map<std::string, int>::const_iterator it = _hashes.find(hash);
-		if (it != _hashes.end())
-			return it->second;
-	}
+	BigInt expanded = _state.expanded_free() | _state.mystate(true) | _state.otherstate(true);
+	bool expanded_bit; (void)expanded;(void)expanded_bit;
 
     for (int pos = 0; pos < _state.size(); pos++)
     {
-        for (size_t i = 0; i < 4; i++)
-        {
-            board_eval(pos, _modes[i], false);
-        }
+		expanded_bit = expanded.get_bit(pos);
+		if (expanded_bit)
+		{
+			for (size_t i = 0; i < 4; i++)
+			{
+				board_eval(pos, _modes[i], false);
+			}
+		}
     }
 
     _heuristic = 80000 * (_points["my_five"] - _points["ot_five"])
@@ -270,8 +277,8 @@ int Heuristics::run(bool endgame)
                         + 500 * (_points["my_cfive2"] - _points["ot_cfive2"])
                         + 50  * (_points["my_cfive3"] - _points["ot_cfive3"])
                         + 500 * ((_points["my_potential_captures"]) * _state.maxi_captures()  - (_points["ot_potential_captures"]) *  _state.mini_captures());
-    _hashes[hash] = _heuristic;
-	std::cout << "Hash:" << hash << std::endl;
+    //_hashes[hash] = _heuristic;
+//	std::cout << "Hash:" << hash << std::endl;
 
 	return _heuristic;
 }

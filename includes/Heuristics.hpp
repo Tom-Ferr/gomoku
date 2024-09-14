@@ -4,7 +4,7 @@
 # include <vector>
 # include <BoardState.hpp>
 # include <map>
-
+#include <unordered_map>
 class Heuristics
 {
 	static std::unordered_map<std::string, int> _hashes;

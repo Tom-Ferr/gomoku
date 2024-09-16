@@ -3,7 +3,7 @@ SRC_DIR			= 	./src
 BUILD_DIR		= 	./build
 INCLUDE_DIR		= 	./includes
 ALGORITHM_DIR	= 	$(addprefix ${SRC_DIR}, /Algorithm)
-GUI_DIR			= 	$(addprefix ${SRC_DIR}, /Gui/)
+GUI_DIR			= 	$(addprefix ${SRC_DIR}, /Gui)
 SUB_DIRS		= 	${SRC_DIR} ${ALGORITHM_DIR} ${GUI_DIR}
 
 # Files

@@ -9,6 +9,13 @@
 # include <MLX42/MLX42.h>
 # include <common.hpp>
 
+/*
+** Class for the status bar displayed on the board.
+** It displays information about the game, such as the players,
+** the turn, the time, and the captures.
+** Displays either vertically or horizontally, depending on the
+** dimensions of the window.
+*/
 class BoardStatusBar
 {
 	private:

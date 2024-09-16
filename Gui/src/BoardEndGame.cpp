@@ -2,7 +2,10 @@
 #include <Gui.hpp>
 # include <Board.hpp>
 
-
+/*
+** Constructors and Destructor.
+** Canonical Form.
+*/
 BoardEndGame::BoardEndGame()
 {}
 

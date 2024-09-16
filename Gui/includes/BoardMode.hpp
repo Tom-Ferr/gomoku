@@ -11,6 +11,12 @@
 
 class GameMessage;
 
+/*
+** Popup displayed when the game ends.
+** Derived from ABoardPopup.
+** Utilizes GameMessage class as an interface of the message to
+** be displayed.
+*/
 class BoardMode: public ABoardPopup
 {
 	private:
@@ -30,7 +36,6 @@ class BoardMode: public ABoardPopup
 		void resize();
 		void hide();
 		bool click();
-		void show(std::string mode, bool selecting=true);
 		void show(GameMessage const &message);
 		void hover();
 		ButtonGroup const &buttons() const;

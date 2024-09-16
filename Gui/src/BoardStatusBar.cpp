@@ -2,12 +2,13 @@
 #include <Gui.hpp>
 # include <Board.hpp>
 
-
+/*
+** Constructors and Destructor.
+** Canonical Form.
+*/
 BoardStatusBar::BoardStatusBar()
 : _background(nullptr)
-{
-
-}
+{ }
 
 BoardStatusBar::BoardStatusBar(BoardStatusBar const &other)
 {
@@ -28,6 +29,9 @@ Rect const &BoardStatusBar::dimensions()
 	return (_dimensions);
 }
 
+/*
+** sets initial values for the status bar
+*/
 void BoardStatusBar::init()
 {
 	_background = mlx_new_image(Gui::mlx(), 1, 1);
@@ -53,7 +57,8 @@ void BoardStatusBar::resize()
 
 	_dimensions = Rect::subrect(Gui::dimensions(), 1., .05, 2);
 	text_height = _dimensions.height * .6;
-	if (static_cast<float>(Gui::dimensions().width) / Gui::dimensions().height > 1.5)
+	if (static_cast<float>(Gui::dimensions().width)
+			/ Gui::dimensions().height > 1.5)
 	{
 		_dimensions = Rect::subrect(Gui::dimensions(), .2, 1, 0);
 		_dimensions.x = Gui::dimensions().width - _dimensions.width;
@@ -75,24 +80,52 @@ void BoardStatusBar::_resize_vertical(size_t text_height)
 {
 	float spacing = 1.1;
 
-	_vs.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05, 0, text_height));
-	_player1.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * spacing, 0, text_height));
-	_player2.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 2 * spacing, 0, text_height));
-	_turn.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 3 * spacing, 0, text_height));
-	_last_time.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 4 * spacing, 0, text_height));
-	_avg_time.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 5 * spacing, 0, text_height));
-	_captures.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 6 * spacing, 0, text_height));
-	_player1_captures.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 7 * spacing, 0, text_height));
-	_player2_captures.resize(Rect(_dimensions.x + 5, _dimensions.y + 1.05 + text_height * 8 * spacing, 0, text_height));
-	_dimensions.height = _player2_captures.dimensions().y + _player2_captures.dimensions().height + 5;
+	_vs.resize(
+		Rect(_dimensions.x + 5,
+			 _dimensions.y + 1.05, 0, text_height));
+	_player1.resize(
+		Rect(_dimensions.x + 5,
+			 _dimensions.y + 1.05 + text_height * spacing,
+			 0, text_height));
+	_player2.resize(
+		Rect(_dimensions.x + 5,
+			 _dimensions.y + 1.05 + text_height * 2 * spacing,
+			 0, text_height));
+	_turn.resize(
+		Rect(_dimensions.x + 5,
+			 _dimensions.y + 1.05 + text_height * 3 * spacing,
+			 0, text_height));
+	_last_time.resize(
+		Rect(_dimensions.x + 5,
+			 _dimensions.y + 1.05 + text_height * 4 * spacing,
+			 0, text_height));
+	_avg_time.resize(
+		Rect(_dimensions.x + 5,
+			 _dimensions.y + 1.05 + text_height * 5 * spacing,
+			 0, text_height));
+	_captures.resize(
+		Rect(_dimensions.x + 5,
+			 _dimensions.y + 1.05 + text_height * 6.2 * spacing,
+			 0, text_height));
+	_player1_captures.resize(
+		Rect(_dimensions.x + 15,
+			 _dimensions.y + 1.05 + text_height * 7 * spacing,
+			 0, text_height));
+	_player2_captures.resize(
+		Rect(_dimensions.x + 15,
+			 _dimensions.y + 1.05 + text_height * 8 * spacing,
+			 0, text_height));
+	_dimensions.height = _player2_captures.dimensions().y
+							+ _player2_captures.dimensions().height + 5;
 }
 
 void BoardStatusBar::_resize_horizontal(size_t text_height)
 {
 	float ratio;
-	float current_width = _avg_time.dimensions().width + _avg_time.dimensions().x;
-	float current_height = _avg_time.dimensions().height;
 	float spacing;
+	float current_width = _avg_time.dimensions().width
+							+ _avg_time.dimensions().x;
+	float current_height = _avg_time.dimensions().height;
 
 	ratio = current_width / current_height;
 	if ((ratio * text_height) > _dimensions.width)
@@ -103,14 +136,28 @@ void BoardStatusBar::_resize_horizontal(size_t text_height)
 	std::cout << "Ratio: " << ratio << std::endl;
 	_vs.resize(Rect(_dimensions.x + 20, _dimensions.y + 1.05, 0, text_height));
 	spacing = text_height / 2;
-	_player1.resize(Rect(_vs.dimensions().x + _vs.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
-	_player2.resize(Rect(_player1.dimensions().x + _player1.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
-	_turn.resize(Rect(_player2.dimensions().x + _player2.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
-	_last_time.resize(Rect(_turn.dimensions().x + _turn.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
-	_avg_time.resize(Rect(_last_time.dimensions().x + _last_time.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
-	_captures.resize(Rect(_avg_time.dimensions().x + _avg_time.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
-	_player1_captures.resize(Rect(_captures.dimensions().x + _captures.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
-	_player2_captures.resize(Rect(_player1_captures.dimensions().x + _player1_captures.dimensions().width + spacing, _dimensions.y + 1.05, 0, text_height));
+	_player1.resize(
+		Rect(_vs.dimensions().x + _vs.dimensions().width + spacing,
+			 _dimensions.y + 1.05, 0, text_height));
+	_player2.resize(
+		Rect(_player1.dimensions().x + _player1.dimensions().width + spacing,
+			 _dimensions.y + 1.05, 0, text_height));
+	_turn.resize(
+		Rect(_player2.dimensions().x + _player2.dimensions().width + spacing,
+			 _dimensions.y + 1.05, 0, text_height));
+	_last_time.resize(
+		Rect(_turn.dimensions().x + _turn.dimensions().width + spacing,
+			 _dimensions.y + 1.05, 0, text_height));
+	_avg_time.resize(
+		Rect(_last_time.dimensions().x
+			 + _last_time.dimensions().width + spacing,
+			 _dimensions.y + 1.05, 0, text_height));
+	_captures.resize(
+		Rect(Gui::dimensions().height + 100, 0, 0, text_height));
+	_player1_captures.resize(
+		Rect(Gui::dimensions().height + 100, 0, 0, text_height));
+	_player2_captures.resize(
+		Rect(Gui::dimensions().height + 100, 0, 0, text_height));
 }
 
 void BoardStatusBar::hide()

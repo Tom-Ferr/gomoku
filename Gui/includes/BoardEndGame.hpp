@@ -10,6 +10,10 @@
 # include <MLX42/MLX42.h>
 # include <common.hpp>
 
+/*
+** Popup displayed when the game ends.
+** Derived from ABoardPopup.
+*/
 class BoardEndGame : public ABoardPopup
 {
 	private:

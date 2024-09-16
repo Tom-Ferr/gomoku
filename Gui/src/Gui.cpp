@@ -1,15 +1,36 @@
 #include  <Gui.hpp>
 
-mlx_t			*Gui::_mlx = nullptr;
-std::map<std::string, mlx_texture_t*> Gui::_textures;
-Rect			Gui::_dimensions;
-Rect			Gui::_mouse;
+/*
+** static variables initialization
+*/
+mlx_t									*Gui::_mlx = nullptr;
+std::map<std::string, mlx_texture_t*>	Gui::_textures;
+Rect									Gui::_dimensions;
+Rect									Gui::_mouse;
 
+/*
+** Constructors and assignment operator.
+*/
 Gui::Gui()
+: _background(nullptr)
 {
 	_board = Board(this);
 	if (_init())
 		_run();
+}
+
+Gui::Gui(Gui const &other)
+{
+	*this = other;
+}
+
+Gui &Gui::operator=(Gui const &other)
+{
+	_background = other._background;
+	_board = other._board;
+	_menu = other._menu;
+	_gamestate = other._gamestate;
+	return *this;
 }
 
 /*
@@ -17,7 +38,8 @@ Gui::Gui()
 */
 Gui::~Gui()
 {
-	for (std::map<std::string, mlx_texture_t*>::iterator it = _textures.begin(); it != _textures.end(); it++)
+	for (std::map<std::string, mlx_texture_t*>::iterator it
+			= _textures.begin(); it != _textures.end(); it++)
 	{
 		if (it->second)
 			mlx_delete_texture(it->second);
@@ -36,7 +58,8 @@ bool Gui::_init()
 	_gamestate = GS_MENU;
 	if (!(_mlx = mlx_init(WIDTH, HEIGHT, "Gomoku", true)))
 	{
-		std::cout << "Error: mlx_init failed. " << mlx_strerror(mlx_errno) << std::endl;
+		std::cout << "Error: mlx_init failed. "
+				<< mlx_strerror(mlx_errno) << std::endl;
 		return (false);
 	}
 	if (!(_load_textures()))
@@ -106,13 +129,25 @@ void Gui::_run()
 	mlx_key_hook(_mlx, key_hook, this);
 	mlx_cursor_hook(_mlx, cursor_hook, this);
 	mlx_mouse_hook(_mlx, mouse_hook, this);
-	mlx_close_hook(_mlx, close_hook, this);
 	mlx_resize_hook(_mlx, resize_hook, this);
 	mlx_loop_hook(_mlx, board_loop_hook, this);
 	mlx_loop(_mlx);
 }
 
-void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const &color, size_t index, size_t gridsize, Rect dest)
+/*
+** Applies a texture to an image, with optional color, grid index
+** and destination position.
+** Arguments:
+** - image: the image to apply the texture to
+** - texture: the texture to apply
+** - color: the color to apply to the texture. Defaults to white.
+** - index: the index of the texture in the grid. Defaults to 0.
+** - gridsize: the size of the grid. Defaults to 1.
+** - dest: the destination rectangle. Defaults to the whole image.
+*/
+void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture,
+							Color const &color, size_t index,
+							size_t gridsize, Rect dest)
 {
 	struct s_coord<uint8_t *> pixel;
 	struct s_coord<unsigned int> xy;
@@ -137,9 +172,10 @@ void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const 
 				tex.x = texture->width - 1;
 			if (tex.y >= texture->height)
 				tex.y = texture->height - 1;
-			pixel.x = &texture->pixels[(tex.y * texture->width + tex.x) * texture->bytes_per_pixel];
-			pixel.y = &image->pixels[((j + dest.y) * image->width + i + dest.x) * texture->bytes_per_pixel];
-			//pixel.y = &image->pixels[(j * image->width + i) * texture->bytes_per_pixel];
+			pixel.x = &texture->pixels[(tex.y * texture->width + tex.x)
+										* texture->bytes_per_pixel];
+			pixel.y = &image->pixels[((j + dest.y) * image->width + i + dest.x)
+										* texture->bytes_per_pixel];
 			if (color != Color::white)
 			{
 				pixel.y[0] = (pixel.x[0] * color.r) / 255;
@@ -155,6 +191,9 @@ void	Gui::apply_texture(mlx_image_t* image, mlx_texture_t* texture, Color const 
 	}
 }
 
+/*
+** resize the Gui elements and propagates resizing to _board and _menu.
+*/
 void	Gui::_resize(int width, int height)
 {
 	Gui::_dimensions.width = width;
@@ -170,7 +209,6 @@ void	Gui::_resize(int width, int height)
 /*
 ** input hooks
 */
-
 void Gui::board_loop_hook(void *param)
 {
 	Gui *gui = static_cast<Gui*>(param);
@@ -218,13 +256,6 @@ void	Gui::cursor_hook(double x, double y, void *param)
 		gui->_board.hover();
 }
 
-void	Gui::close_hook(void *param)
-{
-	Gui *gui = static_cast<Gui*>(param);
-	(void)gui;
-	std::cout << "Window closed" << std::endl;
-}
-
 void Gui::key_hook(mlx_key_data_t keydata, void* param)
 {
 	Gui *gui = static_cast<Gui*>(param);
@@ -239,7 +270,6 @@ void Gui::key_hook(mlx_key_data_t keydata, void* param)
 		}
 		else if (gui->_gamestate == GS_MENU)
 		{
-			std::cout << "Escape key pressed" << std::endl;
 			mlx_close_window(Gui::mlx());
 		}
 	}

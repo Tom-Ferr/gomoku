@@ -177,7 +177,7 @@ bool Board::hover()
 		_endgame.hover();
 		return true;
 	}
-	if (enabled() && Board::dimensions().contains(Gui::_mouse.x, Gui::_mouse.y))
+	if (enabled() && Board::dimensions().contains(Gui::mouse().x, Gui::mouse().y))
 	{
 		tile = get_hovered_tile();
 		if (tile == -1)
@@ -294,8 +294,8 @@ Rect	&Board::get_tile_dimensions()
 */
 int Board::get_hovered_tile()
 {
-	size_t x = (Board::dimensions().x + Board::dimensions().width - Gui::_mouse.x) / get_tile_dimensions().width;
-	size_t y = (Board::dimensions().y + Board::dimensions().height - Gui::_mouse.y) / get_tile_dimensions().height;
+	size_t x = (Board::dimensions().x + Board::dimensions().width - Gui::mouse().x) / get_tile_dimensions().width;
+	size_t y = (Board::dimensions().y + Board::dimensions().height - Gui::mouse().y) / get_tile_dimensions().height;
 	if (x >= sqrt() || y >= sqrt())
 		return -1;
     return (y * sqrt() + x);

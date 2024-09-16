@@ -175,6 +175,8 @@ void Logger::close_fds()
 {
 	if (_moves_fd != -1)
 		close(_moves_fd);
+	if (_boardstate_fd != -1)
+		close(_boardstate_fd);
 }
 
 void Logger::set_active(bool active)

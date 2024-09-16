@@ -32,8 +32,10 @@ class Logger
 		Logger(Logger const &other);
 		~Logger();
 		Logger &operator=(Logger const &other);
-		static void log_move(size_t current_move, std::string who, size_t move, bool turn);
-		static void log_move(size_t current_move, std::string who, size_t move, bool turn, BoardState &bs);
+		static void log_move(size_t current_move, std::string who,
+								size_t move, bool turn);
+		static void log_move(size_t current_move, std::string who,
+								size_t move, bool turn, BoardState &bs);
 		static void close_fds();
 		static void set_active(bool active);
 };

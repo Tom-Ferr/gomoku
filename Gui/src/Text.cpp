@@ -1,6 +1,5 @@
 #include <Text.hpp>
 #include <Gui.hpp>
-
 #include <algorithm>
 
 Text::Text()
@@ -58,7 +57,8 @@ void Text::_init()
 	}
 	if (!_image)
 	{
-		_image = mlx_new_image(Gui::mlx(), _dimensions.width, _dimensions.height);
+		_image = mlx_new_image(Gui::mlx()
+						 _dimensions.width, _dimensions.height);
 		if (!_image)
 			return ;
 		mlx_image_to_window(Gui::mlx(), _image, 0, 0);
@@ -72,28 +72,15 @@ void Text::resize(Rect const &dimensions)
 
 	_dimensions.x = dimensions.x;
 	_dimensions.y = dimensions.y;
-	/*
-	** if the text is greater or equal to LINE_WIDTH,
-	** we resize the text to fit the width, otherwise we consider the height
-	** passed in dimensions.
-	*/
-	ratio = static_cast<float>(Gui::texture("font_regular")->height / FONT_GRIDSIZE)
+	ratio = static_cast<float>(
+			Gui::texture("font_regular")->height / FONT_GRIDSIZE)
 			/ (Gui::texture("font_regular")->width / FONT_GRIDSIZE);
-	//if (_text.size() >= LINE_WIDTH)
-	//	resize(dimensions.width * ratio);
-	//else
-
 	if (_text.size() > LINE_WIDTH)
 	{
-
-		std::cout << "Dimensions Width: " << dimensions.width << std::endl;
-		std::cout << "Dimensions Height: " << dimensions.height << std::endl;
-		std::cout << "Ratio: " << ratio << std::endl;
-		std::cout << "New Height: " << (dimensions.width / LINE_WIDTH) * ratio << std::endl;
-
 		max_total_height = Gui::dimensions().height / 3;
 		max_total_height /= ((_text.size() / LINE_WIDTH) + 1);
-		max_total_height = std::min(max_total_height, static_cast<size_t>((dimensions.width / LINE_WIDTH) * ratio));
+		max_total_height = std::min(max_total_height,
+				static_cast<size_t>((dimensions.width / LINE_WIDTH) * ratio));
 		resize(max_total_height);
 	}
 	else

@@ -8,7 +8,11 @@
 # include <MLX42/MLX42.h>
 # include <common.hpp>
 
-
+/*
+** Info class for displaying information on the board.
+** Used with the Statusbar.
+** Consists of a title and a description or image (piece).
+*/
 class Info
 {
 	private:

@@ -4,6 +4,10 @@
 #include <Button.hpp>
 #include <vector>
 
+/*
+** A group of buttons with a title.
+** Used in main menu and selecting BoardMode.
+*/
 class ButtonGroup
 {
 	private:

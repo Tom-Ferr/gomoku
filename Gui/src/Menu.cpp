@@ -2,16 +2,20 @@
 # include <Gui.hpp>
 
 Menu::Menu()
-: _logo(nullptr)
-{
-
-}
+: _logo(nullptr), _play_button(nullptr), _play_button_hover(nullptr)
+{ }
 
 bool Menu::init()
 {
-	_logo = mlx_new_image(Gui::mlx(), Gui::texture("logo")->height, Gui::texture("logo")->width);
-	_play_button = mlx_new_image(Gui::mlx(), Gui::texture("playbuttons")->height / 2, Gui::texture("playbuttons")->width / 2);
-	_play_button_hover = mlx_new_image(Gui::mlx(), Gui::texture("playbuttons")->height / 2, Gui::texture("playbuttons")->width / 2);
+	_logo = mlx_new_image(Gui::mlx(),
+							Gui::texture("logo")->height,
+							Gui::texture("logo")->width);
+	_play_button = mlx_new_image(Gui::mlx(),
+							Gui::texture("playbuttons")->height / 2,
+							Gui::texture("playbuttons")->width / 2);
+	_play_button_hover = mlx_new_image(Gui::mlx(),
+							Gui::texture("playbuttons")->height / 2,
+							Gui::texture("playbuttons")->width / 2);
 	_dimensions = Rect::subrect(Gui::dimensions(), .8);
 	Gui::apply_texture(_logo, Gui::texture("logo"));
 
@@ -46,7 +50,14 @@ Menu::~Menu()
 
 Menu &Menu::operator=(Menu const &other)
 {
-	(void)other;
+	_logo = other._logo;
+	_play_button = other._play_button;
+	_play_button_hover = other._play_button_hover;
+	_bgroup_vs = other._bgroup_vs;
+	_bgroup_starting = other._bgroup_starting;
+	_bgroup_mode = other._bgroup_mode;
+	_dimensions = other._dimensions;
+	_play_dimensions = other._play_dimensions;
 	return *this;
 }
 
@@ -58,12 +69,17 @@ void Menu::resize()
 	_play_dimensions = Rect::subrect(_dimensions, .4, .15, 2);
 	ratio = float(Gui::texture("logo")->height) / Gui::texture("logo")->width;
 	Rect logo_dimensions = Rect::subrect(_dimensions, .7, ratio * .7, 0);
-	mlx_resize_image(_logo, logo_dimensions.width, logo_dimensions.height);
-	mlx_resize_image(_play_button, _play_dimensions.width, _play_dimensions.height);
-	mlx_resize_image(_play_button_hover, _play_dimensions.width, _play_dimensions.height);
+	mlx_resize_image(_logo, logo_dimensions.width,
+										logo_dimensions.height);
+	mlx_resize_image(_play_button, _play_dimensions.width,
+										_play_dimensions.height);
+	mlx_resize_image(_play_button_hover, _play_dimensions.width,
+										_play_dimensions.height);
 	Gui::apply_texture(_logo, Gui::texture("logo"));
-	Gui::apply_texture(_play_button, Gui::texture("playbuttons"), Color::white, 2, 2);
-	Gui::apply_texture(_play_button_hover, Gui::texture("playbuttons"), Color::white, 0, 2);
+	Gui::apply_texture(_play_button, Gui::texture("playbuttons"),
+													 Color::white, 2, 2);
+	Gui::apply_texture(_play_button_hover, Gui::texture("playbuttons"),
+													Color::white, 0, 2);
 	_logo->instances[0].x = logo_dimensions.x;
 	_logo->instances[0].y = logo_dimensions.y;
 	_play_button->instances[0].x = _play_dimensions.x;
@@ -79,9 +95,12 @@ void Menu::_resize_buttons()
 	Rect button_box = Rect::subrect(Gui::dimensions(), .9);
 	button_box = Rect::subrect(button_box, .3, .5, 1);
 	button_box.y = _logo->instances[0].y + (_logo->height * 1.03);
-	_bgroup_vs.resize(Rect(button_box.x - (button_box.width * 1.1) , button_box.y, button_box.width, button_box.height));
-	_bgroup_starting.resize(Rect(button_box.x, button_box.y, button_box.width, button_box.height));
-	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.1), button_box.y, button_box.width, button_box.height));
+	_bgroup_vs.resize(Rect(button_box.x - (button_box.width * 1.1),
+						button_box.y, button_box.width, button_box.height));
+	_bgroup_starting.resize(Rect(button_box.x, button_box.y,
+								button_box.width, button_box.height));
+	_bgroup_mode.resize(Rect(button_box.x + (button_box.width * 1.1),
+						button_box.y, button_box.width, button_box.height));
 	_bgroup_vs.depth(_logo->instances[0].z + 1);
 	_bgroup_starting.depth(_logo->instances[0].z + 1);
 	_bgroup_mode.depth(_logo->instances[0].z + 1);
@@ -116,15 +135,14 @@ bool Menu::click()
 {
 	if (_bgroup_vs.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
 		_bgroup_vs.click();
-	else if (_bgroup_starting.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+	else if (_bgroup_starting.dimensions().contains(
+										Gui::mouse().x, Gui::mouse().y))
 		_bgroup_starting.click();
-	else if (_bgroup_mode.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+	else if (_bgroup_mode.dimensions().contains(
+										Gui::mouse().x, Gui::mouse().y))
 		_bgroup_mode.click();
 	else if (_play_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
-	{
-		std::cout << "Play button clicked" << std::endl;
 		return true;
-	}
 	return false;
 }
 

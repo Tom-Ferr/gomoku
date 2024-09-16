@@ -4,7 +4,7 @@
 ** static variables initialization
 */
 mlx_t									*Gui::_mlx = nullptr;
-std::map<std::string, mlx_texture_t*>	Gui::_textures;
+std::map<std::string, mlx_texture_t *>	Gui::_textures;
 Rect									Gui::_dimensions;
 Rect									Gui::_mouse;
 
@@ -117,7 +117,8 @@ bool Gui::_load_textures()
 		return (false);
 	if (!_load_texture(Gui::texture("playbuttons"), "assets/playbuttons.png"))
 		return (false);
-	if (!_load_texture(Gui::texture("selectbuttons"), "assets/selectbuttons.png"))
+	if (!_load_texture(Gui::texture("selectbuttons"),
+						"assets/selectbuttons.png"))
 		return (false);
 	if (!_load_texture(Gui::texture("box"), "assets/boxbg.png"))
 		return (false);
@@ -225,7 +226,8 @@ void 	Gui::resize_hook(int32_t width, int32_t height, void* param)
 		gui->_resize(width, height);
 }
 
-void	Gui::mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void *param)
+void	Gui::mouse_hook(mouse_key_t button, action_t action,
+						modifier_key_t mods, void *param)
 {
 	Gui *gui = static_cast<Gui*>(param);
 	(void)gui;
@@ -237,7 +239,9 @@ void	Gui::mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, v
 		if (gui->_menu.click())
 		{
 			gui->_gamestate = GS_BOARD;
-			gui->_board.show(gui->_menu.opt_vs(), gui->_menu.opt_starting(), gui->_menu.opt_mode());
+			gui->_board.show(gui->_menu.opt_vs(),
+								gui->_menu.opt_starting(),
+								gui->_menu.opt_mode());
 			gui->_menu.hide();
 		}
 	}

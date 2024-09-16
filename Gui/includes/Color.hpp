@@ -1,8 +1,14 @@
 #ifndef COLOR_HPP
 # define COLOR_HPP
-#include <MLX42/MLX42.h>
+
+/*
+** Class for color representation.
+*/
 class Color
 {
+	private:
+		typedef unsigned char uint8_t;
+
 	public:
 		static Color white;
 		static Color black;

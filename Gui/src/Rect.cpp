@@ -38,7 +38,8 @@ bool Rect::operator!=(const Rect& other)
 
 bool Rect::contains(size_t x, size_t y) const
 {
-	return x >= this->x && x <= this->x + width && y >= this->y && y <= this->y + height;
+	return x >= this->x && x <= this->x + width
+			&& y >= this->y && y <= this->y + height;
 }
 
 /*
@@ -95,6 +96,7 @@ Rect Rect::subrect(const Rect &parent, float wratio, float hratio, int valign)
 
 std::ostream& operator<<(std::ostream& os, const Rect& rect)
 {
-	os << "Rect: " << rect.x << ", " << rect.y << ", " << rect.width << ", " << rect.height;
+	os << "Rect: " << rect.x << ", " << rect.y
+		<< ", " << rect.width << ", " << rect.height;
 	return os;
 }

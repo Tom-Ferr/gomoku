@@ -7,6 +7,7 @@
 # include <ButtonGroup.hpp>
 # include <MLX42/MLX42.h>
 # include <Game.hpp>
+
 class Menu
 {
 	private:
@@ -20,19 +21,19 @@ class Menu
 		Rect				_play_dimensions;
 
 		void _resize_buttons();
+
 	public:
 		Menu();
 		Menu(Menu const &other);
 		~Menu();
+		Menu &operator=(Menu const &other) ;
 		bool init();
 		void resize();
-		Menu &operator=(Menu const &other) ;
 		Rect const &dimensions();
 		void hover();
 		bool click();
 		void show();
 		void hide();
-
 		t_gamemode opt_mode();
 		t_startingplayer opt_starting();
 		t_vs opt_vs();

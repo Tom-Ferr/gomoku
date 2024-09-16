@@ -36,20 +36,25 @@ void ButtonGroup::resize(Rect const &dimensions)
 {
 	size_t prev_y;
 	float ratio;
-	//Rect(756, 362, 194, 324);
-	ratio = static_cast<float>(Gui::texture("selectbuttons")->height) / Gui::texture("selectbuttons")->width;
-	_title.resize(Rect(dimensions.x, dimensions.y, dimensions.width, dimensions.width * ratio * .8));
+
+	ratio = static_cast<float>(Gui::texture("selectbuttons")->height)
+								/ Gui::texture("selectbuttons")->width;
+	_title.resize(Rect(dimensions.x, dimensions.y,
+						dimensions.width, dimensions.width * ratio * .8));
 	_title.center(dimensions.x + (dimensions.width / 2));
 	prev_y = dimensions.y + (_title.dimensions().height * 1.2);
 	for (size_t i = 0; i < _buttons.size(); i++)
 	{
-		_buttons[i].resize(Rect(dimensions.x, prev_y, dimensions.width, dimensions.height));
+		_buttons[i].resize(Rect(dimensions.x, prev_y,
+								dimensions.width, dimensions.height));
 		prev_y += (_buttons[i].dimensions().height * 1.2);
 	}
 	_dimensions = dimensions;
 	_dimensions.height = _title.dimensions().height;
 	if (_buttons.size())
-		_dimensions.height = (_buttons[_buttons.size() - 1].dimensions().y + _buttons[_buttons.size() - 1].dimensions().height) - _dimensions.y;
+		_dimensions.height = (_buttons[_buttons.size() - 1].dimensions().y
+								+ _buttons[_buttons.size() - 1].dimensions().height)
+								- _dimensions.y;
 }
 
 void ButtonGroup::add(std::string const &str)

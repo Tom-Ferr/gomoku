@@ -7,7 +7,6 @@ int Logger::_boardstate_fd = -1;
 bool Logger::_active = true;
 std::string Logger::_logdir = "";
 
-
 Logger::Logger()
 { }
 
@@ -28,7 +27,8 @@ Logger &Logger::operator=(Logger const &other)
 std::string Logger::_get_current_time()
 {
 	char buffer[100];
-	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+	std::chrono::system_clock::time_point now
+							= std::chrono::system_clock::now();
     std::time_t now_c = std::chrono::system_clock::to_time_t(now);
     std::tm tm;
     localtime_r(&now_c, &tm);
@@ -144,27 +144,33 @@ void Logger::_log_boardstate(BoardState &bs)
 	write(_boardstate_fd, str.c_str(), str.size());
 }
 
-void Logger::log_move(size_t total_moves, std::string who, size_t move, bool turn)
+void Logger::log_move(size_t total_moves, std::string who,
+						size_t move, bool turn)
 {
 	if (!_init(_moves_fd, LOGMOVES_FILENAME))
 		return ;
 	while (who.size() < 10)
 		who += " ";
-	std::string str = std::to_string(total_moves) + "\t" + who + "\t\t" + std::to_string(move) + "\t"
-		+ " ( x:" + std::to_string(move % 19) + " y:" + std::to_string(move / 10) + " )" + "\t"
+	std::string str = std::to_string(total_moves)
+		+ "\t" + who + "\t\t" + std::to_string(move) + "\t"
+		+ " ( x:" + std::to_string(move % 19)
+		+ " y:" + std::to_string(move / 10) + " )" + "\t"
 		+ (turn ? "Black" : "White") + "\n";
 	write(_moves_fd, str.c_str(), str.size());
 }
 
-void Logger::log_move(size_t total_moves, std::string who, size_t move, bool turn, BoardState &bs)
+void Logger::log_move(size_t total_moves, std::string who,
+						size_t move, bool turn, BoardState &bs)
 {
 	log_move(total_moves, who, move, turn);
 	if (!_init(_boardstate_fd, LOGSTATE_FILENAME))
 		return ;
 	while (who.size() < 10)
 		who += " ";
-	std::string str = std::to_string(total_moves) + "\t" + who + "\t\t" + std::to_string(move) + "\t"
-		+ " ( x:" + std::to_string(move % 19) + " y:" + std::to_string(move / 10) + " )" + "\t"
+	std::string str = std::to_string(total_moves) + "\t"
+		+ who + "\t\t" + std::to_string(move) + "\t"
+		+ " ( x:" + std::to_string(move % 19)
+		+ " y:" + std::to_string(move / 10) + " )" + "\t"
 		+ (turn ? "Black" : "White") + "\n";
 	write(_boardstate_fd, str.c_str(), str.size());
 	_log_boardstate(bs);

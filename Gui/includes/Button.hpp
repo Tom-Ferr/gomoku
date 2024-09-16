@@ -14,6 +14,11 @@ enum e_btn
 	BTN_SELECTED
 };
 
+/*
+** Class for buttons
+** Consists of a text and background images
+** for normal, hovered, and selected states.
+*/
 class Button
 {
 	private:

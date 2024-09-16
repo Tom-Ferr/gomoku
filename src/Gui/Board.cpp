@@ -8,7 +8,8 @@ size_t				Board::_sqrt = DEFAULT_BOARD;
 size_t				Board::_size = DEFAULT_BOARD * DEFAULT_BOARD;
 
 Board::Board(Gui *gui)
-: _background(nullptr), _gui(gui), _hovered_tile(nullptr), _enabled(false), _gameover(false), _hinted_tile(nullptr)
+: _background(nullptr), _gui(gui), _hovered_tile(nullptr),
+_enabled(false), _gameover(false), _hinted_tile(nullptr)
 { }
 
 /*
@@ -331,18 +332,13 @@ void Board::loop()
 		_game.message().clear();
 		return ;
 	}
-	if (_game.vs_ai() && (_game.is_player_turn() ^ _game.is_game_swap_special_move()))
+	if (_game.vs_ai()
+			&& ((_game.is_player_turn() ^ _game.is_game_swap_special_move())
+			|| (!_game.is_player_turn() && _game.is_game_swap_deferred_move())))
 	{
 		enable();
 		return ;
 	}
-	if (_game.vs_ai () && (!_game.is_player_turn() && _game.is_game_swap_deferred_move()))
-	{
-		enable();
-		return ;
-	}
-
-	/*vs AI and is AI turn, do something*/
 	if (_game.vs_ai()
 		&& (!_game.is_player_turn() /* I wil lnot play if it is players turn*/
 		|| _game.is_game_swap_special_move() /* except if it is a special move for swap mode*/
@@ -358,13 +354,7 @@ void Board::loop()
 			enable();
 			update_statusbar();
 		}
-		else
-		{
-			// we've got a game over... (no possible move for AI)
-			// still need to determine the winner
-		}
 	}
-	/*vs P2 and there is no hint set, show hint for whatever player is the turn*/
 	if (!_game.vs_ai() && !_hinted_tile)
 	{
 		_game.dummy_step(_game.turn());
@@ -372,8 +362,6 @@ void Board::loop()
 		_hinted_tile->hint(true);
 		enable();
 	}
-	//std::cout << "Enabled: " << enabled() << std::endl;
-	//std::cout << "Board queue loop" << std::endl;
 }
 
 void Board::update_statusbar()

@@ -57,7 +57,7 @@ void Text::_init()
 	}
 	if (!_image)
 	{
-		_image = mlx_new_image(Gui::mlx()
+		_image = mlx_new_image(Gui::mlx(),
 						 _dimensions.width, _dimensions.height);
 		if (!_image)
 			return ;

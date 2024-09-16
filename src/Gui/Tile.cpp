@@ -31,7 +31,6 @@ Tile::Tile(size_t pos)
 	for (size_t i = 0; i < 5; i++)
 	{
 		_pieces[i] = mlx_image_to_window(Gui::mlx(), Board::_piece_images[i], 0, 0);
-		//mlx_set_instance_depth(&piece(i), 3);
 		piece(i).enabled = false;
 	}
 }

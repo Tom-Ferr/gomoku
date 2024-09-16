@@ -221,7 +221,8 @@ void 	Gui::resize_hook(int32_t width, int32_t height, void* param)
 {
 	Gui *gui = static_cast<Gui*>(param);
 
-	gui->_resize(width, height);
+	if (width > 300 && height > 200)
+		gui->_resize(width, height);
 }
 
 void	Gui::mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void *param)

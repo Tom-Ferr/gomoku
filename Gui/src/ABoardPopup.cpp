@@ -1,10 +1,14 @@
 #include <ABoardPopup.hpp>
 #include <Gui.hpp>
-# include <Board.hpp>
+#include <Board.hpp>
 
-
+/*
+** Constructors, Destructor.
+** Canonical Form.
+*/
 ABoardPopup::ABoardPopup()
-: _background(nullptr), _centerbox(nullptr), _header(nullptr), _ok_button(nullptr), _ok_button_hover(nullptr)
+: _background(nullptr), _centerbox(nullptr),
+	_header(nullptr), _ok_button(nullptr), _ok_button_hover(nullptr)
 { }
 
 ABoardPopup::ABoardPopup(ABoardPopup const &other)
@@ -43,7 +47,8 @@ void ABoardPopup::_init()
 	mlx_image_to_window(Gui::mlx(), _background, _dimensions.x, _dimensions.y);
 	mlx_image_to_window(Gui::mlx(), _centerbox, _dimensions.x, _dimensions.y);
 	mlx_image_to_window(Gui::mlx(), _header, _dimensions.x, _dimensions.y);
-	mlx_image_to_window(Gui::mlx(), _ok_button_hover, _dimensions.x, _dimensions.y);
+	mlx_image_to_window(Gui::mlx(), _ok_button_hover,
+						_dimensions.x, _dimensions.y);
 	mlx_image_to_window(Gui::mlx(), _ok_button, _dimensions.x, _dimensions.y);
 	_header_text = Text("Header", true);
 	hide();
@@ -63,9 +68,12 @@ void ABoardPopup::_resize_ok()
 		return ;
 	_ok_dimensions = Rect::subrect(_dimensions, .3, .1, 2);
 	mlx_resize_image(_ok_button, _ok_dimensions.width, _ok_dimensions.height);
-	mlx_resize_image(_ok_button_hover, _ok_dimensions.width, _ok_dimensions.height);
-	Gui::apply_texture(_ok_button, Gui::texture("playbuttons"), Color::white, 3, 2);
-	Gui::apply_texture(_ok_button_hover, Gui::texture("playbuttons"), Color::white, 1, 2);
+	mlx_resize_image(_ok_button_hover,
+						_ok_dimensions.width, _ok_dimensions.height);
+	Gui::apply_texture(_ok_button,
+						Gui::texture("playbuttons"), Color::white, 3, 2);
+	Gui::apply_texture(_ok_button_hover,
+						Gui::texture("playbuttons"), Color::white, 1, 2);
 	_ok_dimensions.y = _ok_dimensions.y - _ok_dimensions.height * .3;
 	_ok_button->instances[0].x = _ok_dimensions.x;
 	_ok_button->instances[0].y = _ok_dimensions.y;
@@ -92,7 +100,8 @@ void ABoardPopup::_resize_background()
 {
 	if (!_background)
 		return ;
-	mlx_resize_image(_background,  Gui::dimensions().width,  Gui::dimensions().height);
+	mlx_resize_image(_background,  Gui::dimensions().width,
+									Gui::dimensions().height);
 	_background->instances[0].x = 0;
 	_background->instances[0].y = 0;
 }
@@ -105,12 +114,14 @@ void ABoardPopup::_resize_header()
 	if (!_header)
 		return ;
 	header_dimensions = Rect::subrect(_dimensions, 1.04);;
-	ratio = static_cast<float>(Gui::texture("selectbuttons")->height) / Gui::texture("selectbuttons")->width;
+	ratio = static_cast<float>(Gui::texture("selectbuttons")->height)
+								/ Gui::texture("selectbuttons")->width;
 	header_dimensions.height = header_dimensions.width * ratio;
 	mlx_resize_image(_header, header_dimensions.width, header_dimensions.height);
 	_header->instances[0].x = header_dimensions.x;
 	_header->instances[0].y = header_dimensions.y;
-	Gui::apply_texture(_header, Gui::texture("selectbuttons"), Color(255, 255, 255, 255), 4, 3);
+	Gui::apply_texture(_header, Gui::texture("selectbuttons"),
+						Color(255, 255, 255, 255), 4, 3);
 	_header_text.resize(Rect::subrect(header_dimensions, .8));
 	_header_text.center(header_dimensions.x + (header_dimensions.width / 2));
 }
@@ -121,21 +132,32 @@ void ABoardPopup::_box_texture()
 
 	subrects["top"] = Rect(0, 0, _centerbox->width, 10);
 	subrects["left"] = Rect(0, 0, 10, _centerbox->height);
-	subrects["right"] = Rect(_centerbox->width - 10, 0, 10, _centerbox->height);
-	subrects["bottom"] = Rect(0, _centerbox->height - 10, _centerbox->width, 10);
+	subrects["right"] = Rect(_centerbox->width - 10, 0, 10,
+								_centerbox->height);
+	subrects["bottom"] = Rect(0, _centerbox->height - 10,
+								_centerbox->width, 10);
 	subrects["topleft"] = Rect(0, 0, 10, 10);
 	subrects["topright"] = Rect(_centerbox->width - 10, 0, 10, 10);
-	subrects["bottomright"] = Rect(_centerbox->width - 10, _centerbox->height - 10, 10, 10);
+	subrects["bottomright"] = Rect(_centerbox->width - 10,
+									_centerbox->height - 10, 10, 10);
 	subrects["bottomleft"] = Rect(0, _centerbox->height - 10, 10, 10);
 	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 4, 3);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 1, 3, subrects["top"]);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 3, 3, subrects["left"]);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 5, 3, subrects["right"]);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 7, 3, subrects["bottom"]);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 0, 3, subrects["topleft"]);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 2, 3, subrects["topright"]);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 6, 3, subrects["bottomleft"]);
-	Gui::apply_texture(_centerbox, Gui::texture("box"), Color::white, 8, 3, subrects["bottomright"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 1, 3, subrects["top"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 3, 3, subrects["left"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 5, 3, subrects["right"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 7, 3, subrects["bottom"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 0, 3, subrects["topleft"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 2, 3, subrects["topright"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 6, 3, subrects["bottomleft"]);
+	Gui::apply_texture(_centerbox, Gui::texture("box"),
+							Color::white, 8, 3, subrects["bottomright"]);
 }
 
 void ABoardPopup::_hide()
@@ -192,5 +214,5 @@ bool ABoardPopup::_click()
 
 void ABoardPopup::_set_header_text(std::string const &text)
 {
-    	_header_text = text;
+	_header_text = text;
 }

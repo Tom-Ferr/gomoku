@@ -6,6 +6,14 @@
 # include <common.hpp>
 # include <Text.hpp>
 
+/*
+** Abstract class for popups, which are used to display messages
+** on the board.
+** It consists mainly of a background, a center box, a header
+** and an ok button, and does most of the work to display and
+** resize them, making the derived classes only need to implement
+** the resize of its own elements.
+*/
 class ABoardPopup
 {
 	protected:
@@ -45,6 +53,5 @@ class ABoardPopup
 		virtual void hide() = 0;
 		virtual void hover() = 0;
 };
-
 
 #endif

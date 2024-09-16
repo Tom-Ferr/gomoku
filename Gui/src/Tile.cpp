@@ -5,10 +5,10 @@ Tile::Tile() {}
 Tile::Tile(size_t pos)
 : _pos(pos), _enabled(true)
 {
-	//(void)_set;(void)_hover;(void)_hint;
 	size_t x = pos % Board::sqrt();
 	size_t y = pos / Board::sqrt();
 	size_t tex = 4;
+
 	if (x == 0 && y == 0)
 		tex = 8;
 	else if (x == 0 && y == Board::sqrt() - 1)

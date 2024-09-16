@@ -159,7 +159,7 @@ void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const
         _set_points(my, prev_score);
     else if (target_score < prev_score)
         target[pos] = prev_score;
-    else if((target_score == prev_score && target_score == 32) || last == edge )
+    else if(target_score == 32 || last == edge )
         _set_points(my, target_score);
 
 }
@@ -280,7 +280,7 @@ int Heuristics::run(bool endgame)
     //_hashes[hash] = _heuristic;
 //	std::cout << "Hash:" << hash << std::endl;
 
-	return _heuristic;
+    return _heuristic;
 }
 
 bool Heuristics::endgame(size_t pos)

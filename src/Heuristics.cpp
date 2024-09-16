@@ -266,8 +266,8 @@ int Heuristics::run(bool endgame)
     }
 
     _heuristic = 80000 * (_points["my_five"] - _points["ot_five"])
-                + 15000 * (_points["my_ofour"] - _points["ot_ofour"])
-                + 500 * (_points["my_cfour"] - _points["ot_cfour"])
+                + 10000 * (_points["my_ofour"] - (_points["ot_ofour"] * 2))
+                + 550 * (_points["my_cfour"] - _points["ot_cfour"])
                 + 500 * (_points["my_othree"] - _points["ot_othree"])
                 + 200 * (_points["my_cthree"] - _points["ot_cthree"])
                 + 50 * (_points["my_otwo"] - _points["ot_otwo"])

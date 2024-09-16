@@ -140,7 +140,7 @@ bool Game::dummy_step(bool turn)
 	if (!turn)
 		dummy.swap_states();
 	_captures.clear();
-	result = Node(3, INT_MIN, INT_MAX, _board).minimax();
+	result = Node(3, INT_MIN, INT_MAX, dummy).minimax();
 	if (result.second == 0)
 	{
 		std::cout << "No move found" << std::endl;

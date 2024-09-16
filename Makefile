@@ -66,11 +66,13 @@ ${MLX}:
 
 
 $(NAME):	${OBJS} ${MLX}
-			${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}  ${LIBS}
+	@${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}  ${LIBS}
+	@echo "\033[96m${NAME} is built. \033[0m"
 
 ${BUILD_DIR}/%.o: ${SRC_DIR}/%.cpp
 	@mkdir -p ${@D}
-	${CXX} ${CXXFLAGS} -MMD ${SANITIZE} ${INCLUDE} -c $< -o $@
+	@${CXX} ${CXXFLAGS} -MMD ${SANITIZE} ${INCLUDE} -c $< -o $@
+	@echo "\033[0;32mCompiled $<\033[0m"
 
 clean:
 				@rm -rf ${BUILD_DIR}

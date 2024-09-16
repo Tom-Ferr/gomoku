@@ -155,13 +155,12 @@ void Heuristics::to_compute(bool my, std::vector<int> &target, size_t pos, const
     int target_score = target[pos];
     int prev_score = target[prev];
 
-    if (target_score < prev_score && target_score == 0)
+    if ((target_score < prev_score && prev_score != 32) && target_score == 0)
         _set_points(my, prev_score);
-    else if (target_score < prev_score)
+    else if (target_score < prev_score && prev_score != 32)
         target[pos] = prev_score;
     else if(target_score == 32 || last == edge )
         _set_points(my, target_score);
-
 }
 
 bool Heuristics::board_eval(int pos, char orientation, bool endgame)

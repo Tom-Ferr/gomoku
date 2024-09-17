@@ -130,6 +130,8 @@ bool Gui::_load_textures()
 		return (false);
 	if (!_load_texture(Gui::texture("box"), "assets/boxbg.png"))
 		return (false);
+	if (!_load_texture(texture("hintbutton"), "assets/hintbutton.png"))
+		return (false);
 	return (true);
 }
 

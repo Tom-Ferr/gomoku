@@ -30,7 +30,7 @@ INCLUDE			= 	$(patsubst $(SRC_DIR)%, -I$(INCLUDE_DIR)%, $(SUB_DIRS))
 NAME			=	gomoku
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
-SANITIZE 		=	-O3
+SANITIZE 		=	-O3#-fsanitize=address -g
 LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx -ldl -pthread -lm
 
 

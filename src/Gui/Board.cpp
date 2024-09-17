@@ -197,6 +197,8 @@ bool Board::hover()
 		_endgame.hover();
 		return true;
 	}
+	if (enabled() && _statusbar.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+		_statusbar.hover();
 	if (enabled() && Board::dimensions().contains(Gui::mouse().x, Gui::mouse().y))
 	{
 		tile = get_hovered_tile();
@@ -239,9 +241,10 @@ bool Board::click()
 {
 	if (_gameover)
 		return false;
+
 	if (_mode.enabled())
 	{
-		if (_mode.click())
+		 if (_mode.click())
 		{
 			if (_mode.buttons().size() == 3 && _mode.buttons().selected() == 2)
 			{
@@ -285,6 +288,15 @@ bool Board::click()
 			_hovered_tile = nullptr;
 			update_statusbar();
 		}
+	}
+	if (enabled() && !_game.vs_ai() && !_hinted_tile && _statusbar.click())
+	{
+		//disable();
+		_game.dummy_step(_game.turn());
+		_hinted_tile = &_tiles[_game.move()];
+		_hinted_tile->hint(true);
+		update_statusbar();
+		//enable();
 	}
 	return true;
 }
@@ -372,13 +384,8 @@ void Board::loop()
 			update_statusbar();
 		}
 	}
-	if (!_game.vs_ai() && !_hinted_tile)
-	{
-		_game.dummy_step(_game.turn());
-		_hinted_tile = &_tiles[_game.move()];
-		_hinted_tile->hint(true);
+	if (!_game.vs_ai())
 		enable();
-	}
 }
 
 void Board::update_statusbar()

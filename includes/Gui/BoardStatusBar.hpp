@@ -6,6 +6,7 @@
 # include <Color.hpp>
 # include <Text.hpp>
 # include <Info.hpp>
+# include <Button.hpp>
 # include <MLX42/MLX42.h>
 # include <common.hpp>
 
@@ -20,6 +21,10 @@ class BoardStatusBar
 {
 	private:
 		mlx_image_t						*_background;
+		mlx_image_t						*_hint_button;
+		mlx_image_t						*_hint_button_hover;
+		Rect							_hint_dimensions;
+		bool							_vs_human;
 		Rect							_dimensions;
 		Info							_vs;
 		Info							_player1;
@@ -30,6 +35,7 @@ class BoardStatusBar
 		Text							_captures;
 		Info							_player1_captures;
 		Info							_player2_captures;
+		Button							_hint;
 
 		void _resize_vertical(size_t text_height);
 		void _resize_horizontal(size_t text_height);
@@ -44,6 +50,8 @@ class BoardStatusBar
 		Rect const &dimensions();
 		void hide();
 		void show();
+		void hover();
+		bool click();
 
 		/*
 		** setters

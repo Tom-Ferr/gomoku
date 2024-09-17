@@ -7,7 +7,7 @@
 ** Canonical Form.
 */
 BoardStatusBar::BoardStatusBar()
-: _background(nullptr)
+: _background(nullptr), _hint_button(nullptr), _hint_button_hover(nullptr), _vs_human(false)
 { }
 
 BoardStatusBar::BoardStatusBar(BoardStatusBar const &other)
@@ -21,6 +21,10 @@ BoardStatusBar &BoardStatusBar::operator=(BoardStatusBar const &other)
 {
 	_dimensions = other._dimensions;
 	_background = other._background;
+	_hint_button = other._hint_button;
+	_hint_button_hover = other._hint_button_hover;
+	_hint_dimensions = other._hint_dimensions;
+	_vs_human = other._vs_human;
 	return (*this);
 }
 
@@ -35,12 +39,21 @@ Rect const &BoardStatusBar::dimensions()
 bool BoardStatusBar::init()
 {
 	_background = mlx_new_image(Gui::mlx(), 1, 1);
-	if (!_background)
+	_hint_button = mlx_new_image(Gui::mlx(),
+							Gui::texture("hintbutton")->height,
+							Gui::texture("hintbutton")->width);
+	_hint_button_hover = mlx_new_image(Gui::mlx(),
+							Gui::texture("hintbutton")->height,
+							Gui::texture("hintbutton")->width);
+	if (!_background || !_hint_button || !_hint_button_hover)
 		return false;
 	mlx_put_pixel(_background, 0, 0, 0x00000077);
-	if (mlx_image_to_window(
+	if ((mlx_image_to_window(
 			Gui::mlx(), _background, _dimensions.x, _dimensions.y) == -1)
+			|| (mlx_image_to_window(Gui::mlx(), _hint_button, 0, 0) == -1)
+			|| (mlx_image_to_window(Gui::mlx(), _hint_button_hover, 0, 0) == -1))
 		return false;
+	std::cout << "initialized Statusbar" << std::endl;
 	_vs = Info("Vs", "AI");
 	_player1 = Info("Player1", PT_BLACK);
 	_player2 = Info("Player2", PT_WHITE);
@@ -50,8 +63,10 @@ bool BoardStatusBar::init()
 	_captures = Text("Captures");
 	_player1_captures = Info("Player1", "0");
 	_player2_captures = Info("Player2", "0");
-	if (!_vs._is_instanciated() || !_player1._is_instanciated() || !_player2._is_instanciated()
-			|| !_turn._is_instanciated() || !_last_time._is_instanciated() || !_avg_time._is_instanciated()
+
+	if (!_vs._is_instanciated() || !_player1._is_instanciated()
+			|| !_player2._is_instanciated() || !_turn._is_instanciated()
+			|| !_last_time._is_instanciated() || !_avg_time._is_instanciated()
 			|| !_captures.init() || !_player1_captures._is_instanciated()
 			|| !_player2_captures._is_instanciated())
 		return false;
@@ -62,27 +77,39 @@ bool BoardStatusBar::init()
 
 void BoardStatusBar::resize()
 {
-	bool vertical = false;
 	size_t text_height;
 
 	_dimensions = Rect::subrect(Gui::dimensions(), 1., .05, 2);
 	text_height = _dimensions.height * .6;
-	if (static_cast<float>(Gui::dimensions().width)
-			/ Gui::dimensions().height > 1.5)
-	{
-		_dimensions = Rect::subrect(Gui::dimensions(), .2, 1, 0);
-		_dimensions.x = Gui::dimensions().width - _dimensions.width;
-		vertical = true;
-	}
-	if (vertical)
-		_resize_vertical(text_height);
-	else
-		_resize_horizontal(text_height);
+	_dimensions = Rect::subrect(Gui::dimensions(), .2, 1, 0);
+	_dimensions.x = Gui::dimensions().width - _dimensions.width;
+	if (!(static_cast<float>(Gui::dimensions().width)
+			/ Gui::dimensions().height > 1.5))
+		_dimensions.x = Gui::dimensions().width;
+
+	_resize_vertical(text_height);
 	if (_background)
 	{
 		mlx_resize_image(_background, _dimensions.width, _dimensions.height);
 		_background->instances[0].x = _dimensions.x;
 		_background->instances[0].y = _dimensions.y;
+	}
+	if (_hint_button && _hint_button_hover)
+	{
+		size_t hint_size = text_height * 2;
+		_hint_dimensions = Rect(_dimensions.x + _dimensions.width - hint_size - 20,
+								_dimensions.y + _dimensions.height - hint_size - 10,
+								hint_size, hint_size);
+		mlx_resize_image(_hint_button, _hint_dimensions.height, _hint_dimensions.height);
+		mlx_resize_image(_hint_button_hover, _hint_dimensions.height, _hint_dimensions.height);
+		Gui::apply_texture(_hint_button, Gui::texture("hintbutton"),
+													 Color::white);
+		Gui::apply_texture(_hint_button_hover, Gui::texture("hintbutton"),
+													Color(255, 255, 0 , 255));
+		_hint_button->instances[0].x = _hint_dimensions.x;
+		_hint_button->instances[0].y = _hint_dimensions.y;
+		_hint_button_hover->instances[0].x = _hint_dimensions.x;
+		_hint_button_hover->instances[0].y = _hint_dimensions.y;
 	}
 }
 
@@ -129,6 +156,34 @@ void BoardStatusBar::_resize_vertical(size_t text_height)
 							+ _player2_captures.dimensions().height + 5;
 }
 
+void BoardStatusBar::hover()
+{
+	if (!_vs_human)
+		return ;
+	if (_hint_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
+	{
+		_hint_button_hover->enabled = true;
+		_hint_button->enabled = false;
+	}
+	else
+	{
+		_hint_button_hover->enabled = false;
+		_hint_button->enabled = true;
+	}
+}
+
+/*
+** if true, the hint button was clicked
+*/
+bool BoardStatusBar::click()
+{
+	if (!_vs_human)
+		return false;
+	if (_hint_dimensions.contains(Gui::mouse().x, Gui::mouse().y))
+		return true;
+	return false;
+}
+
 void BoardStatusBar::_resize_horizontal(size_t text_height)
 {
 	float ratio;
@@ -140,10 +195,6 @@ void BoardStatusBar::_resize_horizontal(size_t text_height)
 	ratio = current_width / current_height;
 	if ((ratio * text_height) > _dimensions.width)
 		text_height = static_cast<float>(_dimensions.width) / ratio;
-	std::cout << "Text Height: " << text_height << std::endl;
-	std::cout << "Current Width: " << current_width << std::endl;
-	std::cout << "Current Height: " << current_height << std::endl;
-	std::cout << "Ratio: " << ratio << std::endl;
 	_vs.resize(Rect(_dimensions.x + 20, _dimensions.y + 1.05, 0, text_height));
 	spacing = text_height / 2;
 	_player1.resize(
@@ -163,11 +214,12 @@ void BoardStatusBar::_resize_horizontal(size_t text_height)
 			 + _last_time.dimensions().width + spacing,
 			 _dimensions.y + 1.05, 0, text_height));
 	_captures.resize(
-		Rect(Gui::dimensions().height + 100, 0, 0, text_height));
+		Rect(0, Gui::dimensions().height + 100, 0, text_height));
 	_player1_captures.resize(
-		Rect(Gui::dimensions().height + 100, 0, 0, text_height));
+		Rect(0, Gui::dimensions().height + 100, 0, text_height));
 	_player2_captures.resize(
-		Rect(Gui::dimensions().height + 100, 0, 0, text_height));
+		Rect(0, Gui::dimensions().height + 100, 0, text_height));
+
 }
 
 void BoardStatusBar::hide()
@@ -182,7 +234,8 @@ void BoardStatusBar::hide()
 	_player1_captures.hide();
 	_player2_captures.hide();
 	_captures.hide();
-
+	_hint_button_hover->enabled = false;
+	_hint_button->enabled = false;
 }
 
 void BoardStatusBar::show()
@@ -197,15 +250,29 @@ void BoardStatusBar::show()
 	_player1_captures.show();
 	_player2_captures.show();
 	_captures.show();
-
+	if (_vs_human)
+	{
+		_hint_button_hover->enabled = false;
+		_hint_button->enabled = true;
+	}
 }
 
 void BoardStatusBar::set_vs(bool ai)
 {
 	if (ai)
+	{
+		_vs_human = false;
 		_vs = "AI";
+		_hint_button_hover->enabled = false;
+		_hint_button->enabled = false;
+	}
 	else
+	{
+		_vs_human = true;
 		_vs = "Player 2";
+		_hint_button_hover->enabled = false;
+		_hint_button->enabled = true;
+	}
 }
 
 void BoardStatusBar::set_player1(bool black)
@@ -255,3 +322,4 @@ void BoardStatusBar::set_player2_captures(size_t captures)
 {
 	_player2_captures = std::to_string(captures);
 }
+

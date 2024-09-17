@@ -31,7 +31,7 @@ NAME			=	gomoku
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
 SANITIZE 		=	-O3
-LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx -ldl -pthread -lm
+LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx
 
 
 # MLX
@@ -50,6 +50,7 @@ INCLUDE += $(GMP_INC)
 LIBS += $(GMP_LIB)
 
 # Rules
+
 all:		${NAME}
 
 ${MLX}:
@@ -64,8 +65,22 @@ ${MLX}:
 		cmake --build build -j4; \
 	fi
 
+check-gmp:
+ifeq ($(shell pkg-config --exists gmp && echo yes || echo no), no)
+	@echo "GMP is not installed. Installing GMP..."
+ifeq ($(shell uname -s), Linux)
+	@sudo apt-get update && sudo apt-get install -y libgmp-dev
+else ifeq ($(shell uname -s), Darwin)
+	@brew install gmp
+else
+	@echo "Unsupported OS. Please install GMP manually."
+	exit 1
+endif
+else
+	@echo "GMP is already installed."
+endif
 
-$(NAME):	${OBJS} ${MLX}
+$(NAME):	check-gmp ${MLX} ${OBJS}
 	@${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}  ${LIBS}
 	@echo "\033[96m${NAME} is built. \033[0m"
 

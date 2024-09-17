@@ -31,7 +31,7 @@ NAME			=	gomoku
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
 SANITIZE 		=	-O3
-LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx
+LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx -ldl -pthread -lm
 
 
 # MLX

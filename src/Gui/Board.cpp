@@ -97,7 +97,8 @@ void Board::hide()
 	_statusbar.hide();
 	_endgame.hide();
 	_mode.hide();
-	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
+	for (std::vector<Tile>::iterator it = _tiles.begin();
+			it != _tiles.end(); ++it)
 	{
 		it->clear();
 		it->hide();
@@ -112,20 +113,24 @@ bool Board::_init_tiles()
 {
 	for (size_t i = 0; i < 9; i++)
 	{
-		Board::_tile_images[i] = mlx_new_image(Gui::mlx(), TILE_SIZE, TILE_SIZE);
+		Board::_tile_images[i] = mlx_new_image(
+						Gui::mlx(), TILE_SIZE, TILE_SIZE);
 		if (!Board::_tile_images[i])
 			return false;
-		Gui::apply_texture(Board::_tile_images[i], Gui::texture("tile"), Color::white, i, 3);
+		Gui::apply_texture(
+			Board::_tile_images[i], Gui::texture("tile"), Color::white, i, 3);
 	}
 	for (size_t i = 0; i < 5; i++)
 	{
-		Board::_piece_images[i] = mlx_new_image(Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
+		Board::_piece_images[i] = mlx_new_image(
+						Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
 		if (!Board::_piece_images[i])
 			return false;
 	}
 	for (size_t i = 0; i < Board::_size; i++)
 		_tiles.push_back(Tile(i));
-	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
+	for (std::vector<Tile>::iterator it = _tiles.begin();
+				it != _tiles.end(); ++it)
 	{
 		if (!it->init())
 			return false;
@@ -146,17 +151,26 @@ void Board::resize()
 	_tile_dimensions = Rect::subrect(_dimensions, 1.0 / sqrt());
 	for (size_t i = 0; i < 9; i++)
 	{
-		mlx_resize_image(Board::_tile_images[i], _tile_dimensions.width, _tile_dimensions.height);
-		Gui::apply_texture(Board::_tile_images[i], Gui::texture("tile"), Color::white, i, 3);
+		mlx_resize_image(Board::_tile_images[i]
+				 _tile_dimensions.width, _tile_dimensions.height);
+		Gui::apply_texture(Board::_tile_images[i],
+								Gui::texture("tile"), Color::white, i, 3);
 	}
 	for (size_t i = 0; i < 5; i++)
-		mlx_resize_image(Board::_piece_images[i], _tile_dimensions.width, _tile_dimensions.height);
-	Gui::apply_texture(Board::_piece_images[PT_BLACK], Gui::texture("piece"), Color::black);
-	Gui::apply_texture(Board::_piece_images[PT_WHITE], Gui::texture("piece"), Color::white);
-	Gui::apply_texture(Board::_piece_images[PT_HINT], Gui::texture("piece"), Color::yellow);
-	Gui::apply_texture(Board::_piece_images[PT_BLACKHOVER], Gui::texture("piece"), Color::black_alpha);
-	Gui::apply_texture(Board::_piece_images[PT_WHITEHOVER], Gui::texture("piece"), Color::white_alpha);
-	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
+		mlx_resize_image(Board::_piece_images[i],
+			_tile_dimensions.width, _tile_dimensions.height);
+	Gui::apply_texture(Board::_piece_images[PT_BLACK],
+							Gui::texture("piece"), Color::black);
+	Gui::apply_texture(Board::_piece_images[PT_WHITE],
+							 Gui::texture("piece"), Color::white);
+	Gui::apply_texture(Board::_piece_images[PT_HINT],
+							Gui::texture("piece"), Color::yellow);
+	Gui::apply_texture(Board::_piece_images[PT_BLACKHOVER],
+							Gui::texture("piece"), Color::black_alpha);
+	Gui::apply_texture(Board::_piece_images[PT_WHITEHOVER],
+							Gui::texture("piece"), Color::white_alpha);
+	for (std::vector<Tile>::iterator it = _tiles.begin();
+									it != _tiles.end(); ++it)
 	{
 		it->resize(_tile_dimensions);
 	}
@@ -197,9 +211,11 @@ bool Board::hover()
 		_endgame.hover();
 		return true;
 	}
-	if (enabled() && _statusbar.dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+	if (enabled() && _statusbar.dimensions().contains(
+								Gui::mouse().x, Gui::mouse().y))
 		_statusbar.hover();
-	if (enabled() && Board::dimensions().contains(Gui::mouse().x, Gui::mouse().y))
+	if (enabled() && Board::dimensions().contains(
+								Gui::mouse().x, Gui::mouse().y))
 	{
 		tile = get_hovered_tile();
 		if (tile == -1)
@@ -233,7 +249,8 @@ bool Board::hover()
 void Board::_remove_captures()
 {
 	std::vector<int> &captures = _game.captures();
-	for (std::vector<int>::iterator it = captures.begin(); it != captures.end(); ++it)
+	for (std::vector<int>::iterator it = captures.begin();
+				it != captures.end(); ++it)
 		_tiles[*it].clear();
 }
 
@@ -246,15 +263,19 @@ bool Board::click()
 	{
 		 if (_mode.click())
 		{
-			if (_mode.buttons().size() == 3 && _mode.buttons().selected() == 2)
+			if (_mode.buttons().size() == 3
+				&& _mode.buttons().selected() == 2)
 			{
 				_game.set_defer_message();
 				update_statusbar();
 			}
 			else if (_mode.buttons().size())
 			{
-				if (!_game.turn() && ((_mode.buttons().selected() == 1 && !_game.is_deferred_turn())
-						|| (_mode.buttons().selected() == 0 && _game.is_deferred_turn())))
+				if (!_game.turn()
+					&& ((_mode.buttons().selected() == 1
+							&& !_game.is_deferred_turn())
+					|| (_mode.buttons().selected() == 0
+							&& _game.is_deferred_turn())))
 					_game.set_player(!_game.player());
                 _game.set_init_game(false);
 				update_statusbar();
@@ -326,8 +347,12 @@ Rect	&Board::get_tile_dimensions()
 */
 int Board::get_hovered_tile()
 {
-	size_t x = (Board::dimensions().x + Board::dimensions().width - Gui::mouse().x) / get_tile_dimensions().width;
-	size_t y = (Board::dimensions().y + Board::dimensions().height - Gui::mouse().y) / get_tile_dimensions().height;
+	size_t x = (Board::dimensions().x
+					+ Board::dimensions().width
+					- Gui::mouse().x) / get_tile_dimensions().width;
+	size_t y = (Board::dimensions().y
+					+ Board::dimensions().height
+					- Gui::mouse().y) / get_tile_dimensions().height;
 	if (x >= sqrt() || y >= sqrt())
 		return -1;
     return (y * sqrt() + x);
@@ -371,8 +396,8 @@ void Board::loop()
 		return ;
 	}
 	if (_game.vs_ai()
-		&& (!_game.is_player_turn() /* I wil lnot play if it is players turn*/
-		|| _game.is_game_swap_special_move())) /* except if it is a special move for swap mode*/
+		&& (!_game.is_player_turn()
+		|| _game.is_game_swap_special_move()))
 	{
 		turn = _game.turn();
 		if (_game.step(turn))

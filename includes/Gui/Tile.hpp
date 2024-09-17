@@ -1,9 +1,9 @@
 #ifndef TILE_HPP
 # define TILE_HPP
-#include <MLX42/MLX42.h>
+
+# include <MLX42/MLX42.h>
 # include <iostream>
 # include <Board.hpp>
-//# include <Gui.hpp>
 # include <map>
 
 class Board;
@@ -13,12 +13,10 @@ class Tile
     private:
 		size_t				_pos;
 		bool				_enabled;
-
-		size_t				_tile_tex;
-		size_t				_tile_idx;
-		size_t				_pieces[5];
+		int32_t				_tile_tex;
+		int32_t				_tile_idx;
+		int32_t				_pieces[5];
 		bool				_hover;
-		//bool				_hint;
 
     public:
 		Tile();
@@ -27,7 +25,7 @@ class Tile
 		~Tile();
 		Tile &operator=(Tile const &other);
 		void resize(Rect dimensions);
-		//void draw();
+		bool init();
 		bool hover(bool on, bool turn);
 		void hint(bool on);
 		bool click(bool turn);

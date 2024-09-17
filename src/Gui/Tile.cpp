@@ -1,12 +1,16 @@
 #include <Tile.hpp>
 #include <Gui.hpp>
+
 Tile::Tile() {}
 
 Tile::Tile(size_t pos)
 : _pos(pos), _enabled(true)
+{ }
+
+bool Tile::init()
 {
-	size_t x = pos % Board::sqrt();
-	size_t y = pos / Board::sqrt();
+	size_t x = _pos % Board::sqrt();
+	size_t y = _pos / Board::sqrt();
 	size_t tex = 4;
 
 	if (x == 0 && y == 0)
@@ -25,14 +29,22 @@ Tile::Tile(size_t pos)
 		tex = 7;
 	else if (y == Board::sqrt() - 1)
 		tex = 1;
-	_tile_idx = mlx_image_to_window(Gui::mlx(), Board::_tile_images[tex], 0, 0);
-	mlx_set_instance_depth(&Board::_tile_images[tex]->instances[_tile_idx], 2);
+	_tile_idx = mlx_image_to_window(
+					Gui::mlx(), Board::_tile_images[tex], 0, 0);
+	if (_tile_idx == -1)
+		return false;
+	mlx_set_instance_depth(
+					&Board::_tile_images[tex]->instances[_tile_idx], 2);
 	_tile_tex = tex;
 	for (size_t i = 0; i < 5; i++)
 	{
-		_pieces[i] = mlx_image_to_window(Gui::mlx(), Board::_piece_images[i], 0, 0);
+		_pieces[i] = mlx_image_to_window(
+						Gui::mlx(), Board::_piece_images[i], 0, 0);
+		if (_pieces[i] == -1)
+			return false;
 		piece(i).enabled = false;
 	}
+	return true;
 }
 
 Tile::Tile(Tile const &other)
@@ -41,7 +53,7 @@ _tile_tex(other._tile_tex), _tile_idx(other._tile_idx)
 {
 	for (size_t i = 0; i < 5; i++)
 		_pieces[i] = other._pieces[i];
-}//, _square(other._square), _piece (other._piece), _enabled(other._enabled) {}
+}
 
 
 Tile::~Tile() {}
@@ -54,8 +66,6 @@ Tile &Tile::operator=(Tile const &other)
 	_tile_idx = other._tile_idx;
 	for (size_t i = 0; i < 5; i++)
 		_pieces[i] = other._pieces[i];
-	//_square = other._square;
-	//_piece = other._piece;
 	return *this;
 }
 
@@ -66,8 +76,10 @@ Tile &Tile::operator=(Tile const &other)
 */
 void Tile::resize(Rect dimensions)
 {
-	dimensions.x = (Board::dimensions().x + Board::dimensions().width) - (dimensions.width * ((_pos % Board::sqrt()) + 1));
-	dimensions.y = (Board::dimensions().y + Board::dimensions().height) - (dimensions.height * ((_pos / Board::sqrt()) + 1));
+	dimensions.x = (Board::dimensions().x + Board::dimensions().width)
+						- (dimensions.width * ((_pos % Board::sqrt()) + 1));
+	dimensions.y = (Board::dimensions().y + Board::dimensions().height)
+						- (dimensions.height * ((_pos / Board::sqrt()) + 1));
 	Board::_tile_images[_tile_tex]->instances[_tile_idx].x = dimensions.x;
 	Board::_tile_images[_tile_tex]->instances[_tile_idx].y = dimensions.y;
 

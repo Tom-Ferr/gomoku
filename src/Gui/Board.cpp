@@ -19,17 +19,21 @@ _enabled(false), _gameover(false), _hinted_tile(nullptr)
 bool Board::init()
 {
 	_background = mlx_new_image(Gui::mlx(), BACKGROUND_SIZE, BACKGROUND_SIZE);
+	if (!_background)
+		return false;
 	Board::_dimensions = Rect::subrect(Gui::dimensions(), .9);
 	Gui::apply_texture(_background, Gui::texture("board"));
-	mlx_image_to_window(Gui::mlx(), _background, 0, 0);
+	if (mlx_image_to_window(Gui::mlx(), _background, 0, 0) == -1)
+		return false;
 	mlx_set_instance_depth(&_background->instances[0], 1);
-	_init();
+	if (!_init_tiles())
+		return false;
 	_statusbar.init();
 	_endgame.init();
 	_mode.init();
 	disable();
 	hide();
-	return (true);
+	return true;
 }
 
 bool Board::show(t_vs vs, t_startingplayer starting, t_gamemode mode)
@@ -48,8 +52,6 @@ bool Board::show(t_vs vs, t_startingplayer starting, t_gamemode mode)
 	}
 	enable();
 	_statusbar.show();
-	//_endgame.show("AI");
-	//_mode.show("Swap", true);
 	update_statusbar();
 	resize();
 	return (true);
@@ -100,17 +102,31 @@ void Board::hide()
 	disable();
 }
 
-bool Board::_init()
+/*
+** creates all tile image and their pieces and initialize tiles.
+*/
+bool Board::_init_tiles()
 {
 	for (size_t i = 0; i < 9; i++)
 	{
 		Board::_tile_images[i] = mlx_new_image(Gui::mlx(), TILE_SIZE, TILE_SIZE);
+		if (!Board::_tile_images[i])
+			return false;
 		Gui::apply_texture(Board::_tile_images[i], Gui::texture("tile"), Color::white, i, 3);
 	}
 	for (size_t i = 0; i < 5; i++)
+	{
 		Board::_piece_images[i] = mlx_new_image(Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
+		if (!Board::_piece_images[i])
+			return false;
+	}
 	for (size_t i = 0; i < Board::_size; i++)
 		_tiles.push_back(Tile(i));
+	for (std::vector<Tile>::iterator it = _tiles.begin(); it != _tiles.end(); ++it)
+	{
+		if (!it->init())
+			return false;
+	}
 	resize();
 	return true;
 }
@@ -341,9 +357,7 @@ void Board::loop()
 	}
 	if (_game.vs_ai()
 		&& (!_game.is_player_turn() /* I wil lnot play if it is players turn*/
-		|| _game.is_game_swap_special_move() /* except if it is a special move for swap mode*/
-		)
-	)
+		|| _game.is_game_swap_special_move())) /* except if it is a special move for swap mode*/
 	{
 		turn = _game.turn();
 		if (_game.step(turn))

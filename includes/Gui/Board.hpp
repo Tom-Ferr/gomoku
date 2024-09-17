@@ -42,7 +42,7 @@ class Board
 		Tile				*_hinted_tile;
 		size_t				_loop_count;
 
-		bool				_init();
+		bool				_init_tiles();
 		void				_remove_captures();
 
 	public:

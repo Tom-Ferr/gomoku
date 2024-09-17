@@ -68,7 +68,8 @@ bool Gui::_init()
 		return (false);
 	mlx_image_to_window(_mlx, _background, 0, 0);
 	mlx_set_instance_depth(&_background->instances[0], 0);
-	_board.init();
+	if (!_board.init())
+		return false;
 	_menu.init();
 	return (true);
 }

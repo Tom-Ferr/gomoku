@@ -29,7 +29,6 @@ BoardState::BoardState(int _sqrt)
 	_inv_mystate = BigInt(0);
 	_inv_otherstate = BigInt(0);
 	_totalboard = BoardState::mask;
-	_create_hash();
 }
 
 BoardState::BoardState(const BoardState& other)
@@ -37,7 +36,7 @@ BoardState::BoardState(const BoardState& other)
 _move(other._move),
 _mystate(other._mystate), _otherstate(other._otherstate),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
-_totalboard(other._totalboard), _hash(other._hash)
+_totalboard(other._totalboard)
 { }
 
 BoardState::BoardState(BoardState&& other) noexcept
@@ -45,7 +44,7 @@ BoardState::BoardState(BoardState&& other) noexcept
 _move(other._move), _mystate(std::move(other._mystate)),
 _otherstate(std::move(other._otherstate)),
 _inv_mystate(other._inv_mystate), _inv_otherstate(other._inv_otherstate),
-_totalboard(other._totalboard), _hash(std::move(other._hash))
+_totalboard(other._totalboard)
 {}
 
 BoardState::BoardState(const BoardState& other, BigInt move)
@@ -75,7 +74,6 @@ void BoardState::applymove(BigInt move, bool mystate)
 		_inv_otherstate = (~_otherstate) & BoardState::mask;
 	}
 	_totalboard = _totalboard ^ move;
-	_create_hash();
 }
 
 void BoardState::applymove(size_t pos, bool mystate)
@@ -292,7 +290,6 @@ void BoardState::swap_states()
 	int tmp = _maxi_captures;
 	_maxi_captures = _mini_captures;
 	_mini_captures = tmp;
-	_create_hash();
 }
 
 BigInt BoardState::expanded_free() const
@@ -347,7 +344,6 @@ BoardState& BoardState::operator=(const BoardState& other)
 		_maxi_captures = other._maxi_captures;
 		_mini_captures = other._mini_captures;
 		_capture_move = other._capture_move;
-		_hash = other._hash;
 	}
 	return *this;
 }
@@ -359,9 +355,6 @@ bool const &BoardState::maximizing() const
 
 std::ostream &operator<<(std::ostream &os, const BoardState &bs)
 {
-	//os << "Mask: " << BoardState::mask << std::endl;
-	//os << "Left Mask: " << BoardState::leftmask << std::endl;
-	//os << "Right Mask: " << BoardState::rightmask << std::endl;
 	os << "_maximizing: " << bs.maximizing() << std::endl;
 	os << "_size: " << bs.size() << std::endl;
 	os << "_sqrt: " << bs.sqrt() << std::endl;
@@ -378,14 +371,4 @@ std::ostream &operator<<(std::ostream &os, const BoardState &bs)
 	}
 	std::cout  << std::endl;
 	return os;
-}
-
-void BoardState::_create_hash()
-{
-	_hash = _mystate.hash() + "_" + _otherstate.hash() + "_" + std::to_string(_maxi_captures) + "_" + std::to_string(_mini_captures);
-}
-
-std::string const &BoardState::hash() const
-{
-	return _hash;
 }

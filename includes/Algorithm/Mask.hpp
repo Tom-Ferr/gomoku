@@ -1,5 +1,6 @@
 #ifndef MASK_HPP
 # define MASK_HPP
+
 # include <gomoku.hpp>
 # include <vector>
 

@@ -63,11 +63,6 @@ Mask::mask_vector Mask::build_targets()
     return vec;
 }
 
-// BigInt Mask::targets(size_t pos) const
-// {
-//     return _targets[pos];
-// }
-
 BigInt &Mask::targets(size_t pos)
 {
 	return Mask::_targets[pos];

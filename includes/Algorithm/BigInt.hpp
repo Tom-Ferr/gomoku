@@ -1,6 +1,4 @@
-
 # include <gomoku.hpp>
-
 #ifndef BIGINT_HPP
 # define BIGINT_HPP
 
@@ -149,8 +147,6 @@ class BigInt
 
 		// Input Stream
 		friend std::istream& operator>>(std::istream& is, BigInt& big_int);
-
-		std::string hash() const;
 
 };
 

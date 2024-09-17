@@ -1,7 +1,6 @@
 #include <Heuristics.hpp>
 
 Mask Heuristics::_masks = Mask();
-std::unordered_map<std::string, int> Heuristics::_hashes;
 
 Heuristics::Heuristics(BoardState &state)
 : _state(state)
@@ -10,25 +9,9 @@ Heuristics::Heuristics(BoardState &state)
 	_other_scores = std::vector<std::vector<int> >(4, std::vector<int>(_state.size(), 0));
 }
 
-/*
-Heuristics::Heuristics( int board_sqrt, BigInt my_state, BigInt other_state)
-: _state_sqrt(board_sqrt),
-_state_size(board_sqrt * board_sqrt)
-{
-	//std::cout << "Board Size:" << _state_size << std::endl;
-	//std::cout << "my_state: " << my_state << std::endl;
-	//std::cout << "other_state: " << other_state << std::endl;
-	_my_state = (~my_state) & BoardState::mask;
-	_other_state = (~other_state) & BoardState::mask;
-	//std::cout << "_my_state: " << _my_state << std::endl;
-	//std::cout << "_other_state: " << _other_state << std::endl;
-}
-*/
-
 Heuristics::Heuristics(const Heuristics& other)
 : _state(other._state)
 {
-    // _scores = other._scores;
     _max_score = other._max_score;
     _min_score = other._min_score;
     _heuristic = other._heuristic;
@@ -38,7 +21,6 @@ Heuristics &Heuristics::operator=(const Heuristics& other)
 {
 	if (this != &other)
     {
-        // _scores = other._scores;
         _max_score = other._max_score;
         _min_score = other._min_score;
         _heuristic = other._heuristic;
@@ -102,14 +84,7 @@ int Heuristics::get_score(const BigInt &target, const BigInt &edge, const BigInt
     }
     return score;
 }
-//ones = 2
-//closed two = 4
-//open two = 7
-//closed three = 8
-//open three = 11
-//closed four = 16
-//open four = 19
-//fives = 32
+
 void Heuristics::_set_points(bool my, int points)
 {
     if (points == 0)
@@ -232,23 +207,11 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     else if (caps < 0)
         _points["ot_potential_captures"]++;
 
-    // if(_state.check_capture(_state.otherstate(true), _state.mystate(true), pos, orientation) != 0)
-    //     _points["ot_potential_captures"]++;
     return false;
 }
 
-int Heuristics::run(bool endgame)
+int Heuristics::run()
 {
-
-	//std::string hash = _state.hash();
-	(void)endgame;
-	//if (!endgame)
-	//{
-	//	std::unordered_map<std::string, int>::const_iterator it = _hashes.find(hash);
-	//	if (it != _hashes.end())
-	//		return it->second;
-	//}
-
 	BigInt expanded = _state.expanded_free() | _state.mystate(true) | _state.otherstate(true);
 	bool expanded_bit; (void)expanded;(void)expanded_bit;
 
@@ -276,8 +239,6 @@ int Heuristics::run(bool endgame)
                         + 500 * (_points["my_cfive2"] - _points["ot_cfive2"])
                         + 50  * (_points["my_cfive3"] - _points["ot_cfive3"])
                         + 500 * ((_points["my_potential_captures"]) * _state.maxi_captures()  - (_points["ot_potential_captures"]) *  _state.mini_captures());
-    //_hashes[hash] = _heuristic;
-//	std::cout << "Hash:" << hash << std::endl;
 
     return _heuristic;
 }

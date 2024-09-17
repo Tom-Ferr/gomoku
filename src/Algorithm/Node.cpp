@@ -65,28 +65,11 @@ std::pair<int, BigInt> Node::minimax()
 {
 	_heuristic = 0;
 	std::pair<int, BigInt> result;
-	// if(_state.is_capture())
-	// {
-	// 	// if(_state.maximizing() == false)
-	// 	// {
-	// 	// 	int score = (1 << _state.maxi_captures()) + 1;
-	// 	// 	if(score > std::abs(_heuristic))
-	// 	// 		_heuristic = score;
-	// 	// }
-	// 	// else
-	// 	{
-	// 		int score = (1 << _state.mini_captures()) + 1;
-	// 		if(score > std::abs(_heuristic))
-	// 			_heNode::_uristic = score * -1;
-	// 	}
-	// }
+
 	if (_depth == 0)
 	{
 		Heuristics h = Heuristics(_state);
 		 _heuristic = h.run();
-		//int heur = h.run();
-		//if (heur < _heuristic)
-		//	_heuristic = heur;
 		result = std::make_pair(_heuristic, _state.move());
 		// print(result);
 		return result;

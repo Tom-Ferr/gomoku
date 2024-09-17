@@ -1,3 +1,6 @@
 *.o
 .vscode
 *.txt
+*.d
+logs
+MLX42

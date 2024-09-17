@@ -8,9 +8,6 @@ Game::Game(int size, t_vs vs, t_startingplayer startingplayer, t_gamemode mode)
 _init_game(true), _game_mode(mode), _ai_nmoves(0), _total_nmoves(0),
 _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 {
-	/*
-	** lets try to init those only if never initialized before...
-	*/
 	Free_Three_Checker::set_masks(6, size);
 	Heuristics::set_masks(5, size);
 	BoardState::set_masks(4, size, true);
@@ -21,27 +18,13 @@ _p1_nmoves(0), _p2_nmoves(0), _total_time(0), _last_time(0)
 	else
 		_board.set_captures(false);
 
-    /*
-	** who will play as BLACK?
-	** _player is the player that will play as BLACK?
-	** true for black, false for white
-	*/
 	if (startingplayer == SP_RANDOM)
 		_player = static_cast<bool>(rand() % 2);
 	else
 		_player = !static_cast<bool>(startingplayer);
 
-	/*
-	** turn starts always as true (as its black to play)
-	*/
 	_turn = true;
-	std::cout << "vs AI/P2: " << _vs_ai << std::endl;
-	std::cout << "starting Player: " << _player << std::endl;
-	std::cout << "Game Mode: " << _game_mode << std::endl;
 
-    /*
-	** Sets up initial message
-	*/
 	if (_game_mode == GM_PRO)
 		_message = GameMessage(true, false, MSG_PRO_INFO, "Pro");
 	else if (_game_mode == GM_LONGPRO)
@@ -104,38 +87,26 @@ bool Game::human_step(size_t pos, bool turn)
 			{
 				_message = GameMessage(false, false, MSG_AI_CHOSE_WHITE, mode_name);
 				set_init_game(false);
-				_player = true; /* set player to black*/
+				_player = true;
 			}
 		}
 
-		else if (_total_nmoves == 3) /* player 1 is black so player two must choose. */
+		else if (_total_nmoves == 3)
 			_message = GameMessage(player(), true, (player() ? MSG_P2_CHOOSES : MSG_P1_CHOOSES), mode_name);
 		else
 			_message = GameMessage(player(), true, (player() ? MSG_P1_CHOOSES : MSG_P2_CHOOSES), mode_name);
 	}
 	Logger::log_move(_total_nmoves, "Human", pos, _turn, _board);
-	std::cout << "Appying move: " << pos << std::endl;
 	return true;
 }
 
-/*
-** asks AI for the best move but does not apply it to the board.
-** no need to check for captures.
-*/
 bool Game::dummy_step(bool turn)
 {
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-	/*
-	** create a dummy board
-	*/
+
 	BoardState dummy(_board);
 	std::pair<int, BigInt> result;
 
-	/*
-	** starting state, just as step.
-	** lets please move this into a function and get this code
-	** out of here.
-	*/
 	if (is_init_game() && _init_game_handler(turn, true))
 		return true;
 	if (!turn)
@@ -144,7 +115,6 @@ bool Game::dummy_step(bool turn)
 	result = Node(3, INT_MIN, INT_MAX, dummy).minimax();
 	if (result.second == 0)
 	{
-		std::cout << "No move found" << std::endl;
 		return false;
 	}
 	_move = result.second.pos();
@@ -160,7 +130,6 @@ bool Game::dummy_step(bool turn)
 bool Game::step(bool turn)
 {
 	Node::node_count = 0;
-	std::cout << "Step" << std::endl;
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	std::pair<int, BigInt> result;
 
@@ -177,25 +146,18 @@ bool Game::step(bool turn)
 		other.swap_states();
 		result = Node(3, INT_MIN, INT_MAX, other).minimax();
 	}
-	if (result.second == 0)
-		std::cout << "No move found" << std::endl;
-	else
+	if (result.second != 0)
 	{
 		_move = result.second.pos();
 		check_capture(_move, !turn);
 		_board.applymove(_move, turn);
-		std::cout << "Move: " << _move << std::endl;
 	}
-	//std::cout << _board << std::endl;
-	//_board.print();
+
 	std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
 	_last_time = duration.count();
 	_total_time += duration.count();
 	_ai_nmoves++;
-	std::cout << "Time taken (step): " << duration.count() << " seconds" << std::endl;
-	std::cout << "Move: " << _move << std::endl;
-	std::cout << "Heuristic: " << result.first << std::endl;
-	std::cout << "Node Count: " << Node::node_count << std::endl;
+
 	Logger::log_move(_total_nmoves, "AI", _move, _turn, _board);
 	_ftc = Free_Three_Checker(_board);
 	_turn = !_turn;
@@ -221,7 +183,6 @@ void Game::check_capture(size_t pos, bool turn)
 				_captures.push_back(i);
 		}
 	}
-	std::cout << "Captures: " << state << std::endl;
 }
 
 BoardState &Game::board()
@@ -239,19 +200,15 @@ std::vector<int> &Game::captures()
 	return _captures;
 }
 
-
-/*
-** Valid moves checker exclusive for the pro/longpro game modes.
-*/
 bool Game::_is_pro_invalid_move(size_t pos)
 {
 	int padding;
 	size_t black_piece;
 	Rect p;
 
-	if (!_turn) /*rule applies only to black pieces*/
+	if (!_turn)
 		return false;
-	if (_board.mystate(true) == 0) /*no black pieces on the board yet. all moves are valid*/
+	if (_board.mystate(true) == 0)
 	{
 		return (pos != static_cast<size_t>(_board.size() / 2));
 	}
@@ -298,19 +255,11 @@ void Game::update_freechecker()
 	_ftc = Free_Three_Checker(_board);
 }
 
-/*
-** whose turn
-** false for white, true for black
-*/
 bool &Game::turn()
 {
 	return _turn;
 }
 
-/*
-** player one piece.
-** false for white, true for black
-*/
 bool Game::player()
 {
 	return _player;
@@ -321,9 +270,6 @@ void Game::set_player(bool player)
 	_player = player;
 }
 
-/*
-** false for AI, true for vs Player2
-*/
 bool Game::vs_ai()
 {
 	return _vs_ai;
@@ -361,18 +307,10 @@ float Game::last_time()
 	return _last_time;
 }
 
-/*
-** 0 = false
-** 1 = black wins
-** 2 = white wins
-** 3 = draw
-*/
 int Game::end_game()
 {
 	Heuristics h(_board);
-	int value = h.run(true);
-	std::cout << "Current Heuristic: " << value << std::endl;
-	h.describe_heuristic();
+	h.run();
 	if (((~_board.totalboard()) & BoardState::mask) == 0)
 		return 0;
 	if (h.maxi_wins() || _board.maxi_captures() >= 5)
@@ -384,12 +322,6 @@ int Game::end_game()
 	return 0;
 }
 
-/*
-** A special move is needed for the swap game modes.
-** if AI is black, it should play the white move if _total_nmoves is 1
-** if AI would defer, it would also maks move 4 special, but
-** for now AI will always choose whites.
-*/
 bool Game::is_game_swap_special_move()
 {
 	if (!_init_game)
@@ -413,24 +345,22 @@ bool Game::is_game_swap_deferred_move()
 	}
 	return false;
 }
-/*
-** initialization handler for game swap mode.
-*/
+
 bool Game::_init_game_swap(bool turn, bool dummy)
 {
 	std::string mode;
 
-	if (!(_total_nmoves)) /*if no black pieces on the board*/
+	if (!(_total_nmoves))
 	{
-		_init_game_standard(turn, dummy); /*apply the same initial move*/
-		set_init_game(true);	/*since 3 moves are needed, the game is still in init state*/
+		_init_game_standard(turn, dummy);
+		set_init_game(true);
 		if (!dummy)
 			_total_nmoves++;
-		return true; /*game step has been handled*/
+		return true;
 	}
 	else if (!_init_game)
 		return false;
-	else if (_total_nmoves <= 3) /*next white and black moves*/
+	else if (_total_nmoves <= 3)
 	{
 		if (!dummy)
 			_total_nmoves++;
@@ -444,7 +374,7 @@ bool Game::_init_game_swap(bool turn, bool dummy)
 			if (_game_mode == GM_SWAP)
 				set_init_game(false);
 		}
-		return false; /*moves are handled normally by minimax*/
+		return false;
 	}
 	if (!dummy)
 		_total_nmoves++;
@@ -453,9 +383,6 @@ bool Game::_init_game_swap(bool turn, bool dummy)
 	return false;
 }
 
-/*
-** initialization handler for game pro mode.
-*/
 bool Game::_init_game_pro(bool turn, bool dummy)
 {
 	size_t padding;
@@ -463,18 +390,14 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 
 	if (!turn)
 		return false;
-	if (_board.mystate(true) == 0) /*if no black pieces on the board*/
+	if (_board.mystate(true) == 0)
 	{
-		_init_game_standard(turn, dummy); /*apply the same initial move*/
-		set_init_game(true);	/*since 2 moves are needed, the game is still in init state*/
+		_init_game_standard(turn, dummy);
+		set_init_game(true);
 		return true;
 	}
 	else if (dummy && _board.mystate(true).bitCount() >= 2)
 	{
-		/*
-		two or more black pieces
-		game is no longer in init mode
-		*/
 		set_init_game(false);
 		return false;
 	}
@@ -486,7 +409,6 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 			padding = 4;
 		while (--padding > 0)
 			tmp.applymove(tmp.expanded_free());
-		std::cout << tmp << std::endl;
 		_move = tmp.expanded_free().pos();
 		if (_move == _board.otherstate(true).pos())
 			_move = (tmp.expanded_free() ^ _board.otherstate(true)).pos();
@@ -500,9 +422,6 @@ bool Game::_init_game_pro(bool turn, bool dummy)
 	return true;
 }
 
-/*
-** places the first move in the center of the board.
-*/
 bool Game::_init_game_standard(bool turn, bool dummy)
 {
 	set_init_game(false);
@@ -517,10 +436,6 @@ bool Game::_init_game_standard(bool turn, bool dummy)
 	return true;
 }
 
-/*
-** returns true if the game was handled by the init_game_handler
-** if dummy, do not apply the move, as it means it's just a hint.
-*/
 bool Game::_init_game_handler(bool turn, bool dummy)
 {
 

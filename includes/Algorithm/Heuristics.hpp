@@ -1,13 +1,13 @@
 #ifndef HEURISTICS_HPP
 # define HEURISTICS_HPP
+
 # include <gomoku.hpp>
 # include <vector>
 # include <BoardState.hpp>
 # include <map>
-#include <unordered_map>
+
 class Heuristics
 {
-	static std::unordered_map<std::string, int> _hashes;
 
 private:
 	BoardState &_state;
@@ -45,7 +45,7 @@ public:
     Heuristics& operator=(const Heuristics& other);
     ~Heuristics();
 
-    int run(bool endgame=false);
+    int run();
     bool endgame(size_t pos);
     void describe_heuristic() const;
     bool maxi_wins() ;

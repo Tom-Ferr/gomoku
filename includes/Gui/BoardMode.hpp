@@ -32,7 +32,7 @@ class BoardMode: public ABoardPopup
 		BoardMode(BoardMode const &other);
 		~BoardMode();
 		BoardMode &operator=(BoardMode const &other);
-		void init();
+		bool init();
 		void resize();
 		void hide();
 		bool click();

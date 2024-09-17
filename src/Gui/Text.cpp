@@ -3,17 +3,18 @@
 #include <algorithm>
 
 Text::Text()
-:_image(nullptr), _bold(false) {}
+:_image(nullptr), _bold(false), _instance(-1) {}
 
 Text::Text(std::string const &str, bool bold)
-:_image(nullptr), _bold(bold)
+:_image(nullptr), _bold(bold), _instance(-1)
 {
 	_text = str;
 	_init();
 }
 
 Text::Text(Text const &other)
-:_image(other._image), _dimensions(other._dimensions), _text(other._text)
+:_image(other._image), _dimensions(other._dimensions),
+_text(other._text)
 {
 	*this = other;
 }
@@ -26,6 +27,7 @@ Text &Text::operator=(Text const &other)
 	_bold = other._bold;
 	_dimensions = other._dimensions;
 	_text = other._text;
+	_instance = other._instance;
 	return (*this);
 }
 
@@ -61,8 +63,16 @@ void Text::_init()
 						 _dimensions.width, _dimensions.height);
 		if (!_image)
 			return ;
-		mlx_image_to_window(Gui::mlx(), _image, 0, 0);
+		_instance = mlx_image_to_window(Gui::mlx(), _image, 0, 0);
 	}
+}
+
+bool Text::init()
+{
+	_init();
+	if (!_image || _instance == -1)
+		return false;
+	return true;
 }
 
 void Text::resize(Rect const &dimensions)
@@ -70,6 +80,8 @@ void Text::resize(Rect const &dimensions)
 	float ratio;
 	size_t max_total_height;
 
+	if (!_image || _instance == -1)
+		return ;
 	_dimensions.x = dimensions.x;
 	_dimensions.y = dimensions.y;
 	ratio = static_cast<float>(
@@ -91,7 +103,7 @@ void Text::resize(size_t height)
 {
 	mlx_texture_t *font = Gui::texture("font_regular");
 
-	if (!_image)
+	if (!_image || _instance == -1)
 		return ;
 	if (_bold)
 		font = Gui::texture("font_heavy");
@@ -125,7 +137,7 @@ void Text::resize(size_t height)
 
 void Text::center(size_t center)
 {
-	if (!_image)
+	if (!_image || _instance == -1)
 		return ;
 	_dimensions.x = center - (_dimensions.width / 2);
 	_image->instances[0].x = _dimensions.x;
@@ -133,7 +145,7 @@ void Text::center(size_t center)
 
 void Text::center(size_t x, size_t y)
 {
-	if (!_image)
+	if (!_image || _instance == -1)
 		return ;
 	_dimensions.x = x - (_dimensions.width / 2);
 	_dimensions.y = y - (_dimensions.height / 2);
@@ -143,7 +155,7 @@ void Text::center(size_t x, size_t y)
 
 void Text::depth(size_t depth)
 {
-	if (!_image)
+	if (!_image || _instance == -1)
 		return ;
 	mlx_set_instance_depth(&_image->instances[0], depth);
 }
@@ -155,12 +167,12 @@ std::string &Text::text()
 
 void Text::show()
 {
-	if (_image)
+	if (_image && _instance != -1)
 		_image->instances[0].enabled = true;
 }
 
 void Text::hide()
 {
-	if (_image)
+	if (_image && _instance != -1)
 		_image->instances[0].enabled = false;
 }

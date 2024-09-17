@@ -17,12 +17,14 @@ bool Menu::init()
 							Gui::texture("playbuttons")->height / 2,
 							Gui::texture("playbuttons")->width / 2);
 	_dimensions = Rect::subrect(Gui::dimensions(), .8);
+	if (!_logo || !_play_button || !_play_button_hover)
+		return false;
 	Gui::apply_texture(_logo, Gui::texture("logo"));
 
-	mlx_image_to_window(Gui::mlx(), _logo, 0, 0);
-	mlx_image_to_window(Gui::mlx(), _play_button, 0, 0);
-	mlx_image_to_window(Gui::mlx(), _play_button_hover, 0, 0);
-
+	if (mlx_image_to_window(Gui::mlx(), _logo, 0, 0) == -1 ||
+			mlx_image_to_window(Gui::mlx(), _play_button, 0, 0) == -1 ||
+			mlx_image_to_window(Gui::mlx(), _play_button_hover, 0, 0) == -1)
+		return false;
 	_bgroup_vs = ButtonGroup("Versus", Rect(0, 0, 0, 0));
 	_bgroup_vs.add("AI");
 	_bgroup_vs.add("Player 2");

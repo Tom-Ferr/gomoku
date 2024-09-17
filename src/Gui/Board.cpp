@@ -28,9 +28,12 @@ bool Board::init()
 	mlx_set_instance_depth(&_background->instances[0], 1);
 	if (!_init_tiles())
 		return false;
-	_statusbar.init();
-	_endgame.init();
-	_mode.init();
+	if (!_statusbar.init())
+		return false;
+	if (!_endgame.init())
+		return false;
+	if (!_mode.init())
+		return false;
 	disable();
 	hide();
 	return true;

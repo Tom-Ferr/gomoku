@@ -16,13 +16,13 @@ class Text
 		Rect			_dimensions;
 		std::string		_text;
 		bool			_bold;
-		void _init();
+		int				_instance;
+		void			_init();
 
 	public:
 		Text();
 		Text(std::string const &str, bool bold = false);
 		Text(Text const &other);
-
 		~Text();
 		void resize(Rect const &dimensions);
 		void resize(size_t height);
@@ -35,6 +35,7 @@ class Text
 		std::string &text();
 		void show();
 		void hide();
+		bool init();
 };
 
 #endif

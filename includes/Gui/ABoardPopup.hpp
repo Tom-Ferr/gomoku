@@ -32,7 +32,7 @@ class ABoardPopup
 		void _box_texture();
 		void _resize_ok();
 		void _resize_header();
-        void _init();
+        bool _init();
         void _resize();
         void _show();
         void _hide();
@@ -47,7 +47,7 @@ class ABoardPopup
 		Rect const &dimensions();
         bool enabled();
 		virtual ~ABoardPopup();
-		virtual void init() = 0;
+		virtual bool init() = 0;
 		virtual void resize() = 0;
         virtual bool click() = 0;
 		virtual void hide() = 0;

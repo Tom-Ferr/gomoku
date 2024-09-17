@@ -23,13 +23,17 @@ BoardEndGame &BoardEndGame::operator=(BoardEndGame const &other)
 	return (*this);
 }
 
-void BoardEndGame::init()
+bool BoardEndGame::init()
 {
-	_init();
+	if (!_init())
+		return false;
 	_set_header_text("Game Over");
 	_player = Text("Player", true);
 	_wins = Text("Wins", true);
+	if (!_player.init() || !_wins.init())
+		return false;
 	hide();
+	return true;
 }
 
 void BoardEndGame::resize()

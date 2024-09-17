@@ -38,7 +38,7 @@ class BoardStatusBar
 		BoardStatusBar();
 		BoardStatusBar(BoardStatusBar const &other);
 		~BoardStatusBar();
-		void init();
+		bool init();
 		void resize();
 		BoardStatusBar &operator=(BoardStatusBar const &other);
 		Rect const &dimensions();

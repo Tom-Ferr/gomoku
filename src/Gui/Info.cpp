@@ -59,6 +59,8 @@ Info &Info::operator=(t_piecetype image)
 {
 	_image = image;
 	_is_image = true;
+	if (!_is_instanciated())
+		return (*this);
 	for (int i = 0; i < 2; i++)
 		Info::_piece_images[i]->instances[_buttons[i]].enabled = false;
 	Info::_piece_images[_image]->instances[_buttons[_image]].enabled = true;
@@ -78,21 +80,38 @@ void Info::_init()
 
 void Info::_init_images()
 {
-	if (!(Info::_piece_images[0]))
+	for (int i = 0; i < 2; i++)
 	{
-		for (int i = 0; i < 2; i++)
-			Info::_piece_images[i]
-				= mlx_new_image(Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
+		if (!(Info::_piece_images[i]))
+			Info::_piece_images[i] = mlx_new_image(
+							Gui::mlx(), BUTTON_SIZE, BUTTON_SIZE);
+
 	}
 	for (int i = 0; i < 2; i++)
 	{
-		_buttons[i] = mlx_image_to_window(
-						Gui::mlx(), Info::_piece_images[i], 0, 0);
-		Info::_piece_images[i]->instances[_buttons[i]].enabled = false;
+		if (Info::_piece_images[i])
+		{
+			_buttons[i] = mlx_image_to_window(
+							Gui::mlx(), Info::_piece_images[i], 0, 0);
+			if (_buttons[i] == -1)
+				Info::_piece_images[i]->instances[_buttons[i]].enabled
+																= false;
+		}
 	}
-	if (_is_image)
+	if (_is_image && _is_instanciated())
 		Info::_piece_images[_image]->instances[_buttons[_image]].enabled
 																= true;
+}
+
+/*
+** Since we don't have a change to init() the images on initialization,
+** of the program, we just make sure they were initialized before
+** doing any operation with it.
+*/
+bool Info::_is_instanciated()
+{
+	return (Info::_piece_images[PT_BLACK] && _buttons[PT_BLACK] != -1)
+			&& (Info::_piece_images[PT_WHITE] && _buttons[PT_WHITE] != -1);
 }
 
 void Info::resize(Rect const &dimensions)
@@ -108,7 +127,7 @@ void Info::resize(Rect const &dimensions)
 	_dimensions = Rect(dimensions.x, dimensions.y,
 						text.width + (dimensions.height) * 1.5,
 						dimensions.height);
-	if (_is_image)
+	if (_is_image && _is_instanciated())
 	{
 		if (dimensions.height != Info::_piece_images[_image]->height
 			&& dimensions.width != Info::_piece_images[_image]->width)
@@ -132,17 +151,19 @@ void Info::resize(Rect const &dimensions)
 void Info::hide()
 {
 	_text.hide();
+	_description.hide();
+	if (!_is_instanciated())
+		return ;
 	Info::_piece_images[PT_WHITE]->instances[_buttons[PT_WHITE]].enabled
 																= false;
 	Info::_piece_images[PT_BLACK]->instances[_buttons[PT_BLACK]].enabled
 																= false;
-	_description.hide();
 }
 
 void Info::show()
 {
 	_text.show();
-	if (_is_image)
+	if (_is_image && _is_instanciated())
 		Info::_piece_images[_image]->instances[_buttons[_image]].enabled
 																= true;
 	else

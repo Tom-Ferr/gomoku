@@ -69,8 +69,15 @@ bool Gui::_init()
 	mlx_image_to_window(_mlx, _background, 0, 0);
 	mlx_set_instance_depth(&_background->instances[0], 0);
 	if (!_board.init())
+	{
+		std::cout << "Error: could not initialize board." << std::endl;
 		return false;
-	_menu.init();
+	}
+	if (!_menu.init())
+	{
+		std::cout << "Error: could not initialize board." << std::endl;
+		return false;
+	}
 	return (true);
 }
 

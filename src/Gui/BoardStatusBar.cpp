@@ -32,11 +32,15 @@ Rect const &BoardStatusBar::dimensions()
 /*
 ** sets initial values for the status bar
 */
-void BoardStatusBar::init()
+bool BoardStatusBar::init()
 {
 	_background = mlx_new_image(Gui::mlx(), 1, 1);
+	if (!_background)
+		return false;
 	mlx_put_pixel(_background, 0, 0, 0x00000077);
-	mlx_image_to_window(Gui::mlx(), _background, _dimensions.x, _dimensions.y);
+	if (mlx_image_to_window(
+			Gui::mlx(), _background, _dimensions.x, _dimensions.y) == -1)
+		return false;
 	_vs = Info("Vs", "AI");
 	_player1 = Info("Player1", PT_BLACK);
 	_player2 = Info("Player2", PT_WHITE);
@@ -46,8 +50,14 @@ void BoardStatusBar::init()
 	_captures = Text("Captures");
 	_player1_captures = Info("Player1", "0");
 	_player2_captures = Info("Player2", "0");
+	if (!_vs._is_instanciated() || !_player1._is_instanciated() || !_player2._is_instanciated()
+			|| !_turn._is_instanciated() || !_last_time._is_instanciated() || !_avg_time._is_instanciated()
+			|| !_captures.init() || !_player1_captures._is_instanciated()
+			|| !_player2_captures._is_instanciated())
+		return false;
 	hide();
 	resize();
+	return true;
 }
 
 void BoardStatusBar::resize()

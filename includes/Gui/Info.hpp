@@ -17,7 +17,7 @@ class Info
 {
 	private:
 		static mlx_image_t			*_piece_images[2];
-		size_t						_buttons[2];
+		int32_t						_buttons[2];
 		Rect						_dimensions;
 		Text						_text;
 		Text						_description;
@@ -27,6 +27,7 @@ class Info
 		void _init_images();
 
 	public:
+		bool _is_instanciated();
 		Info();
 		Info(std::string const &str, std::string const &description="");
 		Info(std::string const &str, t_piecetype image);
@@ -40,6 +41,7 @@ class Info
 		void hide();
 		void show();
 		void set_title(std::string const &str);
+
 };
 
 #endif

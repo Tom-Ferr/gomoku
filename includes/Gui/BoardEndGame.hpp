@@ -25,7 +25,7 @@ class BoardEndGame : public ABoardPopup
 		BoardEndGame(BoardEndGame const &other);
 		~BoardEndGame();
 		BoardEndGame &operator=(BoardEndGame const &other);
-		void init();
+		bool init();
 		void resize();
 		void hide();
 		bool click();

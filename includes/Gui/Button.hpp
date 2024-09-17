@@ -31,6 +31,7 @@ class Button
 		Rect						_dimensions;
 		bool						_selected;
 		bool						_hovered;
+		bool						_initialized;
 		void _init();
 		void _init_static();
 
@@ -48,6 +49,7 @@ class Button
 		void show();
 		void depth(size_t depth);
 		bool selected() const;
+		bool initialized() const;
 };
 
 #endif

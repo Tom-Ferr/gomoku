@@ -36,22 +36,33 @@ Rect const &ABoardPopup::dimensions()
 	return (_dimensions);
 }
 
-void ABoardPopup::_init()
+bool ABoardPopup::_init()
 {
 	_background = mlx_new_image(Gui::mlx(), 1, 1);
 	_centerbox = mlx_new_image(Gui::mlx(), 300, 300);
 	_header = mlx_new_image(Gui::mlx(), 300, 300);
 	_ok_button = mlx_new_image(Gui::mlx(), 300, 300);
 	_ok_button_hover = mlx_new_image(Gui::mlx(), 300, 300);
+	if (!_background || !_centerbox || !_header
+			|| !_ok_button || !_ok_button_hover)
+		return false;
 	mlx_put_pixel(_background, 0, 0, 0x0f0000bb);
-	mlx_image_to_window(Gui::mlx(), _background, _dimensions.x, _dimensions.y);
-	mlx_image_to_window(Gui::mlx(), _centerbox, _dimensions.x, _dimensions.y);
-	mlx_image_to_window(Gui::mlx(), _header, _dimensions.x, _dimensions.y);
-	mlx_image_to_window(Gui::mlx(), _ok_button_hover,
-						_dimensions.x, _dimensions.y);
-	mlx_image_to_window(Gui::mlx(), _ok_button, _dimensions.x, _dimensions.y);
+	if (mlx_image_to_window(
+			Gui::mlx(), _background, _dimensions.x, _dimensions.y) == -1 ||
+		mlx_image_to_window(
+			Gui::mlx(), _centerbox, _dimensions.x, _dimensions.y) == -1 ||
+	mlx_image_to_window(
+			Gui::mlx(), _header, _dimensions.x, _dimensions.y) == -1 ||
+	mlx_image_to_window(
+			Gui::mlx(), _ok_button_hover, _dimensions.x, _dimensions.y) == -1 ||
+	mlx_image_to_window(
+			Gui::mlx(), _ok_button, _dimensions.x, _dimensions.y) == -1)
+		return false;
 	_header_text = Text("Header", true);
+	if (!_header_text.init())
+		return false;
 	hide();
+	return true;
 }
 
 void ABoardPopup::_resize()

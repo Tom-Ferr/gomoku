@@ -19,10 +19,12 @@ BoardMode &BoardMode::operator=(BoardMode const &other)
 	return (*this);
 }
 
-void BoardMode::init()
+bool BoardMode::init()
 {
-	_init();
+	if (!_init())
+		return false;
 	hide();
+	return true;
 }
 
 /*

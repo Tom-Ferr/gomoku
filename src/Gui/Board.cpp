@@ -151,7 +151,7 @@ void Board::resize()
 	_tile_dimensions = Rect::subrect(_dimensions, 1.0 / sqrt());
 	for (size_t i = 0; i < 9; i++)
 	{
-		mlx_resize_image(Board::_tile_images[i]
+		mlx_resize_image(Board::_tile_images[i],
 				 _tile_dimensions.width, _tile_dimensions.height);
 		Gui::apply_texture(Board::_tile_images[i],
 								Gui::texture("tile"), Color::white, i, 3);

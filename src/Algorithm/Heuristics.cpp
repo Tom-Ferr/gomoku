@@ -118,8 +118,6 @@ void Heuristics::_set_points(bool my, int points)
         str+="cfour";
     else if (points == 19)
         str+="ofour";
-    else
-        std::cout << "What is this value: " << points << std::endl;
     _points[str]++;
 }
 
@@ -224,43 +222,36 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 
 BigInt Heuristics::expanded_free(BigInt state) const
 {
-	BigInt e[8];
+	BigInt e[5];
 	BigInt t = state & BoardState::mask;
-	e[0] = ((t & BoardState::rightmask) >> 1) & BoardState::mask;
-	e[1] = ((t & BoardState::leftmask) << 1) & BoardState::mask;
-	e[2] = (t << _state.sqrt()) & BoardState::mask;
-	e[3] = (t >> _state.sqrt()) & BoardState::mask;
-	e[4] = (e[0] << _state.sqrt()) & BoardState::mask;
-	e[5] = (e[1] << _state.sqrt()) & BoardState::mask;
-	e[6] = (e[0] >> _state.sqrt()) & BoardState::mask;
-	e[7] = (e[1] >> _state.sqrt()) & BoardState::mask;
-	return ((e[0] | e[1] | e[2] | e[3] | e[4] | e[5] | e[6] | e[7]) & BoardState::mask);
+
+	e[0] = t;
+	for (int i = 0; i < 4; i++) // direita
+		e[0] = ((e[0] & BoardState::rightmask) >> 1) & BoardState::mask;
+	e[1] = e[0];
+	for (int i = 0; i < 4; i++) //direita baixo
+		e[1] = (e[1] >> _state.sqrt()) & BoardState::mask;
+	e[2] = t;
+	for (int i = 0; i < 4; i++) // baixo
+		e[2] = (e[2] >> _state.sqrt()) & BoardState::mask;
+	e[3] = e[2];
+	for (int i = 0; i < 4; i++) // esquerda
+		e[3] = ((e[3] & BoardState::leftmask) << 1) & BoardState::mask;
+	return (e[0] | e[1] | e[2] | e[3] | state);
 }
 
 int Heuristics::run()
 {
-	// BigInt expanded = expanded_free(_state.mystate(true) | _state.otherstate(true));
-	// BigInt expanded2 = expanded_free((~_state.totalboard() & BoardState::mask) & blind_spot);
-	// expanded2 = expanded_free(expanded2);
-	// expanded2 = expanded_free(expanded2);
-	// expanded2 = expanded_free(expanded2);
-    // expanded2 = expanded2 & target_spot;
-    // expanded = expanded | expanded2;
+	BigInt expanded = expanded_free(_state.mystate(true) | _state.otherstate(true));
+	bool expanded_bit;
 
-	// bool expanded_bit;
-
-    static const Mask::variations_vector masks[4] = {_masks.at(HORIZONTAL).at(FULL), _masks.at(VERTICAL).at(FULL), _masks.at(CRESCENDO).at(FULL), _masks.at(DECRESCENDO).at(FULL)};
     for (int pos = 0; pos < _state.size(); pos++)
     {
-		// expanded_bit = expanded.get_bit(pos);
-		// if (expanded_bit)
+		expanded_bit = expanded.get_bit(pos);
+		if (expanded_bit)
 		{
 			for (size_t i = 0; i < 4; i++)
-			{  
-
-                if(!(BigInt::and_equal_zero(masks[i].at(pos)[0], _state.totalboard())))
-				    board_eval(pos, _modes[i], false);
-			}
+				board_eval(pos, _modes[i], false);
 		}
     }
 

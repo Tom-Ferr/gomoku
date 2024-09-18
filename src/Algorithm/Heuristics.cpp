@@ -1,6 +1,8 @@
 #include <Heuristics.hpp>
 
 Mask Heuristics::_masks = Mask();
+BigInt Heuristics::target_spot = BigInt("1000020000400008001FFFFC200004000080001000020000400008000100002000040000800010000200004000", 16);
+BigInt Heuristics::blind_spot = BigInt("1fffffffffffffffffffe0003c00078000f0001e0003c00078000f0001e0003c00078000f0001e0003c00078000", 16);
 
 Heuristics::Heuristics(BoardState &state)
 : _state(state)
@@ -149,11 +151,14 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 	const BigInt &full_mask = masks.at(FULL).at(pos)[0];
     if (full_mask == 0)
     {
-        int caps =_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation);
-        if (caps > 0)
-            _points["my_potential_captures"]++;
-        else if (caps < 0)
-            _points["ot_potential_captures"]++;
+        if(!endgame)
+        {
+            int caps =_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation);
+            if (caps > 0)
+                _points["my_potential_captures"]++;
+            else if (caps < 0)
+                _points["ot_potential_captures"]++;
+        }
         return false;
     }
     _target = _state.mystate(true) & full_mask;
@@ -217,19 +222,44 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
     return false;
 }
 
+BigInt Heuristics::expanded_free(BigInt state) const
+{
+	BigInt e[8];
+	BigInt t = state & BoardState::mask;
+	e[0] = ((t & BoardState::rightmask) >> 1) & BoardState::mask;
+	e[1] = ((t & BoardState::leftmask) << 1) & BoardState::mask;
+	e[2] = (t << _state.sqrt()) & BoardState::mask;
+	e[3] = (t >> _state.sqrt()) & BoardState::mask;
+	e[4] = (e[0] << _state.sqrt()) & BoardState::mask;
+	e[5] = (e[1] << _state.sqrt()) & BoardState::mask;
+	e[6] = (e[0] >> _state.sqrt()) & BoardState::mask;
+	e[7] = (e[1] >> _state.sqrt()) & BoardState::mask;
+	return ((e[0] | e[1] | e[2] | e[3] | e[4] | e[5] | e[6] | e[7]) & BoardState::mask);
+}
+
 int Heuristics::run()
 {
-	BigInt expanded = _state.expanded_free() | _state.mystate(true) | _state.otherstate(true);
-	bool expanded_bit;
+	// BigInt expanded = expanded_free(_state.mystate(true) | _state.otherstate(true));
+	// BigInt expanded2 = expanded_free((~_state.totalboard() & BoardState::mask) & blind_spot);
+	// expanded2 = expanded_free(expanded2);
+	// expanded2 = expanded_free(expanded2);
+	// expanded2 = expanded_free(expanded2);
+    // expanded2 = expanded2 & target_spot;
+    // expanded = expanded | expanded2;
 
+	// bool expanded_bit;
+
+    static const Mask::variations_vector masks[4] = {_masks.at(HORIZONTAL).at(FULL), _masks.at(VERTICAL).at(FULL), _masks.at(CRESCENDO).at(FULL), _masks.at(DECRESCENDO).at(FULL)};
     for (int pos = 0; pos < _state.size(); pos++)
     {
-		expanded_bit = expanded.get_bit(pos);
-		if (expanded_bit)
+		// expanded_bit = expanded.get_bit(pos);
+		// if (expanded_bit)
 		{
 			for (size_t i = 0; i < 4; i++)
-			{
-				board_eval(pos, _modes[i], false);
+			{  
+
+                if(!(BigInt::and_equal_zero(masks[i].at(pos)[0], _state.totalboard())))
+				    board_eval(pos, _modes[i], false);
 			}
 		}
     }

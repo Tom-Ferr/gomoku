@@ -27,9 +27,9 @@ bool Menu::init()
 		return false;
 	_bgroup_vs = ButtonGroup("Versus", Rect(0, 0, 0, 0));
 	_bgroup_vs.add("AI");
-	_bgroup_vs.add("Player 2");
+	_bgroup_vs.add("Player2");
 	_bgroup_starting = ButtonGroup("Starting Player", Rect(0, 0, 0, 0));
-	_bgroup_starting.add("Player 1");
+	_bgroup_starting.add("Player1");
 	_bgroup_starting.add("AI / Player2");
 	_bgroup_starting.add("Random");
 	_bgroup_mode = ButtonGroup("Game Mode", Rect(0, 0, 0, 0));

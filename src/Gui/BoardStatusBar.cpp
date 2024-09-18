@@ -269,7 +269,7 @@ void BoardStatusBar::set_vs(bool ai)
 	else
 	{
 		_vs_human = true;
-		_vs = "Player 2";
+		_vs = "Player2";
 		_hint_button_hover->enabled = false;
 		_hint_button->enabled = true;
 	}
@@ -288,7 +288,7 @@ void BoardStatusBar::set_player2(bool black, bool ai)
 	if (ai)
 		_player2.set_title("AI: ");
 	else
-		_player2.set_title("Player 2: ");
+		_player2.set_title("Player2: ");
 	if (black)
 		_player2 = PT_BLACK;
 	else

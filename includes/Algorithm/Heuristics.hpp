@@ -21,6 +21,10 @@ private:
     const int _edge_mask_size = 7;
     const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
     static Mask _masks;
+public:
+    static BigInt target_spot;
+    static BigInt blind_spot;
+private:
 
     std::map<std::string, int> _points;
 
@@ -52,6 +56,7 @@ public:
     bool mini_wins() ;
 
     static void set_masks(int mask_size, int board_sqrt);
+    BigInt expanded_free(BigInt state) const;
 private:
     size_t is_capturable(const size_t &pos, const Mask::inner_map &masks, bool maximizing);
     int get_score(const BigInt &target, const BigInt &edge, const BigInt &other_target, const size_t &pos, const Mask::inner_map &masks, const BigInt &fullmask);

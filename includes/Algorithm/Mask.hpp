@@ -52,7 +52,6 @@ public:
     inner_map operator[](char);
 	inner_map &at(char c);
     void print_mask(variations_vector &m) const;
-    //BigInt targets(size_t pos) const;
 	static BigInt &targets(size_t pos);
 
 private:

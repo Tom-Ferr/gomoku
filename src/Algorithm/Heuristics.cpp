@@ -1,8 +1,6 @@
 #include <Heuristics.hpp>
 
 Mask Heuristics::_masks = Mask();
-BigInt Heuristics::target_spot = BigInt("1000020000400008001FFFFC200004000080001000020000400008000100002000040000800010000200004000", 16);
-BigInt Heuristics::blind_spot = BigInt("1fffffffffffffffffffe0003c00078000f0001e0003c00078000f0001e0003c00078000f0001e0003c00078000", 16);
 
 Heuristics::Heuristics(BoardState &state)
 : _state(state)
@@ -227,16 +225,16 @@ BigInt Heuristics::expanded_free(BigInt state) const
 
 	e[0] = t;
 	for (int i = 0; i < 4; i++) // direita
-		e[0] = ((e[0] & BoardState::rightmask) >> 1) & BoardState::mask;
+		e[0] = e[0] | (((e[0] & BoardState::rightmask) >> 1) & BoardState::mask);
 	e[1] = e[0];
 	for (int i = 0; i < 4; i++) //direita baixo
-		e[1] = (e[1] >> _state.sqrt()) & BoardState::mask;
+		e[1] = e[1] | ((e[1] >> _state.sqrt()) & BoardState::mask);
 	e[2] = t;
 	for (int i = 0; i < 4; i++) // baixo
-		e[2] = (e[2] >> _state.sqrt()) & BoardState::mask;
+		e[2] = e[2] | ((e[2] >> _state.sqrt()) & BoardState::mask);
 	e[3] = e[2];
 	for (int i = 0; i < 4; i++) // esquerda
-		e[3] = ((e[3] & BoardState::leftmask) << 1) & BoardState::mask;
+		e[3] = e[3] | (((e[3] & BoardState::leftmask) << 1) & BoardState::mask);
 	return (e[0] | e[1] | e[2] | e[3] | state);
 }
 
@@ -250,9 +248,10 @@ int Heuristics::run()
 		expanded_bit = expanded.get_bit(pos);
 		if (expanded_bit)
 		{
-			for (size_t i = 0; i < 4; i++)
+		    for (size_t i = 0; i < 4; i++)
 				board_eval(pos, _modes[i], false);
 		}
+        
     }
 
     _heuristic = 80000 * (_points["my_five"] - _points["ot_five"])

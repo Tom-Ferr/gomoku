@@ -21,9 +21,6 @@ private:
     const int _edge_mask_size = 7;
     const char _modes[4] = {HORIZONTAL, VERTICAL, CRESCENDO, DECRESCENDO};
     static Mask _masks;
-public:
-    static BigInt target_spot;
-    static BigInt blind_spot;
 private:
 
     std::map<std::string, int> _points;

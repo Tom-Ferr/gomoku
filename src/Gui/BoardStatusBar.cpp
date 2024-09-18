@@ -53,7 +53,6 @@ bool BoardStatusBar::init()
 			|| (mlx_image_to_window(Gui::mlx(), _hint_button, 0, 0) == -1)
 			|| (mlx_image_to_window(Gui::mlx(), _hint_button_hover, 0, 0) == -1))
 		return false;
-	std::cout << "initialized Statusbar" << std::endl;
 	_vs = Info("Vs", "AI");
 	_player1 = Info("Player1", PT_BLACK);
 	_player2 = Info("Player2", PT_WHITE);

@@ -143,6 +143,8 @@ int BoardState::check_capture(const BigInt &self, const BigInt &rival, const siz
     const Mask::inner_map &masks = BoardState::_masks.at(orientation);
 	const Mask::variations_vector &mid_vec = masks.at(MIDDLE);
 	const Mask::variations_vector &edge_vec = masks.at(EDGE);
+	if (mid_vec[pos].empty() || edge_vec[pos].empty())
+		return 0;
 	const BigInt& mid_mask = mid_vec[pos][0];
 	const BigInt& edge_mask = edge_vec[pos][0];
 

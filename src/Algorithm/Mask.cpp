@@ -111,8 +111,6 @@ void Mask::vectorize(Mask::mask_vector &dest, int src, char mode) const
             t_pos = (pos + shift + inc);
         else if (pos >= (int)_board_size)
             t_pos = (pos - shift - inc);
-        // else
-        //     t_pos = (pos);
 
         t = targets(t_pos);
         t.set_maskpos(t_pos);
@@ -269,22 +267,20 @@ Mask::Mask::inner_map Mask::horizontal_mask() const
         }
         else if (_mirror == true)
         {
-            if (pos % _board_sqrt >= _board_sqrt - (_mask_size -1))
-            {
-                BigInt zero = BigInt(0);
-                mask_vector empty_vector;
-                empty_vector.push_back(zero);
-                full_vec.push_back(empty_vector);
-                mid_vec.push_back(empty_vector);
-                edge_vec.push_back(empty_vector);
-                continue;
-            }
             BigInt full_mask = full_base << pos;
             BigInt mid_mask = mid_base << pos;
             BigInt edge_mask = edge_base << pos;
 
             for (size_t j = 0; j <= _mask_size - 1; j += _mask_size - 1)
             {
+                if (pos % _board_sqrt >= _board_sqrt - (_mask_size -1))
+                {
+                    BigInt zero = BigInt(0);
+                    f_vec.push_back(zero);
+                    m_vec.push_back(zero);
+                    e_vec.push_back(zero);
+                    j += _mask_size - 1;
+                }
                 if( (int)((pos % _board_sqrt) - j) < 0)
                     break;
                 f_vec.push_back(full_mask >> j);
@@ -416,16 +412,6 @@ Mask::inner_map Mask::vertical_mask() const
         }
         else if (_mirror == true)
         {
-            if (pos >= _board_sqrt * (_board_sqrt - (_mask_size - 1)))
-            {
-                BigInt zero = BigInt(0);
-                mask_vector empty_vector;
-                empty_vector.push_back(zero);
-                full_vec.push_back(empty_vector);
-                mid_vec.push_back(empty_vector);
-                edge_vec.push_back(empty_vector);
-                continue;
-            }
 
             BigInt full_mask = full_base << pos;
             BigInt mid_mask = mid_base << pos;
@@ -433,6 +419,14 @@ Mask::inner_map Mask::vertical_mask() const
 
             for (size_t j = 0; j <= _mask_size - 1; j += _mask_size - 1)
             {
+                if (pos >= _board_sqrt * (_board_sqrt - (_mask_size - 1)))
+                {
+                    BigInt zero = BigInt(0);
+                    f_vec.push_back(zero);
+                    m_vec.push_back(zero);
+                    e_vec.push_back(zero);
+                    j += _mask_size - 1;
+                }
                 int shift = j * _board_sqrt;
                 if( (int)(pos - shift) < 0)
                     break;
@@ -571,16 +565,6 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
         }
         else if (_mirror == true)
         {
-            if (  pos % _board_sqrt < _mask_size - 1 || pos > (_board_sqrt * (_board_sqrt - (_mask_size -1))))
-            {
-                BigInt zero = BigInt(0);
-                mask_vector empty_vector;
-                empty_vector.push_back(zero);
-                full_vec.push_back(empty_vector);
-                mid_vec.push_back(empty_vector);
-                edge_vec.push_back(empty_vector);
-                continue;
-            }
             if(pos % _board_sqrt == _mask_size - 2)
             {
                 base = base << _board_sqrt;
@@ -590,6 +574,14 @@ Mask::Mask::inner_map Mask::crescendo_mask() const
             BigInt edge_mask = edge_base << pos - (_mask_size - 1);
             for (size_t j = 0; j <= _mask_size - 1; j += _mask_size - 1)
             {
+                if (  pos % _board_sqrt < _mask_size - 1 || pos > (_board_sqrt * (_board_sqrt - (_mask_size -1))))
+                {
+                    BigInt zero = BigInt(0);
+                    f_vec.push_back(zero);
+                    m_vec.push_back(zero);
+                    e_vec.push_back(zero);
+                    j += _mask_size - 1;
+                }
                 int shift = (j * _board_sqrt) - j;
                 if( (pos - shift) % _board_sqrt < _mask_size - 1 || (int)(pos - shift) < 0)
                     break;
@@ -728,22 +720,20 @@ Mask::Mask::inner_map Mask::decrescendo_mask() const
         }
         else if (_mirror == true)
         {
-            if (pos % _board_sqrt > _board_sqrt - (_mask_size) || pos > (_board_sqrt * (_board_sqrt - (_mask_size -1))) - (_mask_size -1))
-            {
-
-                BigInt zero = BigInt(0);
-                mask_vector empty_vector;
-                empty_vector.push_back(zero);
-                full_vec.push_back(empty_vector);
-                mid_vec.push_back(empty_vector);
-                edge_vec.push_back(empty_vector);
-                continue;
-            }
             BigInt full_mask = full_base << pos;
             BigInt mid_mask = mid_base << pos;
             BigInt edge_mask = edge_base << pos;
             for (size_t j = 0; j <= _mask_size - 1; j += _mask_size - 1)
             {
+                
+                if (pos % _board_sqrt > _board_sqrt - (_mask_size) || pos > (_board_sqrt * (_board_sqrt - (_mask_size -1))) - (_mask_size -1))
+                {
+                    BigInt zero = BigInt(0);
+                    f_vec.push_back(zero);
+                    m_vec.push_back(zero);
+                    e_vec.push_back(zero);
+                    j += _mask_size - 1;
+                }
                 int shift = (j * _board_sqrt) + j;
                 if( (pos - shift) % _board_sqrt >= _board_sqrt - ( _mask_size - 1) || (int)(pos - shift) < 0)
                     break;

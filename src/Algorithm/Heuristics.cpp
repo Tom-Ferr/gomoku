@@ -148,7 +148,14 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 
 	const BigInt &full_mask = masks.at(FULL).at(pos)[0];
     if (full_mask == 0)
+    {
+        int caps =_state.check_capture(_state.mystate(true), _state.otherstate(true), pos, orientation);
+        if (caps > 0)
+            _points["my_potential_captures"]++;
+        else if (caps < 0)
+            _points["ot_potential_captures"]++;
         return false;
+    }
     _target = _state.mystate(true) & full_mask;
     _other_target = _state.otherstate(true) & full_mask;
 
@@ -213,7 +220,7 @@ bool Heuristics::board_eval(int pos, char orientation, bool endgame)
 int Heuristics::run()
 {
 	BigInt expanded = _state.expanded_free() | _state.mystate(true) | _state.otherstate(true);
-	bool expanded_bit; (void)expanded;(void)expanded_bit;
+	bool expanded_bit;
 
     for (int pos = 0; pos < _state.size(); pos++)
     {

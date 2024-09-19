@@ -30,7 +30,7 @@ INCLUDE			= 	$(patsubst $(SRC_DIR)%, -I$(INCLUDE_DIR)%, $(SUB_DIRS))
 NAME			=	gomoku
 CXX				=	clang++
 CXXFLAGS		=	-std=c++11 -Wall -Wextra -Werror
-SANITIZE 		=	-O3#-fsanitize=address -g
+SANITIZE 		=	-O3 #-fsanitize=address -g
 LIBS 			=	-lmlx42 -lglfw -lgmp -lgmpxx -ldl -pthread -lm
 
 
@@ -80,7 +80,37 @@ else
 	@echo "GMP is already installed."
 endif
 
-$(NAME):	check-gmp ${MLX} ${OBJS}
+check-glfw:
+ifeq ($(shell pkg-config --exists glfw3 && echo yes || echo no), no)
+	@echo "glfw3 is not installed. Installing glfw3..."
+ifeq ($(shell uname -s), Linux)
+	@sudo apt update && sudo sudo apt install -y libglfw3-dev
+else ifeq ($(shell uname -s), Darwin)
+	@brew install gmp
+else
+	@echo "Unsupported OS. Please install GMP manually."
+	exit 1
+endif
+else
+	@echo "glfw3 is already installed."
+endif
+
+check-cmake:
+ifeq ($(shell pkg-config --exists glfw3 && echo yes || echo no), no)
+	@echo "cmake is not installed. Installing cmake..."
+ifeq ($(shell uname -s), Linux)
+	@sudo apt update && sudo sudo apt install -y cmake
+else ifeq ($(shell uname -s), Darwin)
+	@brew install gmp
+else
+	@echo "Unsupported OS. Please install GMP manually."
+	exit 1
+endif
+else
+	@echo "cmake is already installed."
+endif
+
+$(NAME):	check-cmake check-glfw check-gmp ${MLX} ${OBJS}
 	@${CXX} ${CXXFLAGS} ${SANITIZE} ${OBJS} ${INCLUDE} -o ${NAME}  ${LIBS}
 	@echo "\033[96m${NAME} is built. \033[0m"
 
